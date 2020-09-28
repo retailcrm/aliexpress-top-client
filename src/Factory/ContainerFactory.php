@@ -12,18 +12,21 @@
  */
 namespace RetailCrm\Factory;
 
+use JMS\Serializer\GraphNavigatorInterface;
+use JMS\Serializer\Serializer;
+use RetailCrm\Component\Constants;
+use Shieldon\Psr17\StreamFactory;
+use Shieldon\Psr17\UploadedFileFactory as BaseFactory;
+use JMS\Serializer\SerializerBuilder;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RetailCrm\Component\DependencyInjection\Container;
 use RetailCrm\Component\Environment;
 use RetailCrm\Interfaces\FactoryInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\TraceableValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use JMS\Serializer\Handler\HandlerRegistry;
 
 /**
  * Class EnvironmentFactory
@@ -99,14 +102,13 @@ class ContainerFactory implements FactoryInterface
      */
     protected function setProdServices(Container $container): void
     {
-        $container->set('httpClient', $this->httpClient);
-        $container->set('validator', Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator());
+        $container->set(Constants::HTTP_CLIENT, $this->httpClient);
         $container->set(
-            'serializer', new Serializer(
-                [new ObjectNormalizer()],
-                [new XmlEncoder(), new JsonEncoder()]
-            )
+            Constants::VALIDATOR,
+            Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator()
         );
+        $container->set(Constants::SERIALIZER, $this->getSerializer());
+        $container->set(UploadedFileFactory::class, new UploadedFileFactory(new BaseFactory(), new StreamFactory()));
     }
 
     /**
@@ -119,5 +121,44 @@ class ContainerFactory implements FactoryInterface
         if ($validator instanceof ValidatorInterface) {
             $container->set('validator', new TraceableValidator($validator));
         }
+    }
+
+    /**
+     * @return \JMS\Serializer\Serializer
+     */
+    protected function getSerializer(): Serializer
+    {
+        return SerializerBuilder::create()
+            ->configureHandlers(function(HandlerRegistry $registry) {
+                $returnNull = function($visitor, $obj, array $type) {
+                    return null;
+                };
+
+                $registry->registerHandler(
+                    GraphNavigatorInterface::DIRECTION_SERIALIZATION,
+                    'UploadedFileInterface',
+                    'json',
+                    $returnNull
+                );
+                $registry->registerHandler(
+                    GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
+                    'UploadedFileInterface',
+                    'json',
+                    $returnNull
+                );
+                $registry->registerHandler(
+                    GraphNavigatorInterface::DIRECTION_SERIALIZATION,
+                    'UploadedFileInterface',
+                    'xml',
+                    $returnNull
+                );
+                $registry->registerHandler(
+                    GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
+                    'UploadedFileInterface',
+                    'xml',
+                    $returnNull
+                );
+            })->addDefaultHandlers()
+            ->build();
     }
 }

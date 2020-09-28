@@ -13,6 +13,8 @@
 namespace RetailCrm\Factory;
 
 use Psr\Container\ContainerInterface;
+use RetailCrm\Component\Constants;
+use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\ContainerAwareInterface;
 use RetailCrm\Interfaces\FactoryInterface;
 use RetailCrm\TopClient\Client;
@@ -35,6 +37,9 @@ class ClientFactory implements ContainerAwareInterface, FactoryInterface
     /** @var string $serviceUrl */
     private $serviceUrl;
 
+    /*** @var AuthenticatorInterface $authenticator */
+    protected $authenticator;
+
     /**
      * @param \Psr\Container\ContainerInterface $container
      *
@@ -53,9 +58,20 @@ class ClientFactory implements ContainerAwareInterface, FactoryInterface
      *
      * @return $this
      */
-    public function setServiceUrl(string $serviceUrl): ClientFactory
+    public function setServiceUrl(string $serviceUrl): self
     {
         $this->serviceUrl = $serviceUrl;
+        return $this;
+    }
+
+    /**
+     * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
+     *
+     * @return $this
+     */
+    public function setAuthenticator(AuthenticatorInterface $authenticator): self
+    {
+        $this->authenticator = $authenticator;
         return $this;
     }
 
@@ -65,10 +81,10 @@ class ClientFactory implements ContainerAwareInterface, FactoryInterface
      */
     public function create(): Client
     {
-        $client = new Client($this->serviceUrl);
-        $client->setHttpClient($this->container->get('httpClient'));
-        $client->setSerializer($this->container->get('serializer'));
-        $client->setValidator($this->container->get('validator'));
+        $client = new Client($this->serviceUrl, $this->authenticator);
+        $client->setHttpClient($this->container->get(Constants::HTTP_CLIENT));
+        $client->setSerializer($this->container->get(Constants::SERIALIZER));
+        $client->setValidator($this->container->get(Constants::VALIDATOR));
         $client->validateSelf();
 
         return $client;

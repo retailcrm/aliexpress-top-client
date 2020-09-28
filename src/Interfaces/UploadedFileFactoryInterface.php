@@ -3,7 +3,7 @@
 /**
  * PHP version 7.3
  *
- * @category ClientAwareInterface
+ * @category UploadedFileFactoryInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
@@ -13,24 +13,24 @@
 
 namespace RetailCrm\Interfaces;
 
-use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\UploadedFileInterface;
 
 /**
- * Interface HttpClientAwareInterface
+ * Interface UploadedFileFactoryInterface
  *
- * @category HttpClientAwareInterface
+ * @category UploadedFileFactoryInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-interface HttpClientAwareInterface
+interface UploadedFileFactoryInterface
 {
     /**
-     * @param \Psr\Http\Client\ClientInterface $httpClient
+     * @param string $fileName
      *
-     * @return mixed
+     * @return \Psr\Http\Message\UploadedFileInterface
      */
-    public function setHttpClient(ClientInterface $httpClient): void;
+    public function create(string $fileName): UploadedFileInterface;
 }

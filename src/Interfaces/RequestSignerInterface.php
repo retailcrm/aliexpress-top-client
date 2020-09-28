@@ -3,7 +3,7 @@
 /**
  * PHP version 7.3
  *
- * @category ValidatorAwareInterface
+ * @category RequestSignerInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
@@ -13,22 +13,25 @@
 
 namespace RetailCrm\Interfaces;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use RetailCrm\Model\Request\BaseRequest;
 
 /**
- * Interface ValidatorAwareInterface
+ * Interface RequestSignerInterface
  *
- * @category ValidatorAwareInterface
+ * @category RequestSignerInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-interface ValidatorAwareInterface
+interface RequestSignerInterface
 {
     /**
-     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
+     * Signs provided request.
+     *
+     * @param \RetailCrm\Model\Request\BaseRequest         $request
+     * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
      */
-    public function setValidator(ValidatorInterface $validator): void;
+    public function sign(BaseRequest $request, AuthenticatorInterface $authenticator): void;
 }

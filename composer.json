@@ -21,11 +21,11 @@
         "ext-curl": "*",
         "ext-json": "*",
         "psr/http-client": "^1.0",
-        "symfony/serializer": "^5.1",
         "symfony/validator": "^5.1",
+        "jms/serializer": "^3.9",
+        "shieldon/psr-http": "^1.2",
         "doctrine/annotations": "^1.10",
-        "doctrine/cache": "^1.10",
-        "symfony/property-access": "^5.1"
+        "doctrine/cache": "^1.10"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.3",

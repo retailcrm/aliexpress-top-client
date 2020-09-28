@@ -3,7 +3,7 @@
 /**
  * PHP version 7.4
  *
- * @category EnvironmentTest
+ * @category ClientFactoryTest
  * @package  Component
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
@@ -13,30 +13,33 @@
 namespace Component;
 
 use PHPUnit\Framework\TestCase;
+use RetailCrm\Component\Authenticator\TokenAuthenticator;
 use RetailCrm\Component\Environment;
 use RetailCrm\Factory\ClientFactory;
 use RetailCrm\Factory\ContainerFactory;
 use RetailCrm\TopClient\Client;
 
 /**
- * Class EnvironmentTest
+ * Class ClientFactoryTest
  *
- * @category EnvironmentTest
+ * @category ClientFactoryTest
  * @package  Component
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class EnvironmentTest extends TestCase
+class ClientFactoryTest extends TestCase
 {
     public function testCreateClient()
     {
         $client = ClientFactory::withContainer(
-            ContainerFactory::withEnv(Environment::DEV)
-                ->withClient(new \GuzzleHttp\Client())
-                ->create()
-        )->setServiceUrl(Client::OVERSEAS_ENDPOINT)->create();
+                ContainerFactory::withEnv(Environment::DEV)
+                    ->withClient(new \GuzzleHttp\Client())
+                    ->create()
+            )->setServiceUrl(Client::OVERSEAS_ENDPOINT)
+            ->setAuthenticator(new TokenAuthenticator('appKey', 'token'))
+            ->create();
 
         self::assertInstanceOf(Client::class, $client);
     }

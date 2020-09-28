@@ -14,6 +14,7 @@
 namespace RetailCrm\Traits;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use RetailCrm\Component\Exception\ValidationException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -40,5 +41,19 @@ trait ValidatorAwareTrait
     public function setValidator(ValidatorInterface $validator): void
     {
         $this->validator = $validator;
+    }
+
+    /**
+     * @param mixed $item
+     *
+     * @throws \RetailCrm\Component\Exception\ValidationException
+     */
+    protected function validate($item): void
+    {
+        $violations = $this->validator->validate($item);
+
+        if ($violations->count()) {
+            throw new ValidationException("Invalid data", $violations);
+        }
     }
 }

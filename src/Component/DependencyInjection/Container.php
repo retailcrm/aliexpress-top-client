@@ -34,17 +34,17 @@ use Throwable;
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class Container implements ContainerInterface
+final class Container implements ContainerInterface
 {
     /**
      * @var array $instances
      */
-    public $instances = [];
+    private $instances = [];
 
     /**
      * @var array $definitions
      */
-    public $definitions = [];
+    private $definitions = [];
 
     /**
      * Container constructor.

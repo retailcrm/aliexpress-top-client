@@ -12,13 +12,10 @@
  */
 namespace RetailCrm\TopClient;
 
-use RetailCrm\Component\Exception\ValidationException;
-use RetailCrm\Interfaces\HttpClientAwareInterface;
-use RetailCrm\Interfaces\ValidatorAwareInterface;
-use RetailCrm\Traits\HttpClientAwareTrait;
-use RetailCrm\Traits\SerializerAwareTrait;
+use JMS\Serializer\SerializerInterface;
+use Psr\Http\Client\ClientInterface;
+use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Traits\ValidatorAwareTrait;
-use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -31,31 +28,49 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class Client implements SerializerAwareInterface, HttpClientAwareInterface, ValidatorAwareInterface
+class Client
 {
     use ValidatorAwareTrait;
-    use HttpClientAwareTrait;
-    use SerializerAwareTrait;
 
     public const OVERSEAS_ENDPOINT = 'https://api.taobao.com/router/rest';
     public const CHINESE_ENDPOINT = 'https://eco.taobao.com/router/rest';
     public const AVAILABLE_ENDPOINTS = [self::OVERSEAS_ENDPOINT, self::CHINESE_ENDPOINT];
 
     /**
-     * @var                                                string $serviceUrl
+     * @var string $serviceUrl
      * @Assert\Url()
-     * @Assert\Choice(choices=Client::AVAILABLE_ENDPOINTS, message="Choose a valid endpoint.")
+     * @Assert\Choice(choices=Client::AVAILABLE_ENDPOINTS, message="Invalid endpoint provided.")
      */
     protected $serviceUrl;
 
     /**
+     * @var AuthenticatorInterface $authenticator
+     * @Assert\NotNull(message="Authenticator should be provided")
+     */
+    protected $authenticator;
+
+    /**
+     * @var ClientInterface $httpClient
+     * @Assert\NotNull(message="HTTP client should be provided")
+     */
+    protected $httpClient;
+
+    /**
+     * @var SerializerInterface $serializer
+     * @Assert\NotNull(message="Serializer should be provided")
+     */
+    protected $serializer;
+
+    /**
      * Client constructor.
      *
-     * @param string serviceUrl
+     * @param string                                       $serviceUrl
+     * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
      */
-    public function __construct(string $serviceUrl)
+    public function __construct(string $serviceUrl, AuthenticatorInterface $authenticator)
     {
         $this->serviceUrl = $serviceUrl;
+        $this->authenticator = $authenticator;
     }
 
     /**
@@ -67,16 +82,18 @@ class Client implements SerializerAwareInterface, HttpClientAwareInterface, Vali
     }
 
     /**
-     * @param mixed $item
-     *
-     * @throws \RetailCrm\Component\Exception\ValidationException
+     * @param \Psr\Http\Client\ClientInterface $httpClient
      */
-    private function validate($item): void
+    public function setHttpClient(ClientInterface $httpClient): void
     {
-        $violations = $this->validator->validate($item);
+        $this->httpClient = $httpClient;
+    }
 
-        if ($violations->count()) {
-            throw new ValidationException("Invalid data", $violations);
-        }
+    /**
+     * @param \JMS\Serializer\SerializerInterface $serializer
+     */
+    public function setSerializer(SerializerInterface $serializer): void
+    {
+        $this->serializer = $serializer;
     }
 }
