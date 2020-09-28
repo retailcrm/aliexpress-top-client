@@ -5,13 +5,14 @@ cache:
     - $HOME/.composer/cache
 
 php:
+  - '7.3'
   - '7.4'
 
 before_script:
   - flags="-o"
   - composer install $flags
 
-script: php ./vendor/phpunit/phpunit/phpunit -c phpunit.xml.dist
+script: composer run-script phpunit
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHP version 7.4
+ * PHP version 7.3
  *
  * @category ValidationException
  * @package  RetailCrm\Component\Exception
@@ -27,7 +27,10 @@ use Throwable;
  */
 class ValidationException extends \Exception
 {
-    private ?ConstraintViolationListInterface $violations;
+    /**
+     * @var \Symfony\Component\Validator\ConstraintViolationListInterface|null
+     */
+    private $violations;
 
     /**
      * ValidationException constructor.

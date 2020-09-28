@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHP version 7.4
+ * PHP version 7.3
  *
  * @category ClientFactory
  * @package  RetailCrm\Factory
@@ -12,13 +12,11 @@
  */
 namespace RetailCrm\Factory;
 
-use RetailCrm\Interfaces\HttpClientAwareInterface;
-use RetailCrm\Interfaces\ValidatorAwareInterface;
+use Psr\Container\ContainerInterface;
+use RetailCrm\Interfaces\ContainerAwareInterface;
+use RetailCrm\Interfaces\FactoryInterface;
 use RetailCrm\TopClient\Client;
-use RetailCrm\Traits\HttpClientAwareTrait;
-use RetailCrm\Traits\ValidatorAwareTrait;
-use Symfony\Component\Serializer\SerializerAwareInterface;
-use Symfony\Component\Serializer\SerializerAwareTrait;
+use RetailCrm\Traits\ContainerAwareTrait;
 
 /**
  * Class ClientFactory
@@ -30,24 +28,47 @@ use Symfony\Component\Serializer\SerializerAwareTrait;
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class ClientFactory implements HttpClientAwareInterface, SerializerAwareInterface, ValidatorAwareInterface
+class ClientFactory implements ContainerAwareInterface, FactoryInterface
 {
-    use HttpClientAwareTrait;
-    use SerializerAwareTrait;
-    use ValidatorAwareTrait;
+    use ContainerAwareTrait;
+
+    /** @var string $serviceUrl */
+    private $serviceUrl;
+
+    /**
+     * @param \Psr\Container\ContainerInterface $container
+     *
+     * @return \RetailCrm\Factory\ClientFactory
+     */
+    public static function withContainer(ContainerInterface $container): ClientFactory
+    {
+        $factory = new self();
+        $factory->setContainer($container);
+
+        return $factory;
+    }
 
     /**
      * @param string $serviceUrl
      *
+     * @return $this
+     */
+    public function setServiceUrl(string $serviceUrl): ClientFactory
+    {
+        $this->serviceUrl = $serviceUrl;
+        return $this;
+    }
+
+    /**
      * @return \RetailCrm\TopClient\Client
      * @throws \RetailCrm\Component\Exception\ValidationException
      */
-    public function create(string $serviceUrl): Client
+    public function create(): Client
     {
-        $client = new Client($serviceUrl);
-        $client->setHttpClient($this->httpClient);
-        $client->setSerializer($this->serializer);
-        $client->setValidator($this->validator);
+        $client = new Client($this->serviceUrl);
+        $client->setHttpClient($this->container->get('httpClient'));
+        $client->setSerializer($this->container->get('serializer'));
+        $client->setValidator($this->container->get('validator'));
         $client->validateSelf();
 
         return $client;

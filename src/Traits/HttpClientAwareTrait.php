@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHP version 7.4
+ * PHP version 7.3
  *
  * @category HttpClientAwareTrait
  * @package  RetailCrm\Traits
@@ -29,9 +29,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait HttpClientAwareTrait
 {
     /**
+     * @var ClientInterface $httpClient
      * @Assert\NotNull(message="HTTP client should be provided")
      */
-    protected ClientInterface $httpClient;
+    protected $httpClient;
 
     /**
      * @param \Psr\Http\Client\ClientInterface $httpClient

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHP version 7.4
+ * PHP version 7.3
  *
  * @category Client
  * @package  RetailCrm\TopClient
@@ -16,9 +16,9 @@ use RetailCrm\Component\Exception\ValidationException;
 use RetailCrm\Interfaces\HttpClientAwareInterface;
 use RetailCrm\Interfaces\ValidatorAwareInterface;
 use RetailCrm\Traits\HttpClientAwareTrait;
+use RetailCrm\Traits\SerializerAwareTrait;
 use RetailCrm\Traits\ValidatorAwareTrait;
 use Symfony\Component\Serializer\SerializerAwareInterface;
-use Symfony\Component\Serializer\SerializerAwareTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -42,10 +42,11 @@ class Client implements SerializerAwareInterface, HttpClientAwareInterface, Vali
     public const AVAILABLE_ENDPOINTS = [self::OVERSEAS_ENDPOINT, self::CHINESE_ENDPOINT];
 
     /**
+     * @var                                                string $serviceUrl
      * @Assert\Url()
      * @Assert\Choice(choices=Client::AVAILABLE_ENDPOINTS, message="Choose a valid endpoint.")
      */
-    protected string $serviceUrl;
+    protected $serviceUrl;
 
     /**
      * Client constructor.
@@ -62,11 +63,7 @@ class Client implements SerializerAwareInterface, HttpClientAwareInterface, Vali
      */
     public function validateSelf(): void
     {
-        $violations = $this->validator->validate($this);
-
-        if ($violations->count()) {
-            throw new ValidationException("Invalid client data", $violations);
-        }
+        $this->validate($this);
     }
 
     /**
@@ -79,7 +76,7 @@ class Client implements SerializerAwareInterface, HttpClientAwareInterface, Vali
         $violations = $this->validator->validate($item);
 
         if ($violations->count()) {
-            throw new ValidationException("Invalid data", $item);
+            throw new ValidationException("Invalid data", $violations);
         }
     }
 }

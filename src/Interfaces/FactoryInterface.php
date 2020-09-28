@@ -3,7 +3,7 @@
 /**
  * PHP version 7.3
  *
- * @category ValidatorAwareInterface
+ * @category FactoryInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
@@ -13,22 +13,20 @@
 
 namespace RetailCrm\Interfaces;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-
 /**
- * Interface ValidatorAwareInterface
+ * Interface FactoryInterface
  *
- * @category ValidatorAwareInterface
+ * @category FactoryInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-interface ValidatorAwareInterface
+interface FactoryInterface
 {
     /**
-     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
+     * @return object
      */
-    public function setValidator(ValidatorInterface $validator): void;
+    public function create();
 }

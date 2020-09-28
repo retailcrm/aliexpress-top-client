@@ -12,9 +12,10 @@
  */
 namespace Component;
 
-use GuzzleHttp\Client as HttpClient;
 use PHPUnit\Framework\TestCase;
-use RetailCrm\Factory\EnvironmentFactory;
+use RetailCrm\Component\Environment;
+use RetailCrm\Factory\ClientFactory;
+use RetailCrm\Factory\ContainerFactory;
 use RetailCrm\TopClient\Client;
 
 /**
@@ -31,9 +32,11 @@ class EnvironmentTest extends TestCase
 {
     public function testCreateClient()
     {
-        $client = EnvironmentFactory::withEnv()
-            ->create(new HttpClient())
-            ->createClient(Client::OVERSEAS_ENDPOINT);
+        $client = ClientFactory::withContainer(
+            ContainerFactory::withEnv(Environment::DEV)
+                ->withClient(new \GuzzleHttp\Client())
+                ->create()
+        )->setServiceUrl(Client::OVERSEAS_ENDPOINT)->create();
 
         self::assertInstanceOf(Client::class, $client);
     }

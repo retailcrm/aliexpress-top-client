@@ -3,7 +3,7 @@
 /**
  * PHP version 7.3
  *
- * @category ClientAwareInterface
+ * @category ContainerAwareInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
@@ -13,24 +13,29 @@
 
 namespace RetailCrm\Interfaces;
 
-use Psr\Http\Client\ClientInterface;
+use Psr\Container\ContainerInterface;
 
 /**
- * Interface HttpClientAwareInterface
+ * Interface ContainerAwareInterface
  *
- * @category HttpClientAwareInterface
+ * @category ContainerAwareInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-interface HttpClientAwareInterface
+interface ContainerAwareInterface
 {
     /**
-     * @param \Psr\Http\Client\ClientInterface $httpClient
+     * @param \Psr\Container\ContainerInterface $container
      *
      * @return mixed
      */
-    public function setHttpClient(ClientInterface $httpClient): void;
+    public function setContainer(ContainerInterface $container): void;
+
+    /**
+     * @return \Psr\Container\ContainerInterface
+     */
+    public function getContainer(): ContainerInterface;
 }

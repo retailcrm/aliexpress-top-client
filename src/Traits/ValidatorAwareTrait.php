@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHP version 7.4
+ * PHP version 7.3
  *
  * @category ValidatorAwareTrait
  * @package  RetailCrm\Traits
@@ -29,9 +29,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 trait ValidatorAwareTrait
 {
     /**
+     * @var ValidatorInterface $validator
      * @Assert\NotNull(message="Validator should be provided")
      */
-    protected ValidatorInterface $validator;
+    protected $validator;
 
     /**
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator

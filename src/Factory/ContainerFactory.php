@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHP version 7.4
+ * PHP version 7.3
  *
  * @category EnvironmentFactory
  * @package  RetailCrm\Factory
@@ -12,17 +12,16 @@
  */
 namespace RetailCrm\Factory;
 
-use Devanych\Di\Container;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
-use RetailCrm\TopClient\Client;
+use RetailCrm\Component\DependencyInjection\Container;
+use RetailCrm\Component\Environment;
+use RetailCrm\Interfaces\FactoryInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerAwareTrait;
 use Symfony\Component\Validator\Validation;
-use RetailCrm\Component\Environment;
 use Symfony\Component\Validator\Validator\TraceableValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -36,17 +35,24 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class EnvironmentFactory implements EnvironmentAwareFactoryInterface
+class ContainerFactory implements FactoryInterface
 {
-    public string $env;
-    public ClientInterface $httpClient;
+    /**
+     * @var string $env
+     */
+    public $env;
+
+    /**
+     * @var \Psr\Http\Client\ClientInterface $httpClient
+     */
+    public $httpClient;
 
     /**
      * @param string $environmentType
      *
-     * @return \RetailCrm\Factory\EnvironmentAwareFactoryInterface
+     * @return ContainerFactory
      */
-    public static function withEnv(string $environmentType = Environment::DEV): EnvironmentAwareFactoryInterface
+    public static function withEnv(string $environmentType = Environment::DEV): ContainerFactory
     {
         $factory = new self();
         $factory->env = $environmentType;
@@ -57,28 +63,35 @@ class EnvironmentFactory implements EnvironmentAwareFactoryInterface
     /**
      * @param \Psr\Http\Client\ClientInterface $httpClient
      *
-     * @return \RetailCrm\Component\Environment
+     * @return \RetailCrm\Factory\ContainerFactory
      */
-    public function create(ClientInterface $httpClient): Environment
+    public function withClient(ClientInterface $httpClient): ContainerFactory
     {
         $this->httpClient = $httpClient;
+        return $this;
+    }
 
+    /**
+     * @return \Psr\Container\ContainerInterface
+     */
+    public function create(): ContainerInterface
+    {
         $container = new Container();
 
         switch ($this->env) {
-            case Environment::PROD:
-                $this->setProdServices($container);
-                break;
-            case Environment::DEV:
-            case Environment::TEST:
-                $this->setProdServices($container);
-                $this->setDevServices($container);
-                break;
-            default:
-                throw new \RuntimeException(sprintf('Invalid environment type: %s', $this->env));
+        case Environment::PROD:
+            $this->setProdServices($container);
+            break;
+        case Environment::DEV:
+        case Environment::TEST:
+            $this->setProdServices($container);
+            $this->setDevServices($container);
+            break;
+        default:
+            throw new \RuntimeException(sprintf('Invalid environment type: %s', $this->env));
         }
 
-        return new Environment($container);
+        return $container;
     }
 
     /**
@@ -88,18 +101,12 @@ class EnvironmentFactory implements EnvironmentAwareFactoryInterface
     {
         $container->set('httpClient', $this->httpClient);
         $container->set('validator', Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator());
-        $container->set('serializer', new Serializer(
-            [new ObjectNormalizer()],
-            [new XmlEncoder(), new JsonEncoder()]
-        ));
-        $container->set(ClientFactory::class, function (ContainerInterface $container): ClientFactory {
-            $factory = new ClientFactory();
-            $factory->setHttpClient($container->get('httpClient'));
-            $factory->setSerializer($container->get('serializer'));
-            $factory->setValidator($container->get('validator'));
-
-            return $factory;
-        });
+        $container->set(
+            'serializer', new Serializer(
+                [new ObjectNormalizer()],
+                [new XmlEncoder(), new JsonEncoder()]
+            )
+        );
     }
 
     /**
