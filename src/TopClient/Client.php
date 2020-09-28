@@ -69,7 +69,7 @@ class Client
      */
     public function __construct(string $serviceUrl, AuthenticatorInterface $authenticator)
     {
-        $this->serviceUrl = $serviceUrl;
+        $this->serviceUrl    = $serviceUrl;
         $this->authenticator = $authenticator;
     }
 

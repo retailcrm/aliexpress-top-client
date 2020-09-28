@@ -43,7 +43,7 @@ class UploadedFileFactory implements UploadedFileFactoryInterface
      */
     public function __construct(BaseUploadedFileFactoryInterface $baseFactory, StreamFactoryInterface $streamFactory)
     {
-        $this->baseFactory = $baseFactory;
+        $this->baseFactory   = $baseFactory;
         $this->streamFactory = $streamFactory;
     }
 

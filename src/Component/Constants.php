@@ -24,9 +24,11 @@ namespace RetailCrm\Component;
  */
 class Constants
 {
-    public const HTTP_CLIENT   = 'httpClient';
-    public const SERIALIZER    = 'serializer';
-    public const VALIDATOR     = 'validator';
-    public const TOP_VERSION   = 'top-sdk-php-20180326';
-    public const UNSIGNED_MARK = '00000000000000000000000000000000';
+    public const HTTP_CLIENT    = 'httpClient';
+    public const SERIALIZER     = 'serializer';
+    public const VALIDATOR      = 'validator';
+    public const TOP_VERSION    = 'top-sdk-php-20180326';
+    public const SIGN_TYPE_MD5  = 'md5';
+    public const SIGN_TYPE_HMAC = 'hmac';
+    public const UNSIGNED_MARK  = '00000000000000000000000000000000';
 }

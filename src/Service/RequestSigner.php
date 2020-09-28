@@ -13,6 +13,7 @@
 namespace RetailCrm\Service;
 
 use JMS\Serializer\SerializerInterface;
+use RetailCrm\Component\Constants;
 use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\RequestSignerInterface;
 use RetailCrm\Model\Request\BaseRequest;
@@ -57,7 +58,14 @@ class RequestSigner implements RequestSignerInterface
             $stringToBeSigned .= $param . $value;
         }
 
-        $request->sign = hash_hmac('md5', $stringToBeSigned, $authenticator->getAppSecret());
+        switch ($request->signMethod) {
+            case Constants::SIGN_TYPE_MD5:
+                $request->sign = md5($authenticator->getAppSecret() . $stringToBeSigned);
+                break;
+            case Constants::SIGN_TYPE_HMAC:
+                $request->sign = hash_hmac('md5', $stringToBeSigned, $authenticator->getAppSecret());
+                break;
+        }
     }
 
     /**

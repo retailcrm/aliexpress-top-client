@@ -101,7 +101,7 @@ abstract class BaseRequest
      * @Assert\NotBlank()
      * @Assert\Choice({"hmac", "md5"})
      */
-    public $signMethod = 'hmac';
+    public $signMethod = Constants::SIGN_TYPE_HMAC;
 
     /**
      * @var string $sign
