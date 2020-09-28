@@ -60,10 +60,10 @@ class RequestSigner implements RequestSignerInterface
 
         switch ($request->signMethod) {
             case Constants::SIGN_TYPE_MD5:
-                $request->sign = md5($authenticator->getAppSecret() . $stringToBeSigned);
+                $request->sign = strtoupper(md5($authenticator->getAppSecret() . $stringToBeSigned));
                 break;
             case Constants::SIGN_TYPE_HMAC:
-                $request->sign = hash_hmac('md5', $stringToBeSigned, $authenticator->getAppSecret());
+                $request->sign = strtoupper(hash_hmac('md5', $stringToBeSigned, $authenticator->getAppSecret()));
                 break;
         }
     }
