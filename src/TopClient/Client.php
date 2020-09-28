@@ -14,6 +14,7 @@ namespace RetailCrm\TopClient;
 
 use JMS\Serializer\SerializerInterface;
 use Psr\Http\Client\ClientInterface;
+use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Traits\ValidatorAwareTrait;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,16 +33,10 @@ class Client
 {
     use ValidatorAwareTrait;
 
-    public const OVERSEAS_ENDPOINT = 'https://api.taobao.com/router/rest';
-    public const CHINESE_ENDPOINT = 'https://eco.taobao.com/router/rest';
-    public const AVAILABLE_ENDPOINTS = [self::OVERSEAS_ENDPOINT, self::CHINESE_ENDPOINT];
-
     /**
-     * @var string $serviceUrl
-     * @Assert\Url()
-     * @Assert\Choice(choices=Client::AVAILABLE_ENDPOINTS, message="Invalid endpoint provided.")
+     * @var \RetailCrm\Interfaces\AppDataInterface $appData
      */
-    protected $serviceUrl;
+    protected $appData;
 
     /**
      * @var AuthenticatorInterface $authenticator
@@ -64,12 +59,12 @@ class Client
     /**
      * Client constructor.
      *
-     * @param string                                       $serviceUrl
+     * @param \RetailCrm\Interfaces\AppDataInterface       $appData
      * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
      */
-    public function __construct(string $serviceUrl, AuthenticatorInterface $authenticator)
+    public function __construct(AppDataInterface $appData, AuthenticatorInterface $authenticator)
     {
-        $this->serviceUrl    = $serviceUrl;
+        $this->appData       = $appData;
         $this->authenticator = $authenticator;
     }
 

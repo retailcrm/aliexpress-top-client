@@ -15,6 +15,7 @@ namespace RetailCrm\Factory;
 use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Serializer;
 use RetailCrm\Component\Constants;
+use RetailCrm\Service\RequestSigner;
 use Shieldon\Psr17\StreamFactory;
 use Shieldon\Psr17\UploadedFileFactory as BaseFactory;
 use JMS\Serializer\SerializerBuilder;
@@ -109,6 +110,9 @@ class ContainerFactory implements FactoryInterface
         );
         $container->set(Constants::SERIALIZER, $this->getSerializer());
         $container->set(UploadedFileFactory::class, new UploadedFileFactory(new BaseFactory(), new StreamFactory()));
+        $container->set(RequestSigner::class, function (ContainerInterface $container) {
+            return new RequestSigner($container->get(Constants::SERIALIZER));
+        });
     }
 
     /**

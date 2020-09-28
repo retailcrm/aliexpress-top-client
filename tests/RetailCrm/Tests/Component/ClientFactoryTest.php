@@ -4,26 +4,25 @@
  * PHP version 7.4
  *
  * @category ClientFactoryTest
- * @package  Component
+ * @package  RetailCrm\Tests\Component
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
-namespace Component;
+namespace RetailCrm\Tests\Component;
 
-use PHPUnit\Framework\TestCase;
+use RetailCrm\Component\AppData;
 use RetailCrm\Component\Authenticator\TokenAuthenticator;
-use RetailCrm\Component\Environment;
 use RetailCrm\Factory\ClientFactory;
-use RetailCrm\Factory\ContainerFactory;
+use RetailCrm\Test\TestCase;
 use RetailCrm\TopClient\Client;
 
 /**
  * Class ClientFactoryTest
  *
  * @category ClientFactoryTest
- * @package  Component
+ * @package  RetailCrm\Tests\Component
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
@@ -33,11 +32,8 @@ class ClientFactoryTest extends TestCase
 {
     public function testCreateClient()
     {
-        $client = ClientFactory::withContainer(
-                ContainerFactory::withEnv(Environment::DEV)
-                    ->withClient(new \GuzzleHttp\Client())
-                    ->create()
-            )->setServiceUrl(Client::OVERSEAS_ENDPOINT)
+        $client = ClientFactory::withContainer($this->getContainer())
+            ->setAppData(AppData::create(AppData::OVERSEAS_ENDPOINT, 'appKey', 'helloworld'))
             ->setAuthenticator(new TokenAuthenticator('appKey', 'token'))
             ->create();
 

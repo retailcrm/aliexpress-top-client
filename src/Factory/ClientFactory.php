@@ -14,6 +14,7 @@ namespace RetailCrm\Factory;
 
 use Psr\Container\ContainerInterface;
 use RetailCrm\Component\Constants;
+use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\ContainerAwareInterface;
 use RetailCrm\Interfaces\FactoryInterface;
@@ -34,8 +35,8 @@ class ClientFactory implements ContainerAwareInterface, FactoryInterface
 {
     use ContainerAwareTrait;
 
-    /** @var string $serviceUrl */
-    private $serviceUrl;
+    /** @var \RetailCrm\Interfaces\AppDataInterface $appData */
+    private $appData;
 
     /*** @var AuthenticatorInterface $authenticator */
     protected $authenticator;
@@ -54,13 +55,13 @@ class ClientFactory implements ContainerAwareInterface, FactoryInterface
     }
 
     /**
-     * @param string $serviceUrl
+     * @param \RetailCrm\Interfaces\AppDataInterface $appData
      *
-     * @return $this
+     * @return ClientFactory
      */
-    public function setServiceUrl(string $serviceUrl): self
+    public function setAppData(AppDataInterface $appData): ClientFactory
     {
-        $this->serviceUrl = $serviceUrl;
+        $this->appData = $appData;
         return $this;
     }
 
@@ -81,7 +82,7 @@ class ClientFactory implements ContainerAwareInterface, FactoryInterface
      */
     public function create(): Client
     {
-        $client = new Client($this->serviceUrl, $this->authenticator);
+        $client = new Client($this->appData, $this->authenticator);
         $client->setHttpClient($this->container->get(Constants::HTTP_CLIENT));
         $client->setSerializer($this->container->get(Constants::SERIALIZER));
         $client->setValidator($this->container->get(Constants::VALIDATOR));

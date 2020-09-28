@@ -57,20 +57,4 @@ class TokenAuthenticator implements AuthenticatorInterface
         $request->appKey = $this->appKey;
         $request->session = $this->token;
     }
-
-    /**
-     * @return string
-     */
-    public function getAppKey(): string
-    {
-        return $this->appKey;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAppSecret(): string
-    {
-        return $this->token;
-    }
 }

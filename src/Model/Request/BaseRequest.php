@@ -58,7 +58,7 @@ abstract class BaseRequest
     /**
      * @var \DateTime $timestamp
      *
-     * @JMS\Type("DateTime<'yyyy-MM-dd H:i:s'>")
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\SerializedName("timestamp")
      * @Assert\NotBlank()
      */

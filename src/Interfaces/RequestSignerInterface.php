@@ -30,8 +30,8 @@ interface RequestSignerInterface
     /**
      * Signs provided request.
      *
-     * @param \RetailCrm\Model\Request\BaseRequest         $request
-     * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
+     * @param \RetailCrm\Model\Request\BaseRequest   $request
+     * @param \RetailCrm\Interfaces\AppDataInterface $authenticator
      */
-    public function sign(BaseRequest $request, AuthenticatorInterface $authenticator): void;
+    public function sign(BaseRequest $request, AppDataInterface $authenticator): void;
 }
