@@ -86,6 +86,7 @@ class ClientFactory implements ContainerAwareInterface, FactoryInterface
         $client->setHttpClient($this->container->get(Constants::HTTP_CLIENT));
         $client->setSerializer($this->container->get(Constants::SERIALIZER));
         $client->setValidator($this->container->get(Constants::VALIDATOR));
+        $client->setRequestFactory($this->container->get(RequestFactory::class));
         $client->validateSelf();
 
         return $client;

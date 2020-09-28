@@ -17,7 +17,8 @@ use JMS\Serializer\Serializer;
 use RetailCrm\Component\Constants;
 use RetailCrm\Service\RequestSigner;
 use Shieldon\Psr17\StreamFactory;
-use Shieldon\Psr17\UploadedFileFactory as BaseFactory;
+use Shieldon\Psr17\UploadedFileFactory as BaseUploadedFileFactory;
+use Shieldon\Psr17\RequestFactory as BaseRequestFactory;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
@@ -109,9 +110,16 @@ class ContainerFactory implements FactoryInterface
             Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator()
         );
         $container->set(Constants::SERIALIZER, $this->getSerializer());
-        $container->set(UploadedFileFactory::class, new UploadedFileFactory(new BaseFactory(), new StreamFactory()));
+        $container->set(UploadedFileFactory::class, new UploadedFileFactory(
+            new BaseUploadedFileFactory(),
+            new StreamFactory())
+        );
+        $container->set(BaseRequestFactory::class, new BaseRequestFactory());
         $container->set(RequestSigner::class, function (ContainerInterface $container) {
             return new RequestSigner($container->get(Constants::SERIALIZER));
+        });
+        $container->set(RequestFactory::class, function (ContainerInterface $container) {
+            return new RequestFactory($container->get(RequestSigner::class), $container->get(BaseRequestFactory::class));
         });
     }
 

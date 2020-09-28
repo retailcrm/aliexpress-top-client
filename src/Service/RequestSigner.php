@@ -14,6 +14,7 @@ namespace RetailCrm\Service;
 
 use JMS\Serializer\SerializerInterface;
 use RetailCrm\Component\Constants;
+use RetailCrm\Component\Exception\NotImplementedException;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\RequestSignerInterface;
 use RetailCrm\Model\Request\BaseRequest;
@@ -48,6 +49,8 @@ class RequestSigner implements RequestSignerInterface
     /**
      * @param BaseRequest                            $request
      * @param \RetailCrm\Interfaces\AppDataInterface $appData
+     *
+     * @throws \RetailCrm\Component\Exception\NotImplementedException
      */
     public function sign(BaseRequest $request, AppDataInterface $appData): void
     {
@@ -66,6 +69,9 @@ class RequestSigner implements RequestSignerInterface
                 break;
             case Constants::SIGN_TYPE_HMAC:
                 $request->sign = strtoupper(hash_hmac('md5', $stringToBeSigned, $appData->getAppSecret()));
+                break;
+            default:
+                throw new NotImplementedException(sprintf('Invalid signing method: %s', $request->signMethod));
                 break;
         }
     }

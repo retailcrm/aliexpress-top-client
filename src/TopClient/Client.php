@@ -16,6 +16,7 @@ use JMS\Serializer\SerializerInterface;
 use Psr\Http\Client\ClientInterface;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
+use RetailCrm\Interfaces\RequestFactoryInterface;
 use RetailCrm\Traits\ValidatorAwareTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -49,6 +50,12 @@ class Client
      * @Assert\NotNull(message="HTTP client should be provided")
      */
     protected $httpClient;
+
+    /**
+     * @var \RetailCrm\Interfaces\RequestFactoryInterface $requestFactory
+     * @Assert\NotNull(message="RequestFactoryInterface should be provided")
+     */
+    protected $requestFactory;
 
     /**
      * @var SerializerInterface $serializer
@@ -90,5 +97,13 @@ class Client
     public function setSerializer(SerializerInterface $serializer): void
     {
         $this->serializer = $serializer;
+    }
+
+    /**
+     * @param \RetailCrm\Interfaces\RequestFactoryInterface $requestFactory
+     */
+    public function setRequestFactory(RequestFactoryInterface $requestFactory): void
+    {
+        $this->requestFactory = $requestFactory;
     }
 }

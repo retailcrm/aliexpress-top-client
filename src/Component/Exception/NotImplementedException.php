@@ -3,26 +3,25 @@
 /**
  * PHP version 7.3
  *
- * @category RequestBuilder
- * @package  RetailCrm\Service
+ * @category NotImplementedException
+ * @package  RetailCrm\Component\Exception
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
-namespace RetailCrm\Service;
+namespace RetailCrm\Component\Exception;
 
 /**
- * Class RequestBuilder
+ * Class NotImplementedException
  *
- * @category RequestBuilder
- * @package  RetailCrm\Service
+ * @category NotImplementedException
+ * @package  RetailCrm\Component\Exception
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class RequestBuilder
+class NotImplementedException extends \Exception
 {
-
 }
