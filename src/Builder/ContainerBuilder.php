@@ -116,16 +116,16 @@ class ContainerBuilder implements BuilderInterface
         $container = new Container();
 
         switch ($this->env) {
-        case Environment::PROD:
-            $this->setProdServices($container);
-            break;
-        case Environment::DEV:
-        case Environment::TEST:
-            $this->setProdServices($container);
-            $this->setDevServices($container);
-            break;
-        default:
-            throw new RuntimeException(sprintf('Invalid environment type: %s', $this->env));
+            case Environment::PROD:
+                $this->setProdServices($container);
+                break;
+            case Environment::DEV:
+            case Environment::TEST:
+                $this->setProdServices($container);
+                $this->setDevServices($container);
+                break;
+            default:
+                throw new RuntimeException(sprintf('Invalid environment type: %s', $this->env));
         }
 
         return $container;

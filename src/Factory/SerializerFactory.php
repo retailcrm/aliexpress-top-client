@@ -66,11 +66,11 @@ class SerializerFactory implements FactoryInterface
         $container = $this->container;
 
         return SerializerBuilder::create()
-            ->configureHandlers(function(HandlerRegistry $registry) use ($container) {
-                $returnNull = function($visitor, $obj, array $type) {
+            ->configureHandlers(function (HandlerRegistry $registry) use ($container) {
+                $returnNull = function ($visitor, $obj, array $type) {
                     return null;
                 };
-                $returnSame = function($visitor, $obj, array $type) {
+                $returnSame = function ($visitor, $obj, array $type) {
                     return $obj;
                 };
 
@@ -78,7 +78,7 @@ class SerializerFactory implements FactoryInterface
                     GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                     'RequestDtoInterface',
                     'json',
-                    function($visitor, $obj, array $type) use ($container) {
+                    function ($visitor, $obj, array $type) use ($container) {
                         /** @var SerializerInterface $serializer */
                         $serializer = $container->get(Constants::SERIALIZER);
 
@@ -95,7 +95,7 @@ class SerializerFactory implements FactoryInterface
                     GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                     'RequestDtoInterface',
                     'xml',
-                    function($visitor, $obj, array $type) use ($container) {
+                    function ($visitor, $obj, array $type) use ($container) {
                         /** @var SerializerInterface $serializer */
                         $serializer = $container->get(Constants::SERIALIZER);
 

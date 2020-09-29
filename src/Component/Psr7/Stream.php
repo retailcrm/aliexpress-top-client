@@ -119,9 +119,12 @@ class Stream implements StreamInterface
                 throw $exception;
             }
 
-            trigger_error(sprintf(
-                '%s::__toString exception: %s',
-                self::class, (string) $exception),
+            trigger_error(
+                sprintf(
+                    '%s::__toString exception: %s',
+                    self::class,
+                    (string) $exception
+                ),
                 E_USER_ERROR
             );
         }

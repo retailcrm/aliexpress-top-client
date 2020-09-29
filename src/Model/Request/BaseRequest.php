@@ -136,7 +136,9 @@ abstract class BaseRequest
      *
      * @return void
      */
-    final public function setMethod(string $method): void {}
+    final public function setMethod(string $method): void
+    {
+    }
 
     /**
      * Should return method name for this request.
