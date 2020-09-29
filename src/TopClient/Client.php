@@ -142,6 +142,7 @@ class Client
      * @return void
      * @throws \Psr\Http\Client\ClientExceptionInterface
      * @throws \RetailCrm\Component\Exception\ValidationException
+     * @throws \RetailCrm\Component\Exception\FactoryException
      */
     public function sendRequest(BaseRequest $request)
     {

@@ -34,6 +34,8 @@ interface RequestFactoryInterface
      * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
      *
      * @return RequestInterface
+     * @throws \RetailCrm\Component\Exception\FactoryException
+     * @throws \RetailCrm\Component\Exception\ValidationException
      */
     public function fromModel(
         BaseRequest $request,

@@ -15,7 +15,6 @@ namespace RetailCrm\Tests\TopClient;
 use RetailCrm\Builder\ClientBuilder;
 use RetailCrm\Component\AppData;
 use RetailCrm\Component\Authenticator\TokenAuthenticator;
-use RetailCrm\Component\Exception\ValidationException;
 use RetailCrm\Model\Request\HttpDnsGetRequest;
 use RetailCrm\Test\TestCase;
 
@@ -34,7 +33,7 @@ class ClientTest extends TestCase
     public function testClientRequest()
     {
         self::markTestSkipped('Not implemented yet');
-        
+
         $client = ClientBuilder::create()
             ->setContainer($this->getContainer())
             ->setAppData(new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret'))
