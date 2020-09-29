@@ -54,7 +54,7 @@ class RequestFactoryTest extends TestCase
         $factory = $this->getContainer()->get(RequestFactory::class);
         $request = $factory->fromModel(
             AppData::OVERSEAS_ENDPOINT,
-            $this->getTestRequest(Constants::SIGN_TYPE_HMAC, true),
+            $this->getTestRequest(Constants::SIGN_TYPE_HMAC, true, true),
             $this->getAppData(),
             $this->getAuthenticator()
         );
@@ -63,5 +63,6 @@ class RequestFactoryTest extends TestCase
 
         self::assertEmpty($uri->getQuery());
         self::assertNotFalse(stripos($contents, 'The quick brown fox jumps over the lazy dog'));
+        self::assertNotFalse(stripos($contents, '{"modelContent":"contentData"}'));
     }
 }

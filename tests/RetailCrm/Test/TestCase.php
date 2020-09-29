@@ -64,11 +64,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * @param string $signMethod
      *
-     * @param bool   $withFile
+     * @param bool $withFile
+     * @param bool $withDto
      *
      * @return \RetailCrm\Test\TestSignerRequest
      */
-    protected function getTestRequest(string $signMethod, bool $withFile = false): TestSignerRequest
+    protected function getTestRequest(string $signMethod, bool $withFile = false, bool $withDto = false): TestSignerRequest
     {
         $request = new TestSignerRequest();
         $request->method = 'aliexpress.solution.order.fulfill';
@@ -88,6 +89,10 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 'file.txt',
                 'The quick brown fox jumps over the lazy dog'
             );
+        }
+
+        if ($withDto) {
+            $request->dto = new TestDto();
         }
 
         return $request;
