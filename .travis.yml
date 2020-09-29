@@ -12,7 +12,7 @@ before_script:
   - flags="-o"
   - composer install $flags
 
-script: composer run-script phpunit
+script: composer run-script test
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
