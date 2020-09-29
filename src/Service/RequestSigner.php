@@ -34,15 +34,22 @@ class RequestSigner implements RequestSignerInterface
     /**
      * @var SerializerInterface|\JMS\Serializer\Serializer $serializer
      */
-    public $serializer;
+    private $serializer;
+
+    /**
+     * @var RequestDataFilter $filter
+     */
+    private $filter;
 
     /**
      * RequestSigner constructor.
      *
-     * @param \JMS\Serializer\SerializerInterface $serializer
+     * @param \JMS\Serializer\SerializerInterface  $serializer
+     * @param \RetailCrm\Service\RequestDataFilter $filter
      */
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(SerializerInterface $serializer, RequestDataFilter $filter)
     {
+        $this->filter = $filter;
         $this->serializer = $serializer;
     }
 
@@ -55,7 +62,7 @@ class RequestSigner implements RequestSignerInterface
     public function sign(BaseRequest $request, AppDataInterface $appData): void
     {
         $stringToBeSigned = '';
-        $params           = $this->getRequestData($request);
+        $params           = $this->getDataForSigning($request);
 
         foreach ($params as $param => $value) {
             $stringToBeSigned .= $param . $value;
@@ -81,9 +88,9 @@ class RequestSigner implements RequestSignerInterface
      *
      * @return array
      */
-    private function getRequestData(BaseRequest $request): array
+    private function getDataForSigning(BaseRequest $request): array
     {
-        $params = array_filter($this->serializer->toArray($request));
+        $params = $this->filter->filterBinaryFromRequestData($this->serializer->toArray($request));
         unset($params['sign']);
         ksort($params);
 

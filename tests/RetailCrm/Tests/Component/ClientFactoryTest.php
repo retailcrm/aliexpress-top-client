@@ -14,6 +14,7 @@ namespace RetailCrm\Tests\Component;
 
 use RetailCrm\Component\AppData;
 use RetailCrm\Component\Authenticator\TokenAuthenticator;
+use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Factory\ClientFactory;
 use RetailCrm\Test\TestCase;
 use RetailCrm\TopClient\Client;
@@ -38,5 +39,6 @@ class ClientFactoryTest extends TestCase
             ->create();
 
         self::assertInstanceOf(Client::class, $client);
+        self::assertInstanceOf(ServiceLocator::class, $client->getServiceLocator());
     }
 }

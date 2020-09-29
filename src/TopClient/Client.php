@@ -14,6 +14,7 @@ namespace RetailCrm\TopClient;
 
 use JMS\Serializer\SerializerInterface;
 use Psr\Http\Client\ClientInterface;
+use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\RequestFactoryInterface;
@@ -64,6 +65,11 @@ class Client
     protected $serializer;
 
     /**
+     * @var \RetailCrm\Component\ServiceLocator $serviceLocator
+     */
+    protected $serviceLocator;
+
+    /**
      * Client constructor.
      *
      * @param \RetailCrm\Interfaces\AppDataInterface       $appData
@@ -105,5 +111,21 @@ class Client
     public function setRequestFactory(RequestFactoryInterface $requestFactory): void
     {
         $this->requestFactory = $requestFactory;
+    }
+
+    /**
+     * @param \RetailCrm\Component\ServiceLocator $serviceLocator
+     */
+    public function setServiceLocator(ServiceLocator $serviceLocator): void
+    {
+        $this->serviceLocator = $serviceLocator;
+    }
+
+    /**
+     * @return \RetailCrm\Component\ServiceLocator
+     */
+    public function getServiceLocator(): ServiceLocator
+    {
+        return $this->serviceLocator;
     }
 }

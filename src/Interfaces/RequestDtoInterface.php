@@ -3,7 +3,7 @@
 /**
  * PHP version 7.3
  *
- * @category UploadedFileFactoryInterface
+ * @category RequestDtoInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
@@ -13,24 +13,16 @@
 
 namespace RetailCrm\Interfaces;
 
-use Psr\Http\Message\UploadedFileInterface;
-
 /**
- * Interface UploadedFileFactoryInterface
+ * Interface RequestDtoInterface
  *
- * @category UploadedFileFactoryInterface
+ * @category RequestDtoInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-interface UploadedFileFactoryInterface
+interface RequestDtoInterface
 {
-    /**
-     * @param string $fileName
-     *
-     * @return \Psr\Http\Message\UploadedFileInterface
-     */
-    public function create(string $fileName): UploadedFileInterface;
 }

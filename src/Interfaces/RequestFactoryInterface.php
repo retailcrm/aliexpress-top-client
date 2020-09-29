@@ -13,6 +13,7 @@
 
 namespace RetailCrm\Interfaces;
 
+use Psr\Http\Message\RequestInterface;
 use RetailCrm\Model\Request\BaseRequest;
 
 /**
@@ -28,10 +29,17 @@ use RetailCrm\Model\Request\BaseRequest;
 interface RequestFactoryInterface
 {
     /**
-     * @param \RetailCrm\Model\Request\BaseRequest   $request
-     * @param \RetailCrm\Interfaces\AppDataInterface $appData
+     * @param string                                       $endpoint
+     * @param \RetailCrm\Model\Request\BaseRequest         $request
+     * @param \RetailCrm\Interfaces\AppDataInterface       $appData
+     * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
      *
-     * @return mixed
+     * @return RequestInterface
      */
-    public function fromModel(BaseRequest $request, AppDataInterface $appData);
+    public function fromModel(
+        string $endpoint,
+        BaseRequest $request,
+        AppDataInterface $appData,
+        AuthenticatorInterface $authenticator
+    ): RequestInterface;
 }

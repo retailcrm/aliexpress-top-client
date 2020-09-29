@@ -14,6 +14,7 @@ namespace RetailCrm\Factory;
 
 use Psr\Container\ContainerInterface;
 use RetailCrm\Component\Constants;
+use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\ContainerAwareInterface;
@@ -87,6 +88,7 @@ class ClientFactory implements ContainerAwareInterface, FactoryInterface
         $client->setSerializer($this->container->get(Constants::SERIALIZER));
         $client->setValidator($this->container->get(Constants::VALIDATOR));
         $client->setRequestFactory($this->container->get(RequestFactory::class));
+        $client->setServiceLocator($this->container->get(ServiceLocator::class));
         $client->validateSelf();
 
         return $client;

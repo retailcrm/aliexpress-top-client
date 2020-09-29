@@ -12,9 +12,7 @@
  */
 namespace RetailCrm\Tests\Service;
 
-use DateTime;
 use RetailCrm\Component\AppData;
-use RetailCrm\Component\Authenticator\TokenAuthenticator;
 use RetailCrm\Component\Constants;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\RequestSignerInterface;
@@ -52,40 +50,29 @@ class RequestSignerTest extends TestCase
 
     public function signDataProvider(): array
     {
-        $appData = AppData::create(AppData::OVERSEAS_ENDPOINT, 'appKey', 'helloworld');
+        $appData = $this->getAppData();
 
         return [
             [
-                $this->getRequestWithSignMethod(Constants::SIGN_TYPE_MD5),
+                $this->getTestRequest(Constants::SIGN_TYPE_MD5),
                 $appData,
                 '4BC79C5FAA1B5E254E95A97E65BACEAB'
             ],
             [
-                $this->getRequestWithSignMethod(Constants::SIGN_TYPE_HMAC),
+                $this->getTestRequest(Constants::SIGN_TYPE_HMAC),
+                $appData,
+                '497FA7FCAD98F4F335EFAE2451F8291D'
+            ],
+            [
+                $this->getTestRequest(Constants::SIGN_TYPE_MD5, true),
+                $appData,
+                '4BC79C5FAA1B5E254E95A97E65BACEAB'
+            ],
+            [
+                $this->getTestRequest(Constants::SIGN_TYPE_HMAC, true),
                 $appData,
                 '497FA7FCAD98F4F335EFAE2451F8291D'
             ]
         ];
-    }
-
-    /**
-     * @param string $signMethod
-     *
-     * @return \RetailCrm\Test\TestSignerRequest
-     */
-    private function getRequestWithSignMethod(string $signMethod): TestSignerRequest
-    {
-        $request = new TestSignerRequest();
-        $request->method = 'aliexpress.solution.order.fulfill';
-        $request->appKey = '12345678';
-        $request->session = 'test';
-        $request->timestamp = DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-01 12:00:00');
-        $request->signMethod = $signMethod;
-        $request->serviceName = 'SPAIN_LOCAL_CORREOS';
-        $request->outRef = '1000006270175804';
-        $request->sendType = 'all';
-        $request->logisticsNo = 'ES2019COM0000123456';
-
-        return $request;
     }
 }

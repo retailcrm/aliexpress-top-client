@@ -13,22 +13,23 @@
 namespace RetailCrm\Factory;
 
 use JMS\Serializer\GraphNavigatorInterface;
+use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\Serializer;
-use RetailCrm\Component\Constants;
-use RetailCrm\Service\RequestSigner;
-use Shieldon\Psr17\StreamFactory;
-use Shieldon\Psr17\UploadedFileFactory as BaseUploadedFileFactory;
-use Shieldon\Psr17\RequestFactory as BaseRequestFactory;
 use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use RetailCrm\Component\Constants;
 use RetailCrm\Component\DependencyInjection\Container;
 use RetailCrm\Component\Environment;
+use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Interfaces\FactoryInterface;
+use RetailCrm\Service\RequestDataFilter;
+use RetailCrm\Service\RequestSigner;
+use Shieldon\Psr17\StreamFactory;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\TraceableValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use JMS\Serializer\Handler\HandlerRegistry;
 
 /**
  * Class EnvironmentFactory
@@ -109,17 +110,29 @@ class ContainerFactory implements FactoryInterface
             Constants::VALIDATOR,
             Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator()
         );
-        $container->set(Constants::SERIALIZER, $this->getSerializer());
-        $container->set(UploadedFileFactory::class, new UploadedFileFactory(
-            new BaseUploadedFileFactory(),
-            new StreamFactory())
-        );
-        $container->set(BaseRequestFactory::class, new BaseRequestFactory());
+        $container->set(Constants::SERIALIZER, function (ContainerInterface $container) {
+            return SerializerFactory::withContainer($container)->create();
+        });
+        $container->set(FileItemFactory::class, new FileItemFactory(new StreamFactory()));
+        $container->set(RequestDataFilter::class, new RequestDataFilter());
         $container->set(RequestSigner::class, function (ContainerInterface $container) {
-            return new RequestSigner($container->get(Constants::SERIALIZER));
+            return new RequestSigner(
+                $container->get(Constants::SERIALIZER),
+                $container->get(RequestDataFilter::class)
+            );
         });
         $container->set(RequestFactory::class, function (ContainerInterface $container) {
-            return new RequestFactory($container->get(RequestSigner::class), $container->get(BaseRequestFactory::class));
+            return new RequestFactory(
+                $container->get(RequestSigner::class),
+                $container->get(RequestDataFilter::class),
+                $container->get(Constants::SERIALIZER)
+            );
+        });
+        $container->set(ServiceLocator::class, function (ContainerInterface $container) {
+            $locator = new ServiceLocator();
+            $locator->setContainer($container);
+
+            return $locator;
         });
     }
 
@@ -133,44 +146,5 @@ class ContainerFactory implements FactoryInterface
         if ($validator instanceof ValidatorInterface) {
             $container->set('validator', new TraceableValidator($validator));
         }
-    }
-
-    /**
-     * @return \JMS\Serializer\Serializer
-     */
-    protected function getSerializer(): Serializer
-    {
-        return SerializerBuilder::create()
-            ->configureHandlers(function(HandlerRegistry $registry) {
-                $returnNull = function($visitor, $obj, array $type) {
-                    return null;
-                };
-
-                $registry->registerHandler(
-                    GraphNavigatorInterface::DIRECTION_SERIALIZATION,
-                    'UploadedFileInterface',
-                    'json',
-                    $returnNull
-                );
-                $registry->registerHandler(
-                    GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
-                    'UploadedFileInterface',
-                    'json',
-                    $returnNull
-                );
-                $registry->registerHandler(
-                    GraphNavigatorInterface::DIRECTION_SERIALIZATION,
-                    'UploadedFileInterface',
-                    'xml',
-                    $returnNull
-                );
-                $registry->registerHandler(
-                    GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
-                    'UploadedFileInterface',
-                    'xml',
-                    $returnNull
-                );
-            })->addDefaultHandlers()
-            ->build();
     }
 }

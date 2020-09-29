@@ -13,6 +13,8 @@
 namespace RetailCrm\Test;
 
 use JMS\Serializer\Annotation as JMS;
+use Psr\Http\Message\UploadedFileInterface;
+use RetailCrm\Interfaces\FileItemInterface;
 use RetailCrm\Model\Request\BaseRequest;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -63,4 +65,12 @@ class TestSignerRequest extends BaseRequest
      * @Assert\NotBlank()
      */
     public $logisticsNo;
+
+    /**
+     * @var FileItemInterface $document
+     *
+     * @JMS\Type("FileItemInterface")
+     * @JMS\SerializedName("document")
+     */
+    public $document;
 }
