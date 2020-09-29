@@ -4,10 +4,11 @@ namespace RetailCrm\Test;
 
 use DateTime;
 use Psr\Container\ContainerInterface;
+use RetailCrm\Builder\ContainerBuilder;
 use RetailCrm\Component\AppData;
 use RetailCrm\Component\Authenticator\TokenAuthenticator;
 use RetailCrm\Component\Environment;
-use RetailCrm\Factory\ContainerFactory;
+use RetailCrm\Component\Logger\StdoutLogger;
 use RetailCrm\Factory\FileItemFactory;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
@@ -22,7 +23,7 @@ use RetailCrm\Interfaces\AuthenticatorInterface;
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class TestCase extends \PHPUnit\Framework\TestCase
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     private $container;
 
@@ -34,9 +35,11 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function getContainer($recreate = false): ContainerInterface
     {
         if (null === $this->container || $recreate) {
-            $this->container = ContainerFactory::withEnv(Environment::TEST)
-                ->withClient(new \GuzzleHttp\Client())
-                ->create();
+            $this->container = ContainerBuilder::create()
+                ->setEnv(Environment::TEST)
+                ->setClient(new \GuzzleHttp\Client())
+                ->setLogger(new StdoutLogger())
+                ->build();
         }
 
         return $this->container;

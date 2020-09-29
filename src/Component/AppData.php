@@ -65,20 +65,6 @@ class AppData implements AppDataInterface
     }
 
     /**
-     * Constructor shortcut
-     *
-     * @param string $serviceUrl
-     * @param string $appKey
-     * @param string $appSecret
-     *
-     * @return \RetailCrm\Component\AppData
-     */
-    public static function create(string $serviceUrl, string $appKey, string $appSecret): AppDataInterface
-    {
-        return new self($serviceUrl, $appKey, $appSecret);
-    }
-
-    /**
      * @return string
      */
     public function getServiceUrl(): string

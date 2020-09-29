@@ -3,36 +3,36 @@
 /**
  * PHP version 7.3
  *
- * @category ClientFactory
- * @package  RetailCrm\Factory
+ * @category ClientBuilder
+ * @package  RetailCrm\Builder
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
-namespace RetailCrm\Factory;
+namespace RetailCrm\Builder;
 
-use Psr\Container\ContainerInterface;
 use RetailCrm\Component\Constants;
 use RetailCrm\Component\ServiceLocator;
+use RetailCrm\Factory\RequestFactory;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
+use RetailCrm\Interfaces\BuilderInterface;
 use RetailCrm\Interfaces\ContainerAwareInterface;
-use RetailCrm\Interfaces\FactoryInterface;
 use RetailCrm\TopClient\Client;
 use RetailCrm\Traits\ContainerAwareTrait;
 
 /**
- * Class ClientFactory
+ * Class ClientBuilder
  *
- * @category ClientFactory
- * @package  RetailCrm\Factory
+ * @category ClientBuilder
+ * @package  RetailCrm\Builder
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class ClientFactory implements ContainerAwareInterface, FactoryInterface
+class ClientBuilder implements ContainerAwareInterface, BuilderInterface
 {
     use ContainerAwareTrait;
 
@@ -43,24 +43,19 @@ class ClientFactory implements ContainerAwareInterface, FactoryInterface
     protected $authenticator;
 
     /**
-     * @param \Psr\Container\ContainerInterface $container
-     *
-     * @return \RetailCrm\Factory\ClientFactory
+     * @return static
      */
-    public static function withContainer(ContainerInterface $container): ClientFactory
+    public static function create(): self
     {
-        $factory = new self();
-        $factory->setContainer($container);
-
-        return $factory;
+        return new self();
     }
 
     /**
      * @param \RetailCrm\Interfaces\AppDataInterface $appData
      *
-     * @return ClientFactory
+     * @return ClientBuilder
      */
-    public function setAppData(AppDataInterface $appData): ClientFactory
+    public function setAppData(AppDataInterface $appData): ClientBuilder
     {
         $this->appData = $appData;
         return $this;
@@ -81,7 +76,7 @@ class ClientFactory implements ContainerAwareInterface, FactoryInterface
      * @return \RetailCrm\TopClient\Client
      * @throws \RetailCrm\Component\Exception\ValidationException
      */
-    public function create(): Client
+    public function build(): Client
     {
         $client = new Client($this->appData, $this->authenticator);
         $client->setHttpClient($this->container->get(Constants::HTTP_CLIENT));

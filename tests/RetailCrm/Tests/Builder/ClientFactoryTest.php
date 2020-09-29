@@ -3,40 +3,41 @@
 /**
  * PHP version 7.4
  *
- * @category ClientFactoryTest
- * @package  RetailCrm\Tests\Component
+ * @category ClientBuilderTest
+ * @package  RetailCrm\Tests\Builder
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
-namespace RetailCrm\Tests\Component;
+namespace RetailCrm\Tests\Builder;
 
 use RetailCrm\Component\AppData;
 use RetailCrm\Component\Authenticator\TokenAuthenticator;
 use RetailCrm\Component\ServiceLocator;
-use RetailCrm\Factory\ClientFactory;
+use RetailCrm\Builder\ClientBuilder;
 use RetailCrm\Test\TestCase;
 use RetailCrm\TopClient\Client;
 
 /**
- * Class ClientFactoryTest
+ * Class ClientBuilderTest
  *
- * @category ClientFactoryTest
- * @package  RetailCrm\Tests\Component
+ * @category ClientBuilderTest
+ * @package  RetailCrm\Tests\Builder
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class ClientFactoryTest extends TestCase
+class ClientBuilderTest extends TestCase
 {
     public function testCreateClient()
     {
-        $client = ClientFactory::withContainer($this->getContainer())
-            ->setAppData(AppData::create(AppData::OVERSEAS_ENDPOINT, 'appKey', 'helloworld'))
+        $client = ClientBuilder::create()
+            ->setContainer($this->getContainer())
+            ->setAppData(new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'helloworld'))
             ->setAuthenticator(new TokenAuthenticator('appKey', 'token'))
-            ->create();
+            ->build();
 
         self::assertInstanceOf(Client::class, $client);
         self::assertInstanceOf(ServiceLocator::class, $client->getServiceLocator());

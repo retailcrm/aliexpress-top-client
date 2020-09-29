@@ -36,10 +36,13 @@ trait ContainerAwareTrait
 
     /**
      * @param \Psr\Container\ContainerInterface $container
+     *
+     * @return \RetailCrm\Traits\ContainerAwareTrait
      */
-    public function setContainer(ContainerInterface $container): void
+    public function setContainer(ContainerInterface $container): self
     {
         $this->container = $container;
+        return $this;
     }
 
     /**

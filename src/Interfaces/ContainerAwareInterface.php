@@ -32,7 +32,7 @@ interface ContainerAwareInterface
      *
      * @return mixed
      */
-    public function setContainer(ContainerInterface $container): void;
+    public function setContainer(ContainerInterface $container);
 
     /**
      * @return \Psr\Container\ContainerInterface

@@ -3,27 +3,27 @@
 /**
  * PHP version 7.3
  *
- * @category EnvironmentFactory
- * @package  RetailCrm\Factory
+ * @category ContainerBuilder
+ * @package  RetailCrm\Builder
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
-namespace RetailCrm\Factory;
+namespace RetailCrm\Builder;
 
-use JMS\Serializer\GraphNavigatorInterface;
-use JMS\Serializer\Handler\HandlerRegistry;
-use JMS\Serializer\Serializer;
-use JMS\Serializer\SerializerBuilder;
-use JMS\Serializer\SerializerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RetailCrm\Component\Constants;
 use RetailCrm\Component\DependencyInjection\Container;
 use RetailCrm\Component\Environment;
 use RetailCrm\Component\ServiceLocator;
-use RetailCrm\Interfaces\FactoryInterface;
+use RetailCrm\Factory\FileItemFactory;
+use RetailCrm\Factory\RequestFactory;
+use RetailCrm\Factory\SerializerFactory;
+use RetailCrm\Interfaces\BuilderInterface;
 use RetailCrm\Service\RequestDataFilter;
 use RetailCrm\Service\RequestSigner;
 use Shieldon\Psr17\StreamFactory;
@@ -32,55 +32,77 @@ use Symfony\Component\Validator\Validator\TraceableValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Class EnvironmentFactory
+ * Class ContainerBuilder
  *
- * @category EnvironmentFactory
- * @package  RetailCrm\Factory
+ * @category ContainerBuilder
+ * @package  RetailCrm\Builder
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class ContainerFactory implements FactoryInterface
+class ContainerBuilder implements BuilderInterface
 {
     /**
      * @var string $env
      */
-    public $env;
+    private $env;
 
     /**
      * @var \Psr\Http\Client\ClientInterface $httpClient
      */
-    public $httpClient;
+    private $httpClient;
+
+    /**
+     * @var \Psr\Log\LoggerInterface $logger
+     */
+    private $logger;
+
+    /**
+     * @return static
+     */
+    public static function create(): self
+    {
+        return new self();
+    }
 
     /**
      * @param string $environmentType
      *
-     * @return ContainerFactory
+     * @return ContainerBuilder
      */
-    public static function withEnv(string $environmentType = Environment::DEV): ContainerFactory
+    public function setEnv(string $environmentType = Environment::DEV): self
     {
-        $factory = new self();
-        $factory->env = $environmentType;
-
-        return $factory;
+        $this->env = $environmentType;
+        return $this;
     }
 
     /**
      * @param \Psr\Http\Client\ClientInterface $httpClient
      *
-     * @return \RetailCrm\Factory\ContainerFactory
+     * @return \RetailCrm\Builder\ContainerBuilder
      */
-    public function withClient(ClientInterface $httpClient): ContainerFactory
+    public function setClient(ClientInterface $httpClient): ContainerBuilder
     {
         $this->httpClient = $httpClient;
         return $this;
     }
 
     /**
+     * @param \Psr\Log\LoggerInterface $logger
+     *
+     * @return ContainerBuilder
+     */
+    public function setLogger(LoggerInterface $logger): ContainerBuilder
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
      * @return \Psr\Container\ContainerInterface
      */
-    public function create(): ContainerInterface
+    public function build(): ContainerInterface
     {
         $container = new Container();
 
@@ -106,6 +128,7 @@ class ContainerFactory implements FactoryInterface
     protected function setProdServices(Container $container): void
     {
         $container->set(Constants::HTTP_CLIENT, $this->httpClient);
+        $container->set(Constants::LOGGER, $this->logger ?: new NullLogger());
         $container->set(
             Constants::VALIDATOR,
             Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator()
