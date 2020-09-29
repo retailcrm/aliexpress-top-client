@@ -29,7 +29,6 @@ use RetailCrm\Model\Request\BaseRequest;
 interface RequestFactoryInterface
 {
     /**
-     * @param string                                       $endpoint
      * @param \RetailCrm\Model\Request\BaseRequest         $request
      * @param \RetailCrm\Interfaces\AppDataInterface       $appData
      * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
@@ -37,7 +36,6 @@ interface RequestFactoryInterface
      * @return RequestInterface
      */
     public function fromModel(
-        string $endpoint,
         BaseRequest $request,
         AppDataInterface $appData,
         AuthenticatorInterface $authenticator

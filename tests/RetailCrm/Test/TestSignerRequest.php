@@ -80,4 +80,22 @@ class TestSignerRequest extends BaseRequest
      * @JMS\SerializedName("dto")
      */
     public $dto;
+
+    /**
+     * Returns method name for this request.
+     *
+     * @return string
+     */
+    public function getMethod(): string
+    {
+        return 'aliexpress.solution.order.fulfill';
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpectedResponse(): string
+    {
+        return '';
+    }
 }

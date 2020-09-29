@@ -33,9 +33,11 @@ abstract class BaseRequest
      *
      * @JMS\Type("string")
      * @JMS\SerializedName("method")
+     * @JMS\Accessor(getter="getMethod", setter="setMethod")
+     * @JMS\ReadOnly()
      * @Assert\NotBlank()
      */
-    public $method;
+    protected $method;
 
     /**
      * @var string $appKey
@@ -89,7 +91,6 @@ abstract class BaseRequest
      *
      * @JMS\Type("bool")
      * @JMS\SerializedName("simplify")
-     * @Assert\NotBlank()
      */
     public $simplify = false;
 
@@ -121,4 +122,33 @@ abstract class BaseRequest
      * @Assert\NotBlank()
      */
     public $partnerId = Constants::TOP_VERSION;
+
+    /**
+     * BaseRequest constructor.
+     */
+    public function __construct()
+    {
+        $this->method = $this->getMethod();
+    }
+
+    /**
+     * @param string $method
+     *
+     * @return void
+     */
+    final public function setMethod(string $method): void {}
+
+    /**
+     * Should return method name for this request.
+     *
+     * @return string
+     */
+    abstract public function getMethod(): string;
+
+    /**
+     * Should return response class FQN for this particular request.
+     *
+     * @return string
+     */
+    abstract public function getExpectedResponse(): string;
 }

@@ -16,6 +16,7 @@ use Psr\Http\Message\RequestInterface;
 use RetailCrm\Component\Constants;
 use RetailCrm\Factory\RequestFactory;
 use RetailCrm\Component\AppData;
+use RetailCrm\Interfaces\RequestFactoryInterface;
 use RetailCrm\Test\TestCase;
 
 /**
@@ -33,9 +34,8 @@ class RequestFactoryTest extends TestCase
     public function testFromModelGet(): void
     {
         /** @var RequestFactory $factory */
-        $factory = $this->getContainer()->get(RequestFactory::class);
+        $factory = $this->getContainer()->get(RequestFactoryInterface::class);
         $request = $factory->fromModel(
-            AppData::OVERSEAS_ENDPOINT,
             $this->getTestRequest(Constants::SIGN_TYPE_HMAC),
             $this->getAppData(),
             $this->getAuthenticator()
@@ -51,9 +51,8 @@ class RequestFactoryTest extends TestCase
     public function testFromModelPost(): void
     {
         /** @var RequestFactory $factory */
-        $factory = $this->getContainer()->get(RequestFactory::class);
+        $factory = $this->getContainer()->get(RequestFactoryInterface::class);
         $request = $factory->fromModel(
-            AppData::OVERSEAS_ENDPOINT,
             $this->getTestRequest(Constants::SIGN_TYPE_HMAC, true, true),
             $this->getAppData(),
             $this->getAuthenticator()

@@ -18,6 +18,8 @@ use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\RequestFactoryInterface;
+use RetailCrm\Interfaces\RequestTimestampProviderInterface;
+use RetailCrm\Model\Request\BaseRequest;
 use RetailCrm\Traits\ValidatorAwareTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -68,6 +70,11 @@ class Client
      * @var \RetailCrm\Component\ServiceLocator $serviceLocator
      */
     protected $serviceLocator;
+
+    /**
+     * @var \RetailCrm\Interfaces\RequestTimestampProviderInterface
+     */
+    protected $timestampProvider;
 
     /**
      * Client constructor.
@@ -127,5 +134,20 @@ class Client
     public function getServiceLocator(): ServiceLocator
     {
         return $this->serviceLocator;
+    }
+
+    /**
+     * @param \RetailCrm\Model\Request\BaseRequest $request
+     *
+     * @return void
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     * @throws \RetailCrm\Component\Exception\ValidationException
+     */
+    public function sendRequest(BaseRequest $request)
+    {
+        $httpRequest = $this->requestFactory->fromModel($request, $this->appData, $this->authenticator);
+        $response = $this->httpClient->sendRequest($httpRequest);
+
+        // TODO: Implement this
     }
 }

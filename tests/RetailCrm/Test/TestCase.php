@@ -12,6 +12,7 @@ use RetailCrm\Component\Logger\StdoutLogger;
 use RetailCrm\Factory\FileItemFactory;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
+use RetailCrm\Interfaces\FileItemFactoryInterface;
 
 /**
  * Class TestCase
@@ -50,7 +51,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected function getAppData(): AppDataInterface
     {
-        return AppData::create(AppData::OVERSEAS_ENDPOINT, 'appKey', 'helloworld');
+        return new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'helloworld');
     }
 
     /**
@@ -75,7 +76,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected function getTestRequest(string $signMethod, bool $withFile = false, bool $withDto = false): TestSignerRequest
     {
         $request = new TestSignerRequest();
-        $request->method = 'aliexpress.solution.order.fulfill';
         $request->appKey = '12345678';
         $request->session = 'test';
         $request->timestamp = DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-01 12:00:00');
@@ -87,7 +87,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         if ($withFile) {
             /** @var FileItemFactory $factory */
-            $factory = $this->getContainer()->get(FileItemFactory::class);
+            $factory = $this->getContainer()->get(FileItemFactoryInterface::class);
             $request->document = $factory->fromString(
                 'file.txt',
                 'The quick brown fox jumps over the lazy dog'

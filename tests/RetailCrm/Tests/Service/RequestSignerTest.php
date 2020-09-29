@@ -42,7 +42,7 @@ class RequestSignerTest extends TestCase
     public function testSign(TestSignerRequest $request, AppDataInterface $appData, string $expectedHash): void
     {
         /** @var RequestSignerInterface $signer */
-        $signer = $this->getContainer()->get(RequestSigner::class);
+        $signer = $this->getContainer()->get(RequestSignerInterface::class);
         $signer->sign($request, $appData);
 
         self::assertEquals($expectedHash, $request->sign);

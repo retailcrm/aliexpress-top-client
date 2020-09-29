@@ -19,6 +19,8 @@ use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\BuilderInterface;
 use RetailCrm\Interfaces\ContainerAwareInterface;
+use RetailCrm\Interfaces\RequestFactoryInterface;
+use RetailCrm\Interfaces\RequestTimestampProviderInterface;
 use RetailCrm\TopClient\Client;
 use RetailCrm\Traits\ContainerAwareTrait;
 
@@ -82,7 +84,7 @@ class ClientBuilder implements ContainerAwareInterface, BuilderInterface
         $client->setHttpClient($this->container->get(Constants::HTTP_CLIENT));
         $client->setSerializer($this->container->get(Constants::SERIALIZER));
         $client->setValidator($this->container->get(Constants::VALIDATOR));
-        $client->setRequestFactory($this->container->get(RequestFactory::class));
+        $client->setRequestFactory($this->container->get(RequestFactoryInterface::class));
         $client->setServiceLocator($this->container->get(ServiceLocator::class));
         $client->validateSelf();
 

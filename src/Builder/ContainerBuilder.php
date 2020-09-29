@@ -24,8 +24,13 @@ use RetailCrm\Factory\FileItemFactory;
 use RetailCrm\Factory\RequestFactory;
 use RetailCrm\Factory\SerializerFactory;
 use RetailCrm\Interfaces\BuilderInterface;
+use RetailCrm\Interfaces\FileItemFactoryInterface;
+use RetailCrm\Interfaces\RequestFactoryInterface;
+use RetailCrm\Interfaces\RequestSignerInterface;
+use RetailCrm\Interfaces\RequestTimestampProviderInterface;
 use RetailCrm\Service\RequestDataFilter;
 use RetailCrm\Service\RequestSigner;
+use RetailCrm\Service\RequestTimestampProvider;
 use Shieldon\Psr17\StreamFactory;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\TraceableValidator;
@@ -129,6 +134,7 @@ class ContainerBuilder implements BuilderInterface
     {
         $container->set(Constants::HTTP_CLIENT, $this->httpClient);
         $container->set(Constants::LOGGER, $this->logger ?: new NullLogger());
+        $container->set(RequestTimestampProviderInterface::class, new RequestTimestampProvider());
         $container->set(
             Constants::VALIDATOR,
             Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator()
@@ -136,19 +142,21 @@ class ContainerBuilder implements BuilderInterface
         $container->set(Constants::SERIALIZER, function (ContainerInterface $container) {
             return SerializerFactory::withContainer($container)->create();
         });
-        $container->set(FileItemFactory::class, new FileItemFactory(new StreamFactory()));
+        $container->set(FileItemFactoryInterface::class, new FileItemFactory(new StreamFactory()));
         $container->set(RequestDataFilter::class, new RequestDataFilter());
-        $container->set(RequestSigner::class, function (ContainerInterface $container) {
+        $container->set(RequestSignerInterface::class, function (ContainerInterface $container) {
             return new RequestSigner(
                 $container->get(Constants::SERIALIZER),
                 $container->get(RequestDataFilter::class)
             );
         });
-        $container->set(RequestFactory::class, function (ContainerInterface $container) {
+        $container->set(RequestFactoryInterface::class, function (ContainerInterface $container) {
             return new RequestFactory(
-                $container->get(RequestSigner::class),
+                $container->get(RequestSignerInterface::class),
                 $container->get(RequestDataFilter::class),
-                $container->get(Constants::SERIALIZER)
+                $container->get(Constants::SERIALIZER),
+                $container->get(Constants::VALIDATOR),
+                $container->get(RequestTimestampProviderInterface::class)
             );
         });
         $container->set(ServiceLocator::class, function (ContainerInterface $container) {

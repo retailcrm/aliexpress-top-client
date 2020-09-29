@@ -21,10 +21,13 @@ use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\FileItemInterface;
 use RetailCrm\Interfaces\RequestFactoryInterface;
 use RetailCrm\Interfaces\RequestSignerInterface;
+use RetailCrm\Interfaces\RequestTimestampProviderInterface;
 use RetailCrm\Model\Request\BaseRequest;
 use RetailCrm\Service\RequestDataFilter;
+use RetailCrm\Traits\ValidatorAwareTrait;
 use Shieldon\Psr7\Request;
 use Shieldon\Psr7\Uri;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class RequestFactory
@@ -38,6 +41,8 @@ use Shieldon\Psr7\Uri;
  */
 class RequestFactory implements RequestFactoryInterface
 {
+    use ValidatorAwareTrait;
+
     /**
      * @var \RetailCrm\Interfaces\RequestSignerInterface $signer
      */
@@ -54,39 +59,52 @@ class RequestFactory implements RequestFactoryInterface
     private $serializer;
 
     /**
+     * @var RequestTimestampProviderInterface $timestampProvider
+     */
+    private $timestampProvider;
+
+    /**
      * RequestFactory constructor.
      *
-     * @param \RetailCrm\Interfaces\RequestSignerInterface $signer
-     * @param \RetailCrm\Service\RequestDataFilter         $filter
-     * @param \JMS\Serializer\SerializerInterface          $serializer
+     * @param \RetailCrm\Interfaces\RequestSignerInterface              $signer
+     * @param \RetailCrm\Service\RequestDataFilter                      $filter
+     * @param \JMS\Serializer\SerializerInterface                       $serializer
+     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
+     * @param \RetailCrm\Interfaces\RequestTimestampProviderInterface   $timestampProvider
      */
     public function __construct(
         RequestSignerInterface $signer,
         RequestDataFilter $filter,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        ValidatorInterface $validator,
+        RequestTimestampProviderInterface $timestampProvider
     ) {
         $this->signer = $signer;
         $this->filter = $filter;
         $this->serializer = $serializer;
+        $this->validator = $validator;
+        $this->timestampProvider = $timestampProvider;
     }
 
     /**
-     * @param string                                       $endpoint
      * @param \RetailCrm\Model\Request\BaseRequest         $request
      * @param \RetailCrm\Interfaces\AppDataInterface       $appData
      * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
      *
      * @return \Psr\Http\Message\RequestInterface
      * @throws \RetailCrm\Component\Exception\FactoryException
+     * @throws \RetailCrm\Component\Exception\ValidationException
      */
     public function fromModel(
-        string $endpoint,
         BaseRequest $request,
         AppDataInterface $appData,
         AuthenticatorInterface $authenticator
     ): RequestInterface {
         $authenticator->authenticate($request);
         $this->signer->sign($request, $appData);
+        $this->timestampProvider->provide($request);
+        $this->validate($request);
+
         $requestData = $this->serializer->toArray($request);
         $requestHasBinaryData = $this->filter->hasBinaryFromRequestData($requestData);
 
@@ -95,12 +113,18 @@ class RequestFactory implements RequestFactoryInterface
         }
 
         if ($requestHasBinaryData) {
-            return $this->makeMultipartRequest($endpoint, $requestData);
+            return $this->makeMultipartRequest($appData->getServiceUrl(), $requestData);
+        }
+
+        $queryData = http_build_query($requestData);
+
+        if ($queryData !== '') {
+            $queryData = '?' . $queryData;
         }
 
         return new Request(
             'GET',
-            new Uri($endpoint . '?' . http_build_query($requestData)),
+            new Uri($appData->getServiceUrl() . $queryData),
             '',
             self::defaultHeaders()
         );
