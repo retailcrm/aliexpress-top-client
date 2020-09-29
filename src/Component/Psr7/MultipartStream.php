@@ -6,13 +6,16 @@
  * @category MultipartStream
  * @package  RetailCrm\Component\Psr7
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Component\Psr7;
 
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
+use RuntimeException;
+use UnexpectedValueException;
 
 /**
  * Class MultipartStream
@@ -21,7 +24,7 @@ use Psr\Http\Message\StreamInterface;
  * @package  RetailCrm\Component\Psr7
  * @author   Michael Dowling <mtdowling@gmail.com>
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
@@ -68,7 +71,7 @@ class MultipartStream implements StreamInterface
             return $this->stream;
         }
 
-        throw new \UnexpectedValueException("$name not found on class");
+        throw new UnexpectedValueException("$name not found on class");
     }
 
     /**
@@ -77,7 +80,7 @@ class MultipartStream implements StreamInterface
      */
     public function __set(string $name, $value)
     {
-        throw new \RuntimeException('Not implemented');
+        throw new RuntimeException('Not implemented');
     }
 
     /**
@@ -85,7 +88,7 @@ class MultipartStream implements StreamInterface
      */
     public function __isset(string $name)
     {
-        throw new \RuntimeException('Not implemented');
+        throw new RuntimeException('Not implemented');
     }
 
     /**
@@ -300,7 +303,7 @@ class MultipartStream implements StreamInterface
     {
         foreach (['contents', 'name'] as $key) {
             if (!array_key_exists($key, $element)) {
-                throw new \InvalidArgumentException("A '{$key}' key is required");
+                throw new InvalidArgumentException("A '{$key}' key is required");
             }
         }
 
@@ -352,14 +355,16 @@ class MultipartStream implements StreamInterface
         // Set a default content-length header if one was no provided
         $length = $this->getHeader($headers, 'content-length');
 
-        if (!$length && $length = $stream->getSize()) {
+        if (!$length) {
+            $length = $stream->getSize();
             $headers['Content-Length'] = (string) $length;
         }
 
         // Set a default Content-Type if one was not supplied
         $type = $this->getHeader($headers, 'content-type');
 
-        if (!$type && ($filename === '0' || $filename) && $type = Utils::mimetypeFromFilename($filename)) {
+        if (!$type && ($filename === '0' || $filename)) {
+            $type = Utils::mimetypeFromFilename($filename);
             $headers['Content-Type'] = $type;
         }
 

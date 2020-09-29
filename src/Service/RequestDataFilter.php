@@ -6,7 +6,7 @@
  * @category RequestDataFilter
  * @package  RetailCrm\Service
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -20,7 +20,7 @@ use RetailCrm\Interfaces\FileItemInterface;
  * @category RequestDataFilter
  * @package  RetailCrm\Service
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

@@ -6,7 +6,7 @@
  * @category Constants
  * @package  RetailCrm\Component
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -18,7 +18,7 @@ namespace RetailCrm\Component;
  * @category Constants
  * @package  RetailCrm\Component
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

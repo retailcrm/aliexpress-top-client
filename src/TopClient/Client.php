@@ -6,7 +6,7 @@
  * @category Client
  * @package  RetailCrm\TopClient
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -28,7 +28,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @category Client
  * @package  RetailCrm\TopClient
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
@@ -142,12 +142,13 @@ class Client
      * @throws \Psr\Http\Client\ClientExceptionInterface
      * @throws \RetailCrm\Component\Exception\ValidationException
      * @throws \RetailCrm\Component\Exception\FactoryException
+     *
+     * @todo Implement this method and remove tag below.
+     * @SuppressWarnings(PHPMD)
      */
     public function sendRequest(BaseRequest $request)
     {
         $httpRequest = $this->requestFactory->fromModel($request, $this->appData, $this->authenticator);
         $response = $this->httpClient->sendRequest($httpRequest);
-
-        // TODO: Implement this
     }
 }

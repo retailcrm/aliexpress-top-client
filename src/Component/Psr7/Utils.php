@@ -6,13 +6,15 @@
  * @category Utils
  * @package  RetailCrm\Component\Psr7
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Component\Psr7;
 
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
+use RuntimeException;
 
 /**
  * Class Utils
@@ -21,7 +23,7 @@ use Psr\Http\Message\StreamInterface;
  * @package  RetailCrm\Component\Psr7
  * @author   Michael Dowling <mtdowling@gmail.com>
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
@@ -87,7 +89,7 @@ class Utils
         $ex = null;
 
         set_error_handler(static function (int $errno, string $errstr) use ($filename, $mode, &$ex): bool {
-            $ex = new \RuntimeException(sprintf(
+            $ex = new RuntimeException(sprintf(
                 'Unable to open %s using mode %s: %s',
                 $filename,
                 $mode,
@@ -121,6 +123,7 @@ class Utils
      *
      * @return \Psr\Http\Message\StreamInterface
      * @throws \InvalidArgumentException if the $resource arg is not valid.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public static function streamFor($resource = '', array $options = []): StreamInterface
     {
@@ -167,7 +170,7 @@ class Utils
             return new PumpStream($resource, $options);
         }
 
-        throw new \InvalidArgumentException('Invalid resource type: ' . gettype($resource));
+        throw new InvalidArgumentException('Invalid resource type: ' . gettype($resource));
     }
 
     /**
@@ -190,10 +193,11 @@ class Utils
      * @param string $extension
      *
      * @return string|null
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public static function mimetypeFromExtension(string $extension): ?string
     {
-        static $mimetypes = [
+        $mimetypes = [
             '3gp' => 'video/3gpp',
             '7z' => 'application/x-7z-compressed',
             'aac' => 'audio/x-aac',

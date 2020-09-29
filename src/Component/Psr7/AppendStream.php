@@ -6,13 +6,15 @@
  * @category AppendStream
  * @package  RetailCrm\Component\Psr7
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Component\Psr7;
 
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
+use RuntimeException;
 
 /**
  * Class AppendStream
@@ -21,7 +23,7 @@ use Psr\Http\Message\StreamInterface;
  * @package  RetailCrm\Component\Psr7
  * @author   Michael Dowling <mtdowling@gmail.com>
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
@@ -81,7 +83,7 @@ class AppendStream implements StreamInterface
     public function addStream(StreamInterface $stream): void
     {
         if (!$stream->isReadable()) {
-            throw new \InvalidArgumentException('Each stream must be readable');
+            throw new InvalidArgumentException('Each stream must be readable');
         }
 
         // The stream is only seekable if all streams are seekable
@@ -154,13 +156,13 @@ class AppendStream implements StreamInterface
         $size = 0;
 
         foreach ($this->streams as $stream) {
-            $s = $stream->getSize();
+            $streamSize = $stream->getSize();
 
-            if ($s === null) {
+            if ($streamSize === null) {
                 return null;
             }
 
-            $size += $s;
+            $size += $streamSize;
         }
 
         return $size;
@@ -193,28 +195,29 @@ class AppendStream implements StreamInterface
     public function seek($offset, $whence = SEEK_SET): void
     {
         if (!$this->seekable) {
-            throw new \RuntimeException('This AppendStream is not seekable');
+            throw new RuntimeException('This AppendStream is not seekable');
         }
 
         if ($whence !== SEEK_SET) {
-            throw new \RuntimeException('The AppendStream can only seek with SEEK_SET');
+            throw new RuntimeException('The AppendStream can only seek with SEEK_SET');
         }
 
         $this->pos = $this->current = 0;
 
         // Rewind each stream
-        foreach ($this->streams as $i => $stream) {
+        foreach ($this->streams as $index => $stream) {
             try {
                 $stream->rewind();
-            } catch (\Exception $e) {
-                throw new \RuntimeException('Unable to seek stream '
-                    . $i . ' of the AppendStream', 0, $e);
+            } catch (\Exception $exception) {
+                throw new RuntimeException('Unable to seek stream '
+                    . $index . ' of the AppendStream', 0, $exception);
             }
         }
 
         // Seek to the actual position by reading from each stream
         while ($this->pos < $offset && !$this->eof()) {
             $result = $this->read(min(8096, $offset - $this->pos));
+
             if ($result === '') {
                 break;
             }
@@ -294,7 +297,7 @@ class AppendStream implements StreamInterface
      */
     public function write($string): int
     {
-        throw new \RuntimeException('Cannot write to an AppendStream');
+        throw new RuntimeException('Cannot write to an AppendStream');
     }
 
     /**

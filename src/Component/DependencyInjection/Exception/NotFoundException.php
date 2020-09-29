@@ -6,7 +6,7 @@
  * @category NotFoundException
  * @package  RetailCrm\Component\DependencyInjection\Exception
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -22,7 +22,7 @@ use InvalidArgumentException;
  * @package  RetailCrm\Component\DependencyInjection\Exception
  * @author   Evgeniy Zyubin <mail@devanych.ru>
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

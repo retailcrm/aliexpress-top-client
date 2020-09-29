@@ -6,7 +6,7 @@
  * @category SerializerFactory
  * @package  RetailCrm\Factory
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -27,7 +27,7 @@ use RetailCrm\Interfaces\FactoryInterface;
  * @category SerializerFactory
  * @package  RetailCrm\Factory
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

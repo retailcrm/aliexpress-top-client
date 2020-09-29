@@ -6,7 +6,7 @@
  * @category BaseRequest
  * @package  RetailCrm\Model\Request
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @category BaseRequest
  * @package  RetailCrm\Model\Request
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

@@ -6,7 +6,7 @@
  * @category TokenAuthenticator
  * @package  RetailCrm\Component\Authenticator
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -21,7 +21,7 @@ use RetailCrm\Model\Request\BaseRequest;
  * @category TokenAuthenticator
  * @package  RetailCrm\Component\Authenticator
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

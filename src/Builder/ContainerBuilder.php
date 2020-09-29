@@ -6,7 +6,7 @@
  * @category ContainerBuilder
  * @package  RetailCrm\Builder
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -31,6 +31,7 @@ use RetailCrm\Interfaces\RequestTimestampProviderInterface;
 use RetailCrm\Service\RequestDataFilter;
 use RetailCrm\Service\RequestSigner;
 use RetailCrm\Service\RequestTimestampProvider;
+use RuntimeException;
 use Shieldon\Psr17\StreamFactory;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\TraceableValidator;
@@ -42,9 +43,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @category ContainerBuilder
  * @package  RetailCrm\Builder
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
+ *
+ * ContainerBuilder should be like that.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ContainerBuilder implements BuilderInterface
 {
@@ -121,7 +125,7 @@ class ContainerBuilder implements BuilderInterface
             $this->setDevServices($container);
             break;
         default:
-            throw new \RuntimeException(sprintf('Invalid environment type: %s', $this->env));
+            throw new RuntimeException(sprintf('Invalid environment type: %s', $this->env));
         }
 
         return $container;

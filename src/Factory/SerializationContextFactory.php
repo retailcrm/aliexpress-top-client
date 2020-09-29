@@ -6,7 +6,7 @@
  * @category SerializationContextFactory
  * @package  RetailCrm\Factory
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -21,7 +21,7 @@ use JMS\Serializer\SerializationContext;
  * @category SerializationContextFactory
  * @package  RetailCrm\Factory
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

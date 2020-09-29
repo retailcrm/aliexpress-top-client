@@ -6,7 +6,7 @@
  * @category Container
  * @package  RetailCrm\Component\DependencyInjection
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -30,7 +30,7 @@ use Throwable;
  * @package  RetailCrm\Component\DependencyInjection
  * @author   Evgeniy Zyubin <mail@devanych.ru>
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
@@ -190,17 +190,22 @@ final class Container implements ContainerInterface
      * @param  ReflectionClass $reflection
      * @return object
      * @throws ContainerException If unable to create object.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getObjectFromReflection(ReflectionClass $reflection): object
     {
-        if (($constructor = $reflection->getConstructor()) === null) {
+        $constructor = $reflection->getConstructor();
+
+        if (null === $constructor) {
             return $reflection->newInstance();
         }
 
         $arguments = [];
 
         foreach ($constructor->getParameters() as $parameter) {
-            if ($type = $parameter->getType()) {
+            $type = $parameter->getType();
+
+            if ($type) {
                 $typeName = $type->getName();
 
                 if (!$type->isBuiltin() && ($this->has($typeName) || self::isClassName($typeName))) {
@@ -218,7 +223,7 @@ final class Container implements ContainerInterface
                 try {
                     $arguments[] = $parameter->getDefaultValue();
                     continue;
-                } catch (ReflectionException $e) {
+                } catch (ReflectionException $exception) {
                     throw new ContainerException(
                         sprintf(
                             'Unable to create object `%s`. Unable to get default value of constructor parameter: `%s`.',

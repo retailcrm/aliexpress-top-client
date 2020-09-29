@@ -6,7 +6,7 @@
  * @category TimestampProvider
  * @package  RetailCrm\Service
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -23,7 +23,7 @@ use RetailCrm\Model\Request\BaseRequest;
  * @category TimestampProvider
  * @package  RetailCrm\Service
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
@@ -49,7 +49,7 @@ class RequestTimestampProvider implements RequestTimestampProviderInterface
         if (function_exists('date_default_timezone_set')
             && function_exists('date_default_timezone_get')
         ) {
-            date_default_timezone_set(@date_default_timezone_get());
+            date_default_timezone_set(date_default_timezone_get());
         }
 
         $timestamp = new DateTime();

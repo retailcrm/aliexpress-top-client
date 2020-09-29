@@ -6,7 +6,7 @@
  * @category AppData
  * @package  RetailCrm\Component
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @category AppData
  * @package  RetailCrm\Component
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

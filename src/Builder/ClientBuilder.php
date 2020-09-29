@@ -6,7 +6,7 @@
  * @category ClientBuilder
  * @package  RetailCrm\Builder
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
@@ -30,7 +30,7 @@ use RetailCrm\Traits\ContainerAwareTrait;
  * @category ClientBuilder
  * @package  RetailCrm\Builder
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

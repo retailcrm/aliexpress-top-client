@@ -6,13 +6,14 @@
  * @category PumpStream
  * @package  RetailCrm\Component\Psr7
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Component\Psr7;
 
 use Psr\Http\Message\StreamInterface;
+use RuntimeException;
 
 /**
  * Class PumpStream
@@ -21,7 +22,7 @@ use Psr\Http\Message\StreamInterface;
  * @package  RetailCrm\Component\Psr7
  * @author   Michael Dowling <mtdowling@gmail.com>
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
@@ -142,7 +143,7 @@ class PumpStream implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET): void
     {
-        throw new \RuntimeException('Cannot seek a PumpStream');
+        throw new RuntimeException('Cannot seek a PumpStream');
     }
 
     /**
@@ -160,7 +161,7 @@ class PumpStream implements StreamInterface
      */
     public function write($string): int
     {
-        throw new \RuntimeException('Cannot write to a PumpStream');
+        throw new RuntimeException('Cannot write to a PumpStream');
     }
 
     /**
