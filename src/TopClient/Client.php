@@ -14,11 +14,14 @@ namespace RetailCrm\TopClient;
 
 use JMS\Serializer\SerializerInterface;
 use Psr\Http\Client\ClientInterface;
+use RetailCrm\Component\Exception\TopApiException;
+use RetailCrm\Component\Exception\TopClientException;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\RequestFactoryInterface;
 use RetailCrm\Model\Request\BaseRequest;
+use RetailCrm\Model\Response\BaseResponse;
 use RetailCrm\Traits\ValidatorAwareTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -138,17 +141,32 @@ class Client
     /**
      * @param \RetailCrm\Model\Request\BaseRequest $request
      *
-     * @return void
+     * @return \RetailCrm\Model\Response\BaseResponse
      * @throws \Psr\Http\Client\ClientExceptionInterface
      * @throws \RetailCrm\Component\Exception\ValidationException
      * @throws \RetailCrm\Component\Exception\FactoryException
-     *
-     * @todo Implement this method and remove tag below.
-     * @SuppressWarnings(PHPMD)
+     * @throws \RetailCrm\Component\Exception\TopClientException
+     * @throws \RetailCrm\Component\Exception\TopApiException
      */
     public function sendRequest(BaseRequest $request)
     {
         $httpRequest = $this->requestFactory->fromModel($request, $this->appData, $this->authenticator);
-        $response = $this->httpClient->sendRequest($httpRequest);
+        $httpResponse = $this->httpClient->sendRequest($httpRequest);
+        /** @var BaseResponse $response */
+        $response = $this->serializer->deserialize(
+            $httpResponse->getBody()->getContents(),
+            $request->getExpectedResponse(),
+            $request->format
+        );
+
+        if (!($response instanceof BaseResponse) && !is_subclass_of($response, BaseResponse::class)) {
+            throw new TopClientException(sprintf('Invalid response class: %s', get_class($response)));
+        }
+
+        if (null !== $response->errorResponse) {
+            throw new TopApiException($response->errorResponse);
+        }
+
+        return $response;
     }
 }

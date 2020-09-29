@@ -32,7 +32,7 @@ class ClientTest extends TestCase
 {
     public function testClientRequest()
     {
-        self::markTestSkipped('Not implemented yet');
+        self::markTestSkipped('Should be mocked!');
 
         $client = ClientBuilder::create()
             ->setContainer($this->getContainer())
