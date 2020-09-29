@@ -49,9 +49,39 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * @return \RetailCrm\Interfaces\AppDataInterface
      */
-    protected function getAppData(): AppDataInterface
+    protected function getEnvAppData(): AppDataInterface
     {
-        return new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'helloworld');
+        return $this->getAppData(
+            self::getenv('ENDPOINT', AppData::OVERSEAS_ENDPOINT),
+            self::getenv('APP_KEY', 'appKey'),
+            self::getenv('APP_SECRET', 'helloworld')
+        );
+    }
+
+    /**
+     * @param string $endpoint
+     * @param string $appKey
+     * @param string $appSecret
+     *
+     * @return \RetailCrm\Interfaces\AppDataInterface
+     */
+    protected function getAppData(
+        string $endpoint = AppData::OVERSEAS_ENDPOINT,
+        string $appKey = 'appKey',
+        string $appSecret = 'helloworld'
+    ): AppDataInterface{
+        return new AppData($endpoint, $appKey, $appSecret);
+    }
+
+    /**
+     * @return \RetailCrm\Interfaces\AuthenticatorInterface
+     */
+    protected function getEnvAuthenticator(): AuthenticatorInterface
+    {
+        return $this->getAuthenticator(
+            self::getenv('APP_KEY', 'appKey'),
+            self::getenv('SESSION', 'helloworld')
+        );
     }
 
     /**
@@ -99,5 +129,20 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         }
 
         return $request;
+    }
+
+    /**
+     * @param string $variable
+     * @param mixed  $default
+     *
+     * @return mixed|null
+     */
+    protected static function getenv(string $variable, $default = null)
+    {
+        if (!array_key_exists($variable, $_ENV)) {
+            return $default;
+        }
+
+        return $_ENV[$variable];
     }
 }

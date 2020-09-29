@@ -34,7 +34,8 @@
         "squizlabs/php_codesniffer": "^3.5",
         "guzzlehttp/guzzle": "^7.1",
         "phpcompatibility/php-compatibility": "*",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0"
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+        "vlucas/phpdotenv": "^5.2"
     },
     "scripts": {
         "phpunit": "./vendor/bin/phpunit -c phpunit.xml.dist",

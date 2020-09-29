@@ -18,7 +18,6 @@ use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\RequestFactoryInterface;
-use RetailCrm\Interfaces\RequestTimestampProviderInterface;
 use RetailCrm\Model\Request\BaseRequest;
 use RetailCrm\Traits\ValidatorAwareTrait;
 use Symfony\Component\Validator\Constraints as Assert;

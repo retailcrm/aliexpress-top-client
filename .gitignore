@@ -13,3 +13,4 @@ phpunit.xml
 .project
 .swp
 /nbproject
+.env
