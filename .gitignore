@@ -15,3 +15,5 @@ phpunit.xml
 /nbproject
 .env
 .php_cs.cache
+cghooks.lock
+
