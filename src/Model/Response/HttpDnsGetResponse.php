@@ -3,7 +3,7 @@
 /**
  * PHP version 7.3
  *
- * @category BaseResponse
+ * @category HttpDnsGetResponse
  * @package  RetailCrm\Model\Response
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
@@ -15,30 +15,22 @@ namespace RetailCrm\Model\Response;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Class BaseResponse
+ * Class HttpDnsGetResponse
  *
- * @category BaseResponse
+ * @category HttpDnsGetResponse
  * @package  RetailCrm\Model\Response
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class BaseResponse implements TopResponseInterface
+class HttpDnsGetResponse extends BaseResponse
 {
     /**
-     * @var \RetailCrm\Model\Response\Body\ErrorResponseBody
+     * @var \RetailCrm\Model\Response\Data\HttpDnsGetResponseData $responseData
      *
-     * @JMS\Type("RetailCrm\Model\Response\Body\ErrorResponseBody")
-     * @JMS\SerializedName("error_response")
+     * @JMS\Type("RetailCrm\Model\Response\Data\HttpDnsGetResponseData")
+     * @JMS\SerializedName("httpdns_get_response")
      */
-    public $errorResponse;
-
-    /**
-     * @var string $requestId
-     *
-     * @JMS\Type("string")
-     * @JMS\SerializedName("request_id")
-     */
-    public $requestId;
+    public $responseData;
 }

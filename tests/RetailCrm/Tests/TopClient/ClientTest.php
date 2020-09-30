@@ -16,6 +16,8 @@ use Psr\Http\Message\RequestInterface;
 use RetailCrm\Builder\ClientBuilder;
 use RetailCrm\Component\AppData;
 use RetailCrm\Component\Authenticator\TokenAuthenticator;
+use RetailCrm\Component\Constants;
+use RetailCrm\Component\Exception\TopApiException;
 use RetailCrm\Model\Request\HttpDnsGetRequest;
 use RetailCrm\Model\Response\BaseResponse;
 use RetailCrm\Model\Response\Body\ErrorResponseBody;
@@ -52,7 +54,6 @@ class ClientTest extends TestCase
         $client = ClientBuilder::create()
             ->setContainer($this->getContainer($mockClient))
             ->setAppData(new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret'))
-            ->setAuthenticator(new TokenAuthenticator('appKey', 'token'))
             ->build();
 
         $this->expectExceptionMessage($errorBody->msg);

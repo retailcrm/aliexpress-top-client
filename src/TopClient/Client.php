@@ -12,6 +12,7 @@
  */
 namespace RetailCrm\TopClient;
 
+use DateTime;
 use JMS\Serializer\SerializerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\StreamInterface;
@@ -19,11 +20,11 @@ use RetailCrm\Component\Exception\TopApiException;
 use RetailCrm\Component\Exception\TopClientException;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Interfaces\AppDataInterface;
-use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\TopRequestFactoryInterface;
 use RetailCrm\Interfaces\TopRequestProcessorInterface;
 use RetailCrm\Model\Request\BaseRequest;
 use RetailCrm\Model\Response\BaseResponse;
+use RetailCrm\Model\Response\TopResponseInterface;
 use RetailCrm\Traits\ValidatorAwareTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -45,12 +46,6 @@ class Client
      * @var \RetailCrm\Interfaces\AppDataInterface $appData
      */
     protected $appData;
-
-    /**
-     * @var AuthenticatorInterface $authenticator
-     * @Assert\NotNull(message="Authenticator should be provided")
-     */
-    protected $authenticator;
 
     /**
      * @var ClientInterface $httpClient
@@ -89,12 +84,10 @@ class Client
      * Client constructor.
      *
      * @param \RetailCrm\Interfaces\AppDataInterface       $appData
-     * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
      */
-    public function __construct(AppDataInterface $appData, AuthenticatorInterface $authenticator)
+    public function __construct(AppDataInterface $appData)
     {
         $this->appData       = $appData;
-        $this->authenticator = $authenticator;
     }
 
     /**
@@ -159,18 +152,18 @@ class Client
     /**
      * @param \RetailCrm\Model\Request\BaseRequest $request
      *
-     * @return \RetailCrm\Model\Response\BaseResponse
+     * @return TopResponseInterface
      * @throws \Psr\Http\Client\ClientExceptionInterface
      * @throws \RetailCrm\Component\Exception\ValidationException
      * @throws \RetailCrm\Component\Exception\FactoryException
      * @throws \RetailCrm\Component\Exception\TopClientException
      * @throws \RetailCrm\Component\Exception\TopApiException
      */
-    public function sendRequest(BaseRequest $request)
+    public function sendRequest(BaseRequest $request): TopResponseInterface
     {
-        $this->processor->process($request, $this->appData, $this->authenticator);
+        $this->processor->process($request, $this->appData);
 
-        $httpRequest = $this->requestFactory->fromModel($request, $this->appData, $this->authenticator);
+        $httpRequest = $this->requestFactory->fromModel($request, $this->appData);
         $httpResponse = $this->httpClient->sendRequest($httpRequest);
 
         /** @var BaseResponse $response */
@@ -185,7 +178,7 @@ class Client
         }
 
         if (null !== $response->errorResponse) {
-            throw new TopApiException($response->errorResponse);
+            throw new TopApiException($response->errorResponse, $response->requestId);
         }
 
         return $response;

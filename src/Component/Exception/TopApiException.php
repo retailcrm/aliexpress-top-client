@@ -42,20 +42,21 @@ class TopApiException extends Exception
      * TopApiException constructor.
      *
      * @param \RetailCrm\Model\Response\Body\ErrorResponseBody $responseBody
+     * @param string|null                                      $requestId
      * @param \Throwable|null                                  $previous
      */
-    public function __construct(ErrorResponseBody $responseBody, Throwable $previous = null)
+    public function __construct(ErrorResponseBody $responseBody, ?string $requestId, Throwable $previous = null)
     {
         parent::__construct($responseBody->msg, $responseBody->code, $previous);
 
         $this->subCode = $responseBody->subCode;
-        $this->requestId = $responseBody->requestId;
+        $this->requestId = $requestId;
     }
 
     /**
      * @return string
      */
-    public function getSubCode(): string
+    public function getSubCode(): ?string
     {
         return $this->subCode;
     }
@@ -63,7 +64,7 @@ class TopApiException extends Exception
     /**
      * @return string
      */
-    public function getRequestId(): string
+    public function getRequestId(): ?string
     {
         return $this->requestId;
     }

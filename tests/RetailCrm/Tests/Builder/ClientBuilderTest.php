@@ -13,7 +13,6 @@
 namespace RetailCrm\Tests\Builder;
 
 use RetailCrm\Component\AppData;
-use RetailCrm\Component\Authenticator\TokenAuthenticator;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Builder\ClientBuilder;
 use RetailCrm\Test\TestCase;
@@ -36,7 +35,6 @@ class ClientBuilderTest extends TestCase
         $client = ClientBuilder::create()
             ->setContainer($this->getContainer())
             ->setAppData(new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'helloworld'))
-            ->setAuthenticator(new TokenAuthenticator('appKey', 'token'))
             ->build();
 
         self::assertInstanceOf(Client::class, $client);

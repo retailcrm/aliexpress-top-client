@@ -87,28 +87,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \RetailCrm\Interfaces\AuthenticatorInterface
-     */
-    protected function getEnvAuthenticator(): AuthenticatorInterface
-    {
-        return $this->getAuthenticator(
-            self::getenv('APP_KEY', 'appKey'),
-            self::getenv('SESSION', 'helloworld')
-        );
-    }
-
-    /**
-     * @param string $appKey
-     * @param string $token
-     *
-     * @return \RetailCrm\Interfaces\AuthenticatorInterface
-     */
-    protected function getAuthenticator(string $appKey = 'appKey', string $token = 'token'): AuthenticatorInterface
-    {
-        return new TokenAuthenticator($appKey, $token);
-    }
-
-    /**
      * @param string $signMethod
      *
      * @param bool $withFile

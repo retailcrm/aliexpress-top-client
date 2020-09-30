@@ -33,7 +33,6 @@ interface TopRequestProcessorInterface
      *
      * @param \RetailCrm\Model\Request\BaseRequest         $request
      * @param \RetailCrm\Interfaces\AppDataInterface       $appData
-     * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
      *
      * @return void
      * @throws \RetailCrm\Component\Exception\FactoryException
@@ -41,7 +40,6 @@ interface TopRequestProcessorInterface
      */
     public function process(
         BaseRequest $request,
-        AppDataInterface $appData,
-        AuthenticatorInterface $authenticator
+        AppDataInterface $appData
     ): void;
 }

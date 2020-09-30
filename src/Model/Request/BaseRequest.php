@@ -53,7 +53,7 @@ abstract class BaseRequest
      *
      * @JMS\Type("string")
      * @JMS\SerializedName("session")
-     * @Assert\NotBlank()
+     * @JMS\SkipWhenEmpty()
      */
     public $session;
 
@@ -91,6 +91,7 @@ abstract class BaseRequest
      *
      * @JMS\Type("bool")
      * @JMS\SerializedName("simplify")
+     * @JMS\Accessor(getter="isSimplify")
      */
     public $simplify = false;
 
@@ -129,6 +130,14 @@ abstract class BaseRequest
     public function __construct()
     {
         $this->method = $this->getMethod();
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isSimplify(): ?bool
+    {
+        return $this->simplify ? true : null;
     }
 
     /**

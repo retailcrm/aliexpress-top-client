@@ -15,7 +15,6 @@ namespace RetailCrm\Builder;
 use RetailCrm\Component\Constants;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Interfaces\AppDataInterface;
-use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\BuilderInterface;
 use RetailCrm\Interfaces\ContainerAwareInterface;
 use RetailCrm\Interfaces\TopRequestFactoryInterface;
@@ -40,9 +39,6 @@ class ClientBuilder implements ContainerAwareInterface, BuilderInterface
     /** @var \RetailCrm\Interfaces\AppDataInterface $appData */
     private $appData;
 
-    /*** @var AuthenticatorInterface $authenticator */
-    protected $authenticator;
-
     /**
      * @return static
      */
@@ -63,23 +59,12 @@ class ClientBuilder implements ContainerAwareInterface, BuilderInterface
     }
 
     /**
-     * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
-     *
-     * @return $this
-     */
-    public function setAuthenticator(AuthenticatorInterface $authenticator): self
-    {
-        $this->authenticator = $authenticator;
-        return $this;
-    }
-
-    /**
      * @return \RetailCrm\TopClient\Client
      * @throws \RetailCrm\Component\Exception\ValidationException
      */
     public function build(): Client
     {
-        $client = new Client($this->appData, $this->authenticator);
+        $client = new Client($this->appData);
         $client->setHttpClient($this->container->get(Constants::HTTP_CLIENT));
         $client->setSerializer($this->container->get(Constants::SERIALIZER));
         $client->setValidator($this->container->get(Constants::VALIDATOR));

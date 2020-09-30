@@ -70,9 +70,8 @@ class RequestSigner implements RequestSignerInterface
 
         switch ($request->signMethod) {
             case Constants::SIGN_TYPE_MD5:
-                $request->sign = strtoupper(md5(
-                    $appData->getAppSecret() . $stringToBeSigned . $appData->getAppSecret()
-                ));
+                $stringToBeSigned = $appData->getAppSecret() . $stringToBeSigned . $appData->getAppSecret();
+                $request->sign = strtoupper(md5($stringToBeSigned));
                 break;
             case Constants::SIGN_TYPE_HMAC:
                 $request->sign = strtoupper(hash_hmac('md5', $stringToBeSigned, $appData->getAppSecret()));
@@ -91,7 +90,11 @@ class RequestSigner implements RequestSignerInterface
     private function getDataForSigning(BaseRequest $request): array
     {
         $params = $this->filter->filterBinaryFromRequestData($this->serializer->toArray($request));
-        unset($params['sign']);
+        $params = array_filter(array_filter($params, static function ($val) {
+            return !is_array($val);
+        }));
+
+        unset($params['sign'], $params['session']);
         ksort($params);
 
         return $params;

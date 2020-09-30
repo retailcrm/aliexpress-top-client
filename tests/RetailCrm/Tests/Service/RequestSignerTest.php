@@ -16,7 +16,6 @@ use RetailCrm\Component\AppData;
 use RetailCrm\Component\Constants;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\RequestSignerInterface;
-use RetailCrm\Service\RequestSigner;
 use RetailCrm\Test\TestCase;
 use RetailCrm\Test\TestSignerRequest;
 
@@ -56,22 +55,22 @@ class RequestSignerTest extends TestCase
             [
                 $this->getTestRequest(Constants::SIGN_TYPE_MD5),
                 $appData,
-                '4BC79C5FAA1B5E254E95A97E65BACEAB'
+                '468BF7C95925C187D0DFD7D042072EB4'
             ],
             [
                 $this->getTestRequest(Constants::SIGN_TYPE_HMAC),
                 $appData,
-                '497FA7FCAD98F4F335EFAE2451F8291D'
+                '5EF5C76D5C158BFFA9F35BAAA712A879'
             ],
             [
                 $this->getTestRequest(Constants::SIGN_TYPE_MD5, true),
                 $appData,
-                '4BC79C5FAA1B5E254E95A97E65BACEAB'
+                '468BF7C95925C187D0DFD7D042072EB4'
             ],
             [
                 $this->getTestRequest(Constants::SIGN_TYPE_HMAC, true),
                 $appData,
-                '497FA7FCAD98F4F335EFAE2451F8291D'
+                '5EF5C76D5C158BFFA9F35BAAA712A879'
             ]
         ];
     }

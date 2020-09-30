@@ -35,8 +35,7 @@ class TopRequestFactoryTest extends TestCase
         $factory = $this->getContainer()->get(TopRequestFactoryInterface::class);
         $request = $factory->fromModel(
             $this->getTestRequest(Constants::SIGN_TYPE_HMAC),
-            $this->getAppData(),
-            $this->getAuthenticator()
+            $this->getAppData()
         );
         $uri = $request->getUri();
         $contents = self::getStreamData($request->getBody());
@@ -52,8 +51,7 @@ class TopRequestFactoryTest extends TestCase
         $factory = $this->getContainer()->get(TopRequestFactoryInterface::class);
         $request = $factory->fromModel(
             $this->getTestRequest(Constants::SIGN_TYPE_HMAC, true, true),
-            $this->getAppData(),
-            $this->getAuthenticator()
+            $this->getAppData()
         );
         $uri = $request->getUri();
         $contents = self::getStreamData($request->getBody());

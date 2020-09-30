@@ -12,7 +12,7 @@
  */
 namespace RetailCrm\Model\Request;
 
-use RetailCrm\Model\Response\BaseResponse;
+use RetailCrm\Model\Response\HttpDnsGetResponse;
 
 /**
  * Class HttpDnsGetRequest
@@ -43,7 +43,6 @@ class HttpDnsGetRequest extends BaseRequest
      */
     public function getExpectedResponse(): string
     {
-        // TODO: Implement getExpectedResponse() method.
-        return BaseResponse::class;
+        return HttpDnsGetResponse::class;
     }
 }

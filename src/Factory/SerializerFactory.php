@@ -19,6 +19,7 @@ use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Psr\Container\ContainerInterface;
 use RetailCrm\Component\Constants;
+use RetailCrm\Component\Serializer\InlineJsonBodyHandler;
 use RetailCrm\Interfaces\FactoryInterface;
 
 /**
@@ -73,17 +74,17 @@ class SerializerFactory implements FactoryInterface
                 $returnSame = function ($visitor, $obj, array $type) {
                     return $obj;
                 };
+                $serializeJson = function ($visitor, $obj, array $type) use ($container) {
+                    /** @var SerializerInterface $serializer */
+                    $serializer = $container->get(Constants::SERIALIZER);
+                    return $serializer->serialize($obj, 'json');
+                };
 
                 $registry->registerHandler(
                     GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                     'RequestDtoInterface',
                     'json',
-                    function ($visitor, $obj, array $type) use ($container) {
-                        /** @var SerializerInterface $serializer */
-                        $serializer = $container->get(Constants::SERIALIZER);
-
-                        return $serializer->serialize($obj, 'json');
-                    }
+                    $serializeJson
                 );
                 $registry->registerHandler(
                     GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
@@ -132,6 +133,7 @@ class SerializerFactory implements FactoryInterface
                     'xml',
                     $returnNull
                 );
+                $registry->registerSubscribingHandler(new InlineJsonBodyHandler());
             })->addDefaultHandlers()
             ->setSerializationContextFactory(new SerializationContextFactory())
             ->build();

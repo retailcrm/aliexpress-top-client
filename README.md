@@ -18,14 +18,11 @@ Details about those third-party libraries and why you need to install them can b
 use RetailCrm\Component\AppData;
 use RetailCrm\Builder\ClientBuilder;
 use RetailCrm\Builder\ContainerBuilder;
-use RetailCrm\Component\Authenticator\TokenAuthenticator;
 
-$authenticator = new TokenAuthenticator('appKey', 'token');
 $appData = new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret');
 $client = ClientBuilder::create()
             ->setContainer(ContainerBuilder::create()->build())
             ->setAppData($appData)
-            ->setAuthenticator($authenticator)
             ->build();
 ```
 
@@ -39,7 +36,6 @@ use RetailCrm\Component\Environment;
 use RetailCrm\Component\Logger\StdoutLogger;
 use RetailCrm\Builder\ClientBuilder;
 use RetailCrm\Builder\ContainerBuilder;
-use RetailCrm\Component\Authenticator\TokenAuthenticator;
 
 $client = new Client();
 $logger = new StdoutLogger();
@@ -57,7 +53,8 @@ $container = ContainerBuilder::create()
 $client = ClientBuilder::create()
             ->setContainer($container)
             ->setAppData($appData)
-            ->setAuthenticator($authenticator)
             ->build();
 ```
 Logger should implement `Psr\Log\LoggerInterface` (PSR-3), HTTP client should implement `Psr\Http\Client\ClientInterface` (PSR-18), HTTP objects must be compliant to PSR-7.
+
+You can use your own container - it must be compliant to PSR-11. But this is strongly discouraged because it'll be much easier to just integrate library with your own application, and your own DI system.

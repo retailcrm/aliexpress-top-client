@@ -31,7 +31,6 @@ interface TopRequestFactoryInterface
     /**
      * @param \RetailCrm\Model\Request\BaseRequest         $request
      * @param \RetailCrm\Interfaces\AppDataInterface       $appData
-     * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
      *
      * @return RequestInterface
      * @throws \RetailCrm\Component\Exception\FactoryException
@@ -39,7 +38,6 @@ interface TopRequestFactoryInterface
      */
     public function fromModel(
         BaseRequest $request,
-        AppDataInterface $appData,
-        AuthenticatorInterface $authenticator
+        AppDataInterface $appData
     ): RequestInterface;
 }

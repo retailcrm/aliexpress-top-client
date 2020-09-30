@@ -13,7 +13,6 @@
 namespace RetailCrm\Service;
 
 use RetailCrm\Interfaces\AppDataInterface;
-use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\RequestSignerInterface;
 use RetailCrm\Interfaces\RequestTimestampProviderInterface;
 use RetailCrm\Interfaces\TopRequestProcessorInterface;
@@ -71,12 +70,12 @@ class TopRequestProcessor implements TopRequestProcessorInterface
      */
     public function process(
         BaseRequest $request,
-        AppDataInterface $appData,
-        AuthenticatorInterface $authenticator
+        AppDataInterface $appData
     ): void {
-        $authenticator->authenticate($request);
-        $this->signer->sign($request, $appData);
+        $request->appKey = $appData->getAppKey();
+
         $this->timestampProvider->provide($request);
+        $this->signer->sign($request, $appData);
         $this->validate($request);
     }
 }

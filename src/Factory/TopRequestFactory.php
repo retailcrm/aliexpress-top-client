@@ -20,7 +20,6 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use RetailCrm\Component\Exception\FactoryException;
 use RetailCrm\Interfaces\AppDataInterface;
-use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\FileItemInterface;
 use RetailCrm\Interfaces\TopRequestFactoryInterface;
 use RetailCrm\Model\Request\BaseRequest;
@@ -123,18 +122,18 @@ class TopRequestFactory implements TopRequestFactoryInterface
     /**
      * @param \RetailCrm\Model\Request\BaseRequest         $request
      * @param \RetailCrm\Interfaces\AppDataInterface       $appData
-     * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
      *
      * @return \Psr\Http\Message\RequestInterface
      * @throws \RetailCrm\Component\Exception\FactoryException
      */
     public function fromModel(
         BaseRequest $request,
-        AppDataInterface $appData,
-        AuthenticatorInterface $authenticator
+        AppDataInterface $appData
     ): RequestInterface {
         $requestData = $this->serializer->toArray($request);
         $requestHasBinaryData = $this->filter->hasBinaryFromRequestData($requestData);
+
+        ksort($requestData);
 
         if (empty($requestData)) {
             throw new FactoryException('Empty request data');
