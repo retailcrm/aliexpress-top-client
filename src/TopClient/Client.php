@@ -14,12 +14,14 @@ namespace RetailCrm\TopClient;
 
 use JMS\Serializer\SerializerInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\StreamInterface;
 use RetailCrm\Component\Exception\TopApiException;
 use RetailCrm\Component\Exception\TopClientException;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
-use RetailCrm\Interfaces\RequestFactoryInterface;
+use RetailCrm\Interfaces\TopRequestFactoryInterface;
+use RetailCrm\Interfaces\TopRequestProcessorInterface;
 use RetailCrm\Model\Request\BaseRequest;
 use RetailCrm\Model\Response\BaseResponse;
 use RetailCrm\Traits\ValidatorAwareTrait;
@@ -57,7 +59,7 @@ class Client
     protected $httpClient;
 
     /**
-     * @var \RetailCrm\Interfaces\RequestFactoryInterface $requestFactory
+     * @var \RetailCrm\Interfaces\TopRequestFactoryInterface $requestFactory
      * @Assert\NotNull(message="RequestFactoryInterface should be provided")
      */
     protected $requestFactory;
@@ -77,6 +79,11 @@ class Client
      * @var \RetailCrm\Interfaces\RequestTimestampProviderInterface
      */
     protected $timestampProvider;
+
+    /**
+     * @var TopRequestProcessorInterface $processor
+     */
+    protected $processor;
 
     /**
      * Client constructor.
@@ -115,9 +122,9 @@ class Client
     }
 
     /**
-     * @param \RetailCrm\Interfaces\RequestFactoryInterface $requestFactory
+     * @param \RetailCrm\Interfaces\TopRequestFactoryInterface $requestFactory
      */
-    public function setRequestFactory(RequestFactoryInterface $requestFactory): void
+    public function setRequestFactory(TopRequestFactoryInterface $requestFactory): void
     {
         $this->requestFactory = $requestFactory;
     }
@@ -139,6 +146,17 @@ class Client
     }
 
     /**
+     * @param \RetailCrm\Interfaces\TopRequestProcessorInterface $processor
+     *
+     * @return Client
+     */
+    public function setProcessor(TopRequestProcessorInterface $processor): Client
+    {
+        $this->processor = $processor;
+        return $this;
+    }
+
+    /**
      * @param \RetailCrm\Model\Request\BaseRequest $request
      *
      * @return \RetailCrm\Model\Response\BaseResponse
@@ -150,11 +168,14 @@ class Client
      */
     public function sendRequest(BaseRequest $request)
     {
+        $this->processor->process($request, $this->appData, $this->authenticator);
+
         $httpRequest = $this->requestFactory->fromModel($request, $this->appData, $this->authenticator);
         $httpResponse = $this->httpClient->sendRequest($httpRequest);
+
         /** @var BaseResponse $response */
         $response = $this->serializer->deserialize(
-            $httpResponse->getBody()->getContents(),
+            self::getBodyContents($httpResponse->getBody()),
             $request->getExpectedResponse(),
             $request->format
         );
@@ -168,5 +189,17 @@ class Client
         }
 
         return $response;
+    }
+
+    /**
+     * Returns body stream data (it should work like that in order to keep compatibility with some implementations).
+     *
+     * @param \Psr\Http\Message\StreamInterface $stream
+     *
+     * @return string
+     */
+    protected static function getBodyContents(StreamInterface $stream): string
+    {
+        return $stream->isSeekable() ? $stream->__toString() : $stream->getContents();
     }
 }

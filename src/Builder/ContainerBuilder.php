@@ -12,8 +12,13 @@
  */
 namespace RetailCrm\Builder;
 
+use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UriFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RetailCrm\Component\Constants;
@@ -21,18 +26,19 @@ use RetailCrm\Component\DependencyInjection\Container;
 use RetailCrm\Component\Environment;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Factory\FileItemFactory;
-use RetailCrm\Factory\RequestFactory;
 use RetailCrm\Factory\SerializerFactory;
+use RetailCrm\Factory\TopRequestFactory;
 use RetailCrm\Interfaces\BuilderInterface;
 use RetailCrm\Interfaces\FileItemFactoryInterface;
-use RetailCrm\Interfaces\RequestFactoryInterface;
 use RetailCrm\Interfaces\RequestSignerInterface;
 use RetailCrm\Interfaces\RequestTimestampProviderInterface;
+use RetailCrm\Interfaces\TopRequestFactoryInterface;
+use RetailCrm\Interfaces\TopRequestProcessorInterface;
 use RetailCrm\Service\RequestDataFilter;
 use RetailCrm\Service\RequestSigner;
 use RetailCrm\Service\RequestTimestampProvider;
+use RetailCrm\Service\TopRequestProcessor;
 use RuntimeException;
-use Shieldon\Psr17\StreamFactory;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\TraceableValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -55,7 +61,7 @@ class ContainerBuilder implements BuilderInterface
     /**
      * @var string $env
      */
-    private $env;
+    private $env = Environment::DEV;
 
     /**
      * @var \Psr\Http\Client\ClientInterface $httpClient
@@ -66,6 +72,21 @@ class ContainerBuilder implements BuilderInterface
      * @var \Psr\Log\LoggerInterface $logger
      */
     private $logger;
+
+    /**
+     * @var StreamFactoryInterface $streamFactory
+     */
+    private $streamFactory;
+
+    /**
+     * @var RequestFactoryInterface $requestFactory
+     */
+    private $requestFactory;
+
+    /**
+     * @var UriFactoryInterface $uriFactory
+     */
+    private $uriFactory;
 
     /**
      * @return static
@@ -109,6 +130,39 @@ class ContainerBuilder implements BuilderInterface
     }
 
     /**
+     * @param \Psr\Http\Message\StreamFactoryInterface $streamFactory
+     *
+     * @return ContainerBuilder
+     */
+    public function setStreamFactory(StreamFactoryInterface $streamFactory): ContainerBuilder
+    {
+        $this->streamFactory = $streamFactory;
+        return $this;
+    }
+
+    /**
+     * @param \Psr\Http\Message\RequestFactoryInterface $requestFactory
+     *
+     * @return ContainerBuilder
+     */
+    public function setRequestFactory(RequestFactoryInterface $requestFactory): ContainerBuilder
+    {
+        $this->requestFactory = $requestFactory;
+        return $this;
+    }
+
+    /**
+     * @param \Psr\Http\Message\UriFactoryInterface $uriFactory
+     *
+     * @return ContainerBuilder
+     */
+    public function setUriFactory(UriFactoryInterface $uriFactory): ContainerBuilder
+    {
+        $this->uriFactory = $uriFactory;
+        return $this;
+    }
+
+    /**
      * @return \Psr\Container\ContainerInterface
      */
     public function build(): ContainerInterface
@@ -136,8 +190,11 @@ class ContainerBuilder implements BuilderInterface
      */
     protected function setProdServices(Container $container): void
     {
-        $container->set(Constants::HTTP_CLIENT, $this->httpClient);
-        $container->set(Constants::LOGGER, $this->logger ?: new NullLogger());
+        $container->set(Constants::HTTP_CLIENT, $this->getHttpClient());
+        $container->set(Constants::LOGGER, $this->getLogger());
+        $container->set(StreamFactoryInterface::class, $this->getStreamFactory());
+        $container->set(RequestFactoryInterface::class, $this->getRequestFactory());
+        $container->set(UriFactoryInterface::class, $this->getUriFactory());
         $container->set(RequestTimestampProviderInterface::class, new RequestTimestampProvider());
         $container->set(
             Constants::VALIDATOR,
@@ -146,7 +203,9 @@ class ContainerBuilder implements BuilderInterface
         $container->set(Constants::SERIALIZER, function (ContainerInterface $container) {
             return SerializerFactory::withContainer($container)->create();
         });
-        $container->set(FileItemFactoryInterface::class, new FileItemFactory(new StreamFactory()));
+        $container->set(FileItemFactoryInterface::class, function (ContainerInterface $container) {
+            return new FileItemFactory($container->get(StreamFactoryInterface::class));
+        });
         $container->set(RequestDataFilter::class, new RequestDataFilter());
         $container->set(RequestSignerInterface::class, function (ContainerInterface $container) {
             return new RequestSigner(
@@ -154,14 +213,19 @@ class ContainerBuilder implements BuilderInterface
                 $container->get(RequestDataFilter::class)
             );
         });
-        $container->set(RequestFactoryInterface::class, function (ContainerInterface $container) {
-            return new RequestFactory(
-                $container->get(RequestSignerInterface::class),
-                $container->get(RequestDataFilter::class),
-                $container->get(Constants::SERIALIZER),
-                $container->get(Constants::VALIDATOR),
-                $container->get(RequestTimestampProviderInterface::class)
-            );
+        $container->set(TopRequestProcessorInterface::class, function (ContainerInterface $container) {
+            return (new TopRequestProcessor())
+                ->setSigner($container->get(RequestSignerInterface::class))
+                ->setValidator($container->get(Constants::VALIDATOR))
+                ->setTimestampProvider($container->get(RequestTimestampProviderInterface::class));
+        });
+        $container->set(TopRequestFactoryInterface::class, function (ContainerInterface $container) {
+            return (new TopRequestFactory())
+                ->setFilter($container->get(RequestDataFilter::class))
+                ->setSerializer($container->get(Constants::SERIALIZER))
+                ->setStreamFactory($container->get(StreamFactoryInterface::class))
+                ->setRequestFactory($container->get(RequestFactoryInterface::class))
+                ->setUriFactory($container->get(UriFactoryInterface::class));
         });
         $container->set(ServiceLocator::class, function (ContainerInterface $container) {
             $locator = new ServiceLocator();
@@ -181,5 +245,51 @@ class ContainerBuilder implements BuilderInterface
         if ($validator instanceof ValidatorInterface) {
             $container->set('validator', new TraceableValidator($validator));
         }
+    }
+
+    /**
+     * @return \Psr\Http\Client\ClientInterface
+     */
+    protected function getHttpClient(): ClientInterface
+    {
+        return $this->httpClient instanceof ClientInterface ? $this->httpClient : Psr18ClientDiscovery::find();
+    }
+
+    /**
+     * @return \Psr\Log\LoggerInterface
+     */
+    protected function getLogger(): LoggerInterface
+    {
+        return $this->logger instanceof LoggerInterface ? $this->logger : new NullLogger();
+    }
+
+    /**
+     * @return \Psr\Http\Message\StreamFactoryInterface
+     */
+    protected function getStreamFactory(): StreamFactoryInterface
+    {
+        return $this->streamFactory instanceof StreamFactoryInterface
+            ? $this->streamFactory
+            : Psr17FactoryDiscovery::findStreamFactory();
+    }
+
+    /**
+     * @return \Psr\Http\Message\RequestFactoryInterface
+     */
+    protected function getRequestFactory(): RequestFactoryInterface
+    {
+        return $this->requestFactory instanceof RequestFactoryInterface
+            ? $this->requestFactory
+            : Psr17FactoryDiscovery::findRequestFactory();
+    }
+
+    /**
+     * @return \Psr\Http\Message\UriFactoryInterface
+     */
+    protected function getUriFactory(): UriFactoryInterface
+    {
+        return $this->uriFactory instanceof UriFactoryInterface
+            ? $this->uriFactory
+            : Psr17FactoryDiscovery::findUriFactory();
     }
 }

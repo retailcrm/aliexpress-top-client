@@ -3,7 +3,7 @@
 /**
  * PHP version 7.3
  *
- * @category RequestFactoryInterface
+ * @category TopRequestFactoryInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT https://mit-license.org
@@ -17,16 +17,16 @@ use Psr\Http\Message\RequestInterface;
 use RetailCrm\Model\Request\BaseRequest;
 
 /**
- * Interface RequestFactoryInterface
+ * Interface TopRequestFactoryInterface
  *
- * @category RequestFactoryInterface
+ * @category TopRequestFactoryInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-interface RequestFactoryInterface
+interface TopRequestFactoryInterface
 {
     /**
      * @param \RetailCrm\Model\Request\BaseRequest         $request

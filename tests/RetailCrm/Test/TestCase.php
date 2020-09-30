@@ -3,10 +3,18 @@
 namespace RetailCrm\Test;
 
 use DateTime;
+use Http\Client\Curl\Client as CurlClient;
+use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Mock\Client as MockClient;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use RetailCrm\Builder\ContainerBuilder;
 use RetailCrm\Component\AppData;
 use RetailCrm\Component\Authenticator\TokenAuthenticator;
+use RetailCrm\Component\Constants;
 use RetailCrm\Component\Environment;
 use RetailCrm\Component\Logger\StdoutLogger;
 use RetailCrm\Factory\FileItemFactory;
@@ -29,17 +37,22 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     private $container;
 
     /**
-     * @param bool $recreate
+     * @param \Psr\Http\Client\ClientInterface|null $client
+     * @param bool                                  $recreate
      *
      * @return \Psr\Container\ContainerInterface
      */
-    protected function getContainer($recreate = false): ContainerInterface
+    protected function getContainer(?ClientInterface $client = null, $recreate = false): ContainerInterface
     {
-        if (null === $this->container || $recreate) {
+        if (null === $this->container || null !== $client || $recreate) {
+            $factory = new Psr17Factory();
             $this->container = ContainerBuilder::create()
                 ->setEnv(Environment::TEST)
-                ->setClient(new \GuzzleHttp\Client())
+                ->setClient(is_null($client) ? self::getMockClient() : $client)
                 ->setLogger(new StdoutLogger())
+                ->setStreamFactory($factory)
+                ->setRequestFactory($factory)
+                ->setUriFactory($factory)
                 ->build();
         }
 
@@ -132,6 +145,24 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @param int                                    $code
+     * @param \RetailCrm\Model\Response\BaseResponse $response
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    protected function responseJson(int $code, $response): ResponseInterface
+    {
+        /** @var \JMS\Serializer\SerializerInterface $serializer */
+        $serializer = $this->getContainer()->get(Constants::SERIALIZER);
+        $responseFactory = Psr17FactoryDiscovery::findResponseFactory();
+        $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
+
+        return $responseFactory->createResponse($code)
+            ->withHeader('Content-Type', 'application/json')
+            ->withBody($streamFactory->createStream($serializer->serialize($response, 'json')));
+    }
+
+    /**
      * @param string $variable
      * @param mixed  $default
      *
@@ -144,5 +175,40 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         }
 
         return $_ENV[$variable];
+    }
+
+    /**
+     * @return \Http\Mock\Client
+     */
+    protected static function getMockClient(): MockClient
+    {
+        return new MockClient();
+    }
+
+    /**
+     * @return \Psr\Http\Client\ClientInterface
+     */
+    protected static function getCurlClient(): ClientInterface
+    {
+        return new CurlClient();
+    }
+
+    /**
+     * @param \Psr\Http\Message\StreamInterface $stream
+     *
+     * @return string
+     */
+    protected static function getStreamData(StreamInterface $stream): string
+    {
+        $data = '';
+
+        if ($stream->isSeekable()) {
+            $data = $stream->__toString();
+            $stream->seek(0);
+        } else {
+            $data = $stream->getContents();
+        }
+
+        return $data;
     }
 }

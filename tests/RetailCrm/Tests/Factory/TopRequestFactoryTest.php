@@ -3,7 +3,7 @@
 /**
  * PHP version 7.3
  *
- * @category RequestFactoryTest
+ * @category TopRequestFactoryTest
  * @package  RetailCrm\Tests\Factory
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
@@ -12,36 +12,34 @@
  */
 namespace RetailCrm\Tests\Factory;
 
-use Psr\Http\Message\RequestInterface;
 use RetailCrm\Component\Constants;
-use RetailCrm\Factory\RequestFactory;
-use RetailCrm\Component\AppData;
-use RetailCrm\Interfaces\RequestFactoryInterface;
+use RetailCrm\Factory\TopRequestFactory;
+use RetailCrm\Interfaces\TopRequestFactoryInterface;
 use RetailCrm\Test\TestCase;
 
 /**
- * Class RequestFactoryTest
+ * Class TopRequestFactoryTest
  *
- * @category RequestFactoryTest
+ * @category TopRequestFactoryTest
  * @package  RetailCrm\Tests\Factory
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class RequestFactoryTest extends TestCase
+class TopRequestFactoryTest extends TestCase
 {
     public function testFromModelGet(): void
     {
-        /** @var RequestFactory $factory */
-        $factory = $this->getContainer()->get(RequestFactoryInterface::class);
+        /** @var TopRequestFactory $factory */
+        $factory = $this->getContainer()->get(TopRequestFactoryInterface::class);
         $request = $factory->fromModel(
             $this->getTestRequest(Constants::SIGN_TYPE_HMAC),
             $this->getAppData(),
             $this->getAuthenticator()
         );
         $uri = $request->getUri();
-        $contents = $request->getBody()->getContents();
+        $contents = self::getStreamData($request->getBody());
 
         self::assertEmpty($contents);
         self::assertNotEmpty($uri->getQuery());
@@ -50,15 +48,15 @@ class RequestFactoryTest extends TestCase
 
     public function testFromModelPost(): void
     {
-        /** @var RequestFactory $factory */
-        $factory = $this->getContainer()->get(RequestFactoryInterface::class);
+        /** @var TopRequestFactory $factory */
+        $factory = $this->getContainer()->get(TopRequestFactoryInterface::class);
         $request = $factory->fromModel(
             $this->getTestRequest(Constants::SIGN_TYPE_HMAC, true, true),
             $this->getAppData(),
             $this->getAuthenticator()
         );
         $uri = $request->getUri();
-        $contents = $request->getBody()->getContents();
+        $contents = self::getStreamData($request->getBody());
 
         self::assertEmpty($uri->getQuery());
         self::assertNotFalse(stripos($contents, 'The quick brown fox jumps over the lazy dog'));

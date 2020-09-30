@@ -12,10 +12,14 @@
  */
 namespace RetailCrm\Tests\TopClient;
 
+use Psr\Http\Message\RequestInterface;
 use RetailCrm\Builder\ClientBuilder;
 use RetailCrm\Component\AppData;
 use RetailCrm\Component\Authenticator\TokenAuthenticator;
 use RetailCrm\Model\Request\HttpDnsGetRequest;
+use RetailCrm\Model\Response\BaseResponse;
+use RetailCrm\Model\Response\Body\ErrorResponseBody;
+use RetailCrm\Test\ClosureRequestMatcher;
 use RetailCrm\Test\TestCase;
 
 /**
@@ -30,15 +34,28 @@ use RetailCrm\Test\TestCase;
  */
 class ClientTest extends TestCase
 {
-    public function testClientRequest()
+    public function testClientRequestException()
     {
-        self::markTestSkipped('Should be mocked!');
+        $errorBody = new ErrorResponseBody();
+        $errorBody->code = 999;
+        $errorBody->msg = 'Mocked error';
+        $errorBody->subCode = 'subcode';
+        $errorBody->requestId = '1';
+        $errorResponse = new BaseResponse();
+        $errorResponse->errorResponse = $errorBody;
+
+        $mockClient = self::getMockClient();
+        $mockClient->on(new ClosureRequestMatcher(function (RequestInterface $request) {
+            return true;
+        }), $this->responseJson(400, $errorResponse));
 
         $client = ClientBuilder::create()
-            ->setContainer($this->getContainer())
+            ->setContainer($this->getContainer($mockClient))
             ->setAppData(new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret'))
             ->setAuthenticator(new TokenAuthenticator('appKey', 'token'))
             ->build();
+
+        $this->expectExceptionMessage($errorBody->msg);
 
         $client->sendRequest(new HttpDnsGetRequest());
     }

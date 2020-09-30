@@ -37,10 +37,13 @@ trait ValidatorAwareTrait
 
     /**
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
+     *
+     * @return $this
      */
-    public function setValidator(ValidatorInterface $validator): void
+    public function setValidator(ValidatorInterface $validator): self
     {
         $this->validator = $validator;
+        return $this;
     }
 
     /**
