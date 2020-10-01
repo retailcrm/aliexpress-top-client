@@ -27,9 +27,9 @@ use JMS\Serializer\Annotation as JMS;
 class HttpDnsGetResponseResult
 {
     /**
-     * @var array $env
+     * @var array<string, \RetailCrm\Model\Response\Type\HttpDnsEnvEntry> $env
      *
-     * @JMS\Type("int")
+     * @JMS\Type("array<string,array<string, RetailCrm\Model\Response\Type\HttpDnsEnvEntry>>")
      * @JMS\SerializedName("env")
      */
     public $env;

@@ -17,9 +17,10 @@ use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use Psr\Container\ContainerInterface;
 use RetailCrm\Component\Constants;
-use RetailCrm\Component\Serializer\InlineJsonBodyHandler;
+use RetailCrm\Component\JMS\Factory\JsonDeserializationVisitorFactory;
 use RetailCrm\Interfaces\FactoryInterface;
 
 /**
@@ -133,8 +134,9 @@ class SerializerFactory implements FactoryInterface
                     'xml',
                     $returnNull
                 );
-                $registry->registerSubscribingHandler(new InlineJsonBodyHandler());
             })->addDefaultHandlers()
+            ->setSerializationVisitor('json', new JsonSerializationVisitorFactory())
+            ->setDeserializationVisitor('json', new JsonDeserializationVisitorFactory())
             ->setSerializationContextFactory(new SerializationContextFactory())
             ->build();
     }

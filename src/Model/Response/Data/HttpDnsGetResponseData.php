@@ -32,6 +32,7 @@ class HttpDnsGetResponseData
      *
      * @JMS\Type("RetailCrm\Model\Response\Body\InlineJsonBody\HttpDnsGetResponseResult")
      * @JMS\SerializedName("result")
+     * @JMS\Groups(groups={"InlineJsonBody"})
      */
     public $result;
 }

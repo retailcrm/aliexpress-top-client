@@ -60,4 +60,18 @@ class ClientTest extends TestCase
 
         $client->sendRequest(new HttpDnsGetRequest());
     }
+
+    public function testClientRequestXmlUnsupported()
+    {
+        $client = ClientBuilder::create()
+            ->setContainer($this->getContainer(self::getMockClient()))
+            ->setAppData(new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret'))
+            ->build();
+
+        $request = new HttpDnsGetRequest();
+        $request->format = 'xml';
+
+        $this->expectExceptionMessage('Client only supports JSON mode, got `xml` mode');
+        $client->sendRequest($request);
+    }
 }

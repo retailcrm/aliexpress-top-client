@@ -161,6 +161,10 @@ class Client
      */
     public function sendRequest(BaseRequest $request): TopResponseInterface
     {
+        if ('json' !== $request->format) {
+            throw new TopClientException(sprintf('Client only supports JSON mode, got `%s` mode', $request->format));
+        }
+
         $this->processor->process($request, $this->appData);
 
         $httpRequest = $this->requestFactory->fromModel($request, $this->appData);
