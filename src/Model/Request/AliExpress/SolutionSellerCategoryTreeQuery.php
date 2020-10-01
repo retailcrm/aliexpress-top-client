@@ -2,32 +2,32 @@
 /**
  * PHP version 7.4
  *
- * @category SellerCategoryTreeQuery
- * @package  RetailCrm\Model\Request\AliExpressSolution
+ * @category SolutionSellerCategoryTreeQuery
+ * @package  RetailCrm\Model\Request\AliExpress
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  http://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
 
-namespace RetailCrm\Model\Request\AliExpressSolution;
+namespace RetailCrm\Model\Request\AliExpress;
 
 use RetailCrm\Model\Request\BaseRequest;
 use JMS\Serializer\Annotation as JMS;
-use RetailCrm\Model\Response\AliExpressSolution\SellerCategoryTreeQueryResponse;
+use RetailCrm\Model\Response\AliExpress\SolutionSellerCategoryTreeQueryResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class SellerCategoryTreeQuery
+ * Class SolutionSellerCategoryTreeQuery
  *
- * @category SellerCategoryTreeQuery
- * @package  RetailCrm\Model\Request\AliExpressSolution
+ * @category SolutionSellerCategoryTreeQuery
+ * @package  RetailCrm\Model\Request\AliExpress
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  https://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class SellerCategoryTreeQuery extends BaseRequest
+class SolutionSellerCategoryTreeQuery extends BaseRequest
 {
     /**
      * @var int $categoryId
@@ -61,6 +61,6 @@ class SellerCategoryTreeQuery extends BaseRequest
      */
     public function getExpectedResponse(): string
     {
-        return SellerCategoryTreeQueryResponse::class;
+        return SolutionSellerCategoryTreeQueryResponse::class;
     }
 }

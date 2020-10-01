@@ -2,34 +2,35 @@
 /**
  * PHP version 7.4
  *
- * @category SellerCategoryTreeQueryResponseData
- * @package  RetailCrm\Model\Response\AliExpressSolution\Data
+ * @category SolutionSellerCategoryTreeQueryResponseData
+ * @package  RetailCrm\Model\Response\AliExpress\Data
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  http://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
 
-namespace RetailCrm\Model\Response\AliExpressSolution\Data;
+namespace RetailCrm\Model\Response\AliExpress\Data;
 
 use JMS\Serializer\Annotation as JMS;
+use RetailCrm\Model\Response\AbstractResponseData;
 
 /**
- * Class SellerCategoryTreeQueryResponseData
+ * Class SolutionSellerCategoryTreeQueryResponseData
  *
- * @category SellerCategoryTreeQueryResponseData
+ * @category SolutionSellerCategoryTreeQueryResponseData
  * @package  RetailCrm\Model\Response\AliExpressSolution\Data
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  https://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class SellerCategoryTreeQueryResponseData
+class SolutionSellerCategoryTreeQueryResponseData extends AbstractResponseData
 {
     /**
-     * @var SellerCategoryTreeQueryResponseDataChildrenCategoryList
+     * @var SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList
      *
-     * @JMS\Type("RetailCrm\Model\Response\AliExpressSolution\Data\SellerCategoryTreeQueryResponseDataChildrenCategoryList")
+     * @JMS\Type("RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList")
      * @JMS\SerializedName("children_category_list")
      */
     public $childrenCategoryList;

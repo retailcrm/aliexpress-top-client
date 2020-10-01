@@ -2,30 +2,30 @@
 /**
  * PHP version 7.4
  *
- * @category SellerCategoryTreeQueryResponseDataChildrenCategoryList
- * @package  RetailCrm\Model\Response\AliExpressSolution\Data
+ * @category SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList
+ * @package  RetailCrm\Model\Response\AliExpress\Data
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  http://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
 
-namespace RetailCrm\Model\Response\AliExpressSolution\Data;
+namespace RetailCrm\Model\Response\AliExpress\Data;
 
 use RetailCrm\Model\Entity\CategoryInfo;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Class SellerCategoryTreeQueryResponseDataChildrenCategoryList
+ * Class SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList
  *
- * @category SellerCategoryTreeQueryResponseDataChildrenCategoryList
- * @package  RetailCrm\Model\Response\AliExpressSolution\Data
+ * @category SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList
+ * @package  RetailCrm\Model\Response\AliExpress\Data
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  https://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class SellerCategoryTreeQueryResponseDataChildrenCategoryList
+class SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList
 {
     /**
      * @var CategoryInfo[] $categoryInfo

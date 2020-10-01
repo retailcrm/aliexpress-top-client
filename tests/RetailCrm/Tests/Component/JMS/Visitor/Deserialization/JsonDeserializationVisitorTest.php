@@ -14,9 +14,9 @@ namespace RetailCrm\Tests\Component\JMS\Visitor\Deserialization;
 
 use RetailCrm\Component\Constants;
 use RetailCrm\Model\Entity\CategoryInfo;
-use RetailCrm\Model\Response\AliExpressSolution\Data\SellerCategoryTreeQueryResponseData;
-use RetailCrm\Model\Response\AliExpressSolution\Data\SellerCategoryTreeQueryResponseDataChildrenCategoryList;
-use RetailCrm\Model\Response\AliExpressSolution\SellerCategoryTreeQueryResponse;
+use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResponseData;
+use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList;
+use RetailCrm\Model\Response\AliExpress\SolutionSellerCategoryTreeQueryResponse;
 use RetailCrm\Test\TestCase;
 
 /**
@@ -65,12 +65,12 @@ EOF;
 
         /** @var \JMS\Serializer\SerializerInterface $serializer */
         $serializer = $this->getContainer()->get(Constants::SERIALIZER);
-        /** @var SellerCategoryTreeQueryResponse $result */
-        $result = $serializer->deserialize($json, SellerCategoryTreeQueryResponse::class, 'json');
+        /** @var SolutionSellerCategoryTreeQueryResponse $result */
+        $result = $serializer->deserialize($json, SolutionSellerCategoryTreeQueryResponse::class, 'json');
 
-        self::assertInstanceOf(SellerCategoryTreeQueryResponseData::class, $result->responseData);
+        self::assertInstanceOf(SolutionSellerCategoryTreeQueryResponseData::class, $result->responseData);
         self::assertInstanceOf(
-            SellerCategoryTreeQueryResponseDataChildrenCategoryList::class,
+            SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList::class,
             $result->responseData->childrenCategoryList
         );
         self::assertIsArray($result->responseData->childrenCategoryList->categoryInfo);

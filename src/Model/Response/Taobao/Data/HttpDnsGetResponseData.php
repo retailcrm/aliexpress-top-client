@@ -13,6 +13,7 @@
 namespace RetailCrm\Model\Response\Taobao\Data;
 
 use JMS\Serializer\Annotation as JMS;
+use RetailCrm\Model\Response\AbstractResponseData;
 use RetailCrm\Model\Response\Taobao\Result\HttpDnsGetResponseResult;
 
 /**
@@ -25,7 +26,7 @@ use RetailCrm\Model\Response\Taobao\Result\HttpDnsGetResponseResult;
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class HttpDnsGetResponseData
+class HttpDnsGetResponseData extends AbstractResponseData
 {
     /**
      * @var HttpDnsGetResponseResult $result

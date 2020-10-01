@@ -6,6 +6,7 @@ use DateTime;
 use Http\Client\Curl\Client as CurlClient;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Mock\Client as MockClient;
+use InvalidArgumentException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
@@ -122,9 +123,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * @param int                                    $code
-     * @param \RetailCrm\Model\Response\BaseResponse $response
+     * @param object|array|string $response
      *
      * @return \Psr\Http\Message\ResponseInterface
+     * @throws InvalidArgumentException
      */
     protected function responseJson(int $code, $response): ResponseInterface
     {
@@ -132,10 +134,26 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $serializer = $this->getContainer()->get(Constants::SERIALIZER);
         $responseFactory = Psr17FactoryDiscovery::findResponseFactory();
         $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
+        $data = null;
+
+        switch (gettype($response)) {
+            case 'string':
+                $data = $streamFactory->createStream($response);
+                break;
+            case 'array':
+            case 'object':
+                $data = $streamFactory->createStream($serializer->serialize($response, 'json'));
+                break;
+            default:
+                throw new InvalidArgumentException(sprintf(
+                    'Expected string, object, or array, got "%s"',
+                    gettype($response)
+                ));
+        }
 
         return $responseFactory->createResponse($code)
             ->withHeader('Content-Type', 'application/json')
-            ->withBody($streamFactory->createStream($serializer->serialize($response, 'json')));
+            ->withBody($data);
     }
 
     /**

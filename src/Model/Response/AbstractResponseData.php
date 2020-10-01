@@ -1,39 +1,31 @@
 <?php
-
 /**
- * PHP version 7.3
+ * PHP version 7.4
  *
- * @category BaseResponse
+ * @category AbstractResponseData
  * @package  RetailCrm\Model\Response
  * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
+ * @license  http://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
+
 namespace RetailCrm\Model\Response;
 
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Class BaseResponse
+ * Class AbstractResponseData
  *
- * @category BaseResponse
+ * @category AbstractResponseData
  * @package  RetailCrm\Model\Response
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
+ * @license  https://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-abstract class BaseResponse implements TopResponseInterface
+abstract class AbstractResponseData
 {
-    /**
-     * @var \RetailCrm\Model\Response\ErrorResponseBody
-     *
-     * @JMS\Type("RetailCrm\Model\Response\ErrorResponseBody")
-     * @JMS\SerializedName("error_response")
-     */
-    public $errorResponse;
-
     /**
      * @var string $requestId
      *
