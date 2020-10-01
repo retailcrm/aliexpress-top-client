@@ -195,8 +195,9 @@ class JsonDeserializationVisitor extends AbstractVisitor implements Deserializat
         if (in_array('InlineJsonBody', $metadata->groups ?? [])) {
             if (!array_key_exists($metadata->serializedName, $data)) {
                 throw new RuntimeException(sprintf(
-                    'Cannot find expected key in the data: %s',
-                    $metadata->serializedName
+                    'Cannot find expected key "%s" in the collection: %s',
+                    $metadata->serializedName,
+                    implode(', ', array_keys($data))
                 ));
             }
 

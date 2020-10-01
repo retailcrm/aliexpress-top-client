@@ -4,21 +4,22 @@
  * PHP version 7.3
  *
  * @category HttpDnsGetResponse
- * @package  RetailCrm\Model\Response
+ * @package  RetailCrm\Model\Response\Taobao
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
-namespace RetailCrm\Model\Response;
+namespace RetailCrm\Model\Response\Taobao;
 
 use JMS\Serializer\Annotation as JMS;
+use RetailCrm\Model\Response\BaseResponse;
 
 /**
  * Class HttpDnsGetResponse
  *
  * @category HttpDnsGetResponse
- * @package  RetailCrm\Model\Response
+ * @package  RetailCrm\Model\Response\Taobao
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
@@ -27,9 +28,9 @@ use JMS\Serializer\Annotation as JMS;
 class HttpDnsGetResponse extends BaseResponse
 {
     /**
-     * @var \RetailCrm\Model\Response\Data\HttpDnsGetResponseData $responseData
+     * @var \RetailCrm\Model\Response\Taobao\Data\HttpDnsGetResponseData $responseData
      *
-     * @JMS\Type("RetailCrm\Model\Response\Data\HttpDnsGetResponseData")
+     * @JMS\Type("RetailCrm\Model\Response\Taobao\Data\HttpDnsGetResponseData")
      * @JMS\SerializedName("httpdns_get_response")
      */
     public $responseData;

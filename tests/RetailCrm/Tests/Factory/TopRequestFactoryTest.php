@@ -42,6 +42,7 @@ class TopRequestFactoryTest extends TestCase
 
         self::assertEmpty($contents);
         self::assertNotEmpty($uri->getQuery());
+        self::assertFalse(stripos($uri->getQuery(), 'simplify'), $uri->getQuery());
         self::assertNotFalse(stripos($uri->getQuery(), 'SPAIN_LOCAL_CORREOS'));
     }
 

@@ -4,13 +4,13 @@
  * PHP version 7.3
  *
  * @category HttpDnsGetResponseResult
- * @package  RetailCrm\Model\Response\Body\InlineJsonBody
+ * @package  RetailCrm\Model\Response\Taobao\Result
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
-namespace RetailCrm\Model\Response\Body\InlineJsonBody;
+namespace RetailCrm\Model\Response\Taobao\Result;
 
 use JMS\Serializer\Annotation as JMS;
 
@@ -18,7 +18,7 @@ use JMS\Serializer\Annotation as JMS;
  * Class HttpDnsGetResponseResult
  *
  * @category HttpDnsGetResponseResult
- * @package  RetailCrm\Model\Response\Body\InlineJsonBody
+ * @package  RetailCrm\Model\Response\Taobao\Result
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT
  * @link     http://retailcrm.ru

@@ -4,21 +4,22 @@
  * PHP version 7.3
  *
  * @category HttpDnsGetRequest
- * @package  RetailCrm\Model\Request
+ * @package  RetailCrm\Model\Request\Taobao
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      http://help.retailcrm.ru
  */
-namespace RetailCrm\Model\Request;
+namespace RetailCrm\Model\Request\Taobao;
 
-use RetailCrm\Model\Response\HttpDnsGetResponse;
+use RetailCrm\Model\Request\BaseRequest;
+use RetailCrm\Model\Response\Taobao\HttpDnsGetResponse;
 
 /**
  * Class HttpDnsGetRequest
  *
  * @category HttpDnsGetRequest
- * @package  RetailCrm\Model\Request
+ * @package  RetailCrm\Model\Request\Taobao
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru

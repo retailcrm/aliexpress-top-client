@@ -91,7 +91,7 @@ abstract class BaseRequest
      *
      * @JMS\Type("bool")
      * @JMS\SerializedName("simplify")
-     * @JMS\Accessor(getter="isSimplify")
+     * @JMS\Exclude(if="!object.simplify")
      */
     public $simplify = false;
 
@@ -130,14 +130,6 @@ abstract class BaseRequest
     public function __construct()
     {
         $this->method = $this->getMethod();
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isSimplify(): ?bool
-    {
-        return $this->simplify ? true : null;
     }
 
     /**

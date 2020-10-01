@@ -13,7 +13,7 @@
 namespace RetailCrm\Component\Exception;
 
 use Exception;
-use RetailCrm\Model\Response\Body\ErrorResponseBody;
+use RetailCrm\Model\Response\ErrorResponseBody;
 use Throwable;
 
 /**
@@ -41,7 +41,7 @@ class TopApiException extends Exception
     /**
      * TopApiException constructor.
      *
-     * @param \RetailCrm\Model\Response\Body\ErrorResponseBody $responseBody
+     * @param \RetailCrm\Model\Response\ErrorResponseBody $responseBody
      * @param string|null                                      $requestId
      * @param \Throwable|null                                  $previous
      */

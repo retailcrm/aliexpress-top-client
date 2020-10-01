@@ -27,9 +27,9 @@ use JMS\Serializer\Annotation as JMS;
 class BaseResponse implements TopResponseInterface
 {
     /**
-     * @var \RetailCrm\Model\Response\Body\ErrorResponseBody
+     * @var \RetailCrm\Model\Response\ErrorResponseBody
      *
-     * @JMS\Type("RetailCrm\Model\Response\Body\ErrorResponseBody")
+     * @JMS\Type("RetailCrm\Model\Response\ErrorResponseBody")
      * @JMS\SerializedName("error_response")
      */
     public $errorResponse;

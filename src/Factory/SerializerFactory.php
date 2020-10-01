@@ -22,6 +22,8 @@ use Psr\Container\ContainerInterface;
 use RetailCrm\Component\Constants;
 use RetailCrm\Component\JMS\Factory\JsonDeserializationVisitorFactory;
 use RetailCrm\Interfaces\FactoryInterface;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use JMS\Serializer\Expression\ExpressionEvaluator;
 
 /**
  * Class SerializerFactory
@@ -138,6 +140,7 @@ class SerializerFactory implements FactoryInterface
             ->setSerializationVisitor('json', new JsonSerializationVisitorFactory())
             ->setDeserializationVisitor('json', new JsonDeserializationVisitorFactory())
             ->setSerializationContextFactory(new SerializationContextFactory())
+            ->setExpressionEvaluator(new ExpressionEvaluator(new ExpressionLanguage()))
             ->build();
     }
 }

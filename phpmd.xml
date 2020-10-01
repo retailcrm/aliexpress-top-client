@@ -8,6 +8,7 @@
     <rule ref="rulesets/naming.xml">
         <exclude name="ShortVariable" />
         <exclude name="LongVariable" />
+        <exclude name="LongClassName" />
     </rule>
     <rule ref="rulesets/cleancode.xml">
         <exclude name="StaticAccess" />
@@ -40,6 +41,11 @@
     <rule ref="rulesets/naming.xml/LongVariable">
         <properties>
             <property name="maximum" value="30" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/naming.xml/LongClassName">
+        <properties>
+            <property name="maximum" value="80" />
         </properties>
     </rule>
 

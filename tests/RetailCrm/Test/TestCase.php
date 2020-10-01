@@ -13,13 +13,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use RetailCrm\Builder\ContainerBuilder;
 use RetailCrm\Component\AppData;
-use RetailCrm\Component\Authenticator\TokenAuthenticator;
 use RetailCrm\Component\Constants;
 use RetailCrm\Component\Environment;
 use RetailCrm\Component\Logger\StdoutLogger;
 use RetailCrm\Factory\FileItemFactory;
 use RetailCrm\Interfaces\AppDataInterface;
-use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\FileItemFactoryInterface;
 
 /**
