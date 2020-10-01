@@ -143,6 +143,9 @@ class TopRequestFactory implements TopRequestFactoryInterface
             return $this->makeMultipartRequest($appData->getServiceUrl(), $requestData);
         }
 
+        //TODO
+        // And how this call should process arrays? It will process them, yes.
+        // But in which format AliExpress TOP expects that? Should definitely check that.
         $queryData = http_build_query($requestData);
 
         return $this->requestFactory

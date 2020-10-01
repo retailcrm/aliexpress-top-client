@@ -13,7 +13,6 @@
 namespace RetailCrm\Model\Response\AliExpress;
 
 use RetailCrm\Model\Response\BaseResponse;
-
 use JMS\Serializer\Annotation as JMS;
 
 /**

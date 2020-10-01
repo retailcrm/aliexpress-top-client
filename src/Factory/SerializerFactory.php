@@ -97,23 +97,6 @@ class SerializerFactory implements FactoryInterface
                 );
                 $registry->registerHandler(
                     GraphNavigatorInterface::DIRECTION_SERIALIZATION,
-                    'RequestDtoInterface',
-                    'xml',
-                    function ($visitor, $obj, array $type) use ($container) {
-                        /** @var SerializerInterface $serializer */
-                        $serializer = $container->get(Constants::SERIALIZER);
-
-                        return $serializer->serialize($obj, 'xml');
-                    }
-                );
-                $registry->registerHandler(
-                    GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
-                    'RequestDtoInterface',
-                    'xml',
-                    $returnNull
-                );
-                $registry->registerHandler(
-                    GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                     'FileItemInterface',
                     'json',
                     $returnSame
@@ -122,18 +105,6 @@ class SerializerFactory implements FactoryInterface
                     GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
                     'FileItemInterface',
                     'json',
-                    $returnNull
-                );
-                $registry->registerHandler(
-                    GraphNavigatorInterface::DIRECTION_SERIALIZATION,
-                    'FileItemInterface',
-                    'xml',
-                    $returnSame
-                );
-                $registry->registerHandler(
-                    GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
-                    'FileItemInterface',
-                    'xml',
                     $returnNull
                 );
             })->addDefaultHandlers()
