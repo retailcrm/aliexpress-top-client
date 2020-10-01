@@ -14,12 +14,15 @@ namespace RetailCrm\TopClient;
 
 use DateTime;
 use JMS\Serializer\SerializerInterface;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\StreamInterface;
+use RetailCrm\Builder\AuthorizationUriBuilder;
 use RetailCrm\Component\Exception\TopApiException;
 use RetailCrm\Component\Exception\TopClientException;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Interfaces\AppDataInterface;
+use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\TopRequestFactoryInterface;
 use RetailCrm\Interfaces\TopRequestProcessorInterface;
 use RetailCrm\Model\Request\BaseRequest;
@@ -81,6 +84,11 @@ class Client
     protected $processor;
 
     /**
+     * @var \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
+     */
+    protected $authenticator;
+
+    /**
      * Client constructor.
      *
      * @param \RetailCrm\Interfaces\AppDataInterface       $appData
@@ -131,14 +139,6 @@ class Client
     }
 
     /**
-     * @return \RetailCrm\Component\ServiceLocator
-     */
-    public function getServiceLocator(): ServiceLocator
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
      * @param \RetailCrm\Interfaces\TopRequestProcessorInterface $processor
      *
      * @return Client
@@ -150,10 +150,45 @@ class Client
     }
 
     /**
+     * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
+     *
+     * @return Client
+     */
+    public function setAuthenticator(AuthenticatorInterface $authenticator): Client
+    {
+        $this->authenticator = $authenticator;
+        return $this;
+    }
+
+    /**
+     * @return \RetailCrm\Component\ServiceLocator
+     */
+    public function getServiceLocator(): ServiceLocator
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param bool $withState
+     *
+     * @return string
+     *
+     * $withState is passed to AuthorizationUriBuilder.
+     * @see AuthorizationUriBuilder::__construct
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
+    public function getAuthorizationUri(bool $withState = false): string
+    {
+        $builder = new AuthorizationUriBuilder($this->appData->getAppKey(), $this->appData->getAppSecret(), $withState);
+        return $builder->build();
+    }
+
+    /**
+     * Send TOP request
+     *
      * @param \RetailCrm\Model\Request\BaseRequest $request
      *
      * @return TopResponseInterface
-     * @throws \Psr\Http\Client\ClientExceptionInterface
      * @throws \RetailCrm\Component\Exception\ValidationException
      * @throws \RetailCrm\Component\Exception\FactoryException
      * @throws \RetailCrm\Component\Exception\TopClientException
@@ -168,7 +203,12 @@ class Client
         $this->processor->process($request, $this->appData);
 
         $httpRequest = $this->requestFactory->fromModel($request, $this->appData);
-        $httpResponse = $this->httpClient->sendRequest($httpRequest);
+
+        try {
+            $httpResponse = $this->httpClient->sendRequest($httpRequest);
+        } catch (ClientExceptionInterface $exception) {
+            throw new TopClientException(sprintf('Error sending request: %s', $exception->getMessage()), $exception);
+        }
 
         /** @var BaseResponse $response */
         $response = $this->serializer->deserialize(
@@ -186,6 +226,28 @@ class Client
         }
 
         return $response;
+    }
+
+    /**
+     * Send authenticated TOP request
+     *
+     * @param \RetailCrm\Model\Request\BaseRequest $request
+     *
+     * @return \RetailCrm\Model\Response\TopResponseInterface
+     * @throws \RetailCrm\Component\Exception\FactoryException
+     * @throws \RetailCrm\Component\Exception\TopApiException
+     * @throws \RetailCrm\Component\Exception\TopClientException
+     * @throws \RetailCrm\Component\Exception\ValidationException
+     */
+    public function sendAuthenticatedRequest(BaseRequest $request): TopResponseInterface
+    {
+        if (null === $this->authenticator) {
+            throw new TopClientException('Authenticator is not provided');
+        }
+
+        $this->authenticator->authenticate($request);
+
+        return $this->sendRequest($request);
     }
 
     /**

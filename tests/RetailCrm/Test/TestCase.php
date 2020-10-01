@@ -14,11 +14,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use RetailCrm\Builder\ContainerBuilder;
 use RetailCrm\Component\AppData;
+use RetailCrm\Component\Authenticator\TokenAuthenticator;
 use RetailCrm\Component\Constants;
 use RetailCrm\Component\Environment;
 use RetailCrm\Component\Logger\StdoutLogger;
 use RetailCrm\Factory\FileItemFactory;
 use RetailCrm\Interfaces\AppDataInterface;
+use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\FileItemFactoryInterface;
 
 /**
@@ -65,8 +67,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         return $this->getAppData(
             self::getenv('ENDPOINT', AppData::OVERSEAS_ENDPOINT),
-            self::getenv('APP_KEY', 'appKey'),
-            self::getenv('APP_SECRET', 'helloworld')
+            self::getEnvAppKey(),
+            self::getenv('APP_SECRET', 'helloworld'),
+            self::getenv('REDIRECT_URI', 'https://example.com'),
         );
     }
 
@@ -75,14 +78,32 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      * @param string $appKey
      * @param string $appSecret
      *
+     * @param string $redirectUri
+     *
      * @return \RetailCrm\Interfaces\AppDataInterface
      */
     protected function getAppData(
         string $endpoint = AppData::OVERSEAS_ENDPOINT,
         string $appKey = 'appKey',
-        string $appSecret = 'helloworld'
+        string $appSecret = 'helloworld',
+        string $redirectUri = 'https://example.com'
     ): AppDataInterface{
-        return new AppData($endpoint, $appKey, $appSecret);
+        return new AppData($endpoint, $appKey, $appSecret, $redirectUri);
+    }
+
+    protected function getEnvTokenAuthenticator(): AuthenticatorInterface
+    {
+        return $this->getTokenAuthenticator(self::getenv('SESSION', 'test'));
+    }
+
+    /**
+     * @param string $token
+     *
+     * @return \RetailCrm\Interfaces\AuthenticatorInterface
+     */
+    protected function getTokenAuthenticator(string $token): AuthenticatorInterface
+    {
+        return new TokenAuthenticator($token);
     }
 
     /**
@@ -157,6 +178,14 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @return string
+     */
+    protected static function getEnvAppKey(): string
+    {
+        return self::getenv('APP_KEY', 'appKey');
+    }
+
+    /**
      * @param string $variable
      * @param mixed  $default
      *
@@ -176,7 +205,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected static function getMockClient(): MockClient
     {
-        return new MockClient();
+        $client = new MockClient();
+        $client->setDefaultException(new MatcherException());
+        return $client;
     }
 
     /**

@@ -59,7 +59,7 @@ class ClientTest extends TestCase
 
         $client = ClientBuilder::create()
             ->setContainer($this->getContainer($mockClient))
-            ->setAppData(new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret'))
+            ->setAppData($this->getEnvAppData())
             ->build();
 
         $this->expectExceptionMessage($errorBody->msg);
@@ -71,7 +71,7 @@ class ClientTest extends TestCase
     {
         $client = ClientBuilder::create()
             ->setContainer($this->getContainer(self::getMockClient()))
-            ->setAppData(new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret'))
+            ->setAppData($this->getEnvAppData())
             ->build();
 
         $request = new HttpDnsGetRequest();
@@ -118,7 +118,7 @@ EOF;
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
                 ->setOptionalQueryParams([
-                    'app_key' => 'appKey',
+                    'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.solution.seller.category.tree.query',
                     'category_id' => '5090300',
                     'filter_no_permission' => 1
@@ -127,7 +127,8 @@ EOF;
         );
         $client = ClientBuilder::create()
             ->setContainer($this->getContainer($mock))
-            ->setAppData(new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret'))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
             ->build();
         $request = new SolutionSellerCategoryTreeQuery();
 
@@ -135,7 +136,7 @@ EOF;
         $request->filterNoPermission = true;
 
         /** @var SolutionSellerCategoryTreeQueryResponse $response */
-        $result = $client->sendRequest($request);
+        $result = $client->sendAuthenticatedRequest($request);
 
         self::assertInstanceOf(SolutionSellerCategoryTreeQueryResponseData::class, $result->responseData);
         self::assertInstanceOf(
@@ -184,14 +185,15 @@ EOF;
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
                 ->setOptionalQueryParams([
-                    'app_key' => 'appKey',
+                    'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.postproduct.redefining.categoryforecast'
                 ]),
             $this->responseJson(200, $json)
         );
         $client = ClientBuilder::create()
             ->setContainer($this->getContainer($mock))
-            ->setAppData(new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret'))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
             ->build();
 
         $request = new PostproductRedefiningCategoryForecast();
@@ -199,7 +201,7 @@ EOF;
         $request->locale = 'en';
 
         /** @var PostproductRedefiningCategoryForecastResponse $response */
-        $response = $client->sendRequest($request);
+        $response = $client->sendAuthenticatedRequest($request);
 
         self::assertInstanceOf(PostproductRedefiningCategoryForecastResponse::class, $response);
         self::assertEquals(

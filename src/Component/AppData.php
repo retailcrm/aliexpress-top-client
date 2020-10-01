@@ -51,17 +51,23 @@ class AppData implements AppDataInterface
     private $appSecret;
 
     /**
+     * @var string $redirectUri
+     */
+    private $redirectUri;
+
+    /**
      * AppData constructor.
      *
      * @param string $serviceUrl
      * @param string $appKey
      * @param string $appSecret
      */
-    public function __construct(string $serviceUrl, string $appKey, string $appSecret)
+    public function __construct(string $serviceUrl, string $appKey, string $appSecret, string $redirectUri = '')
     {
-        $this->serviceUrl = $serviceUrl;
-        $this->appKey     = $appKey;
-        $this->appSecret  = $appSecret;
+        $this->serviceUrl  = $serviceUrl;
+        $this->appKey      = $appKey;
+        $this->appSecret   = $appSecret;
+        $this->redirectUri = $redirectUri;
     }
 
     /**
@@ -86,5 +92,13 @@ class AppData implements AppDataInterface
     public function getAppSecret(): string
     {
         return $this->appSecret;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectUri(): string
+    {
+        return $this->redirectUri;
     }
 }

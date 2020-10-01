@@ -3,7 +3,7 @@
 /**
  * PHP version 7.3
  *
- * @category AppDataInterface
+ * @category AuthenticatorInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT https://mit-license.org
@@ -13,35 +13,24 @@
 
 namespace RetailCrm\Interfaces;
 
+use RetailCrm\Model\Request\BaseRequest;
+
 /**
- * Interface AppDataInterface
+ * Interface AuthenticatorInterface
  *
- * @category AppDataInterface
+ * @category AuthenticatorInterface
  * @package  RetailCrm\Interfaces
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-interface AppDataInterface
+interface AuthenticatorInterface
 {
     /**
-     * @return string
+     * Authenticate provided request
+     *
+     * @param \RetailCrm\Model\Request\BaseRequest $request
      */
-    public function getServiceUrl(): string;
-
-    /**
-     * @return string
-     */
-    public function getAppKey(): string;
-
-    /**
-     * @return string
-     */
-    public function getAppSecret(): string;
-
-    /**
-     * @return string
-     */
-    public function getRedirectUri(): string;
+    public function authenticate(BaseRequest $request): void;
 }
