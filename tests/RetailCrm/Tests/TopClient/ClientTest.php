@@ -14,7 +14,7 @@ namespace RetailCrm\Tests\TopClient;
 
 use Http\Message\RequestMatcher\CallbackRequestMatcher;
 use Psr\Http\Message\RequestInterface;
-use RetailCrm\Builder\ClientBuilder;
+use RetailCrm\Builder\TopClientBuilder;
 use RetailCrm\Model\Entity\CategoryInfo;
 use RetailCrm\Model\Enum\FeedOperationTypes;
 use RetailCrm\Model\Enum\FeedStatuses;
@@ -66,7 +66,7 @@ class ClientTest extends TestCase
             return true;
         }), $this->responseJson(400, $errorResponse));
 
-        $client = ClientBuilder::create()
+        $client = TopClientBuilder::create()
             ->setContainer($this->getContainer($mockClient))
             ->setAppData($this->getEnvAppData())
             ->build();
@@ -78,7 +78,7 @@ class ClientTest extends TestCase
 
     public function testClientRequestXmlUnsupported()
     {
-        $client = ClientBuilder::create()
+        $client = TopClientBuilder::create()
             ->setContainer($this->getContainer(self::getMockClient()))
             ->setAppData($this->getEnvAppData())
             ->build();
@@ -86,7 +86,7 @@ class ClientTest extends TestCase
         $request = new HttpDnsGetRequest();
         $request->format = 'xml';
 
-        $this->expectExceptionMessage('Client only supports JSON mode, got `xml` mode');
+        $this->expectExceptionMessage('TopClient only supports JSON mode, got `xml` mode');
         $client->sendRequest($request);
     }
 
@@ -135,7 +135,7 @@ EOF;
                 ]),
             $this->responseJson(200, $json)
         );
-        $client = ClientBuilder::create()
+        $client = TopClientBuilder::create()
             ->setContainer($this->getContainer($mock))
             ->setAppData($this->getEnvAppData())
             ->setAuthenticator($this->getEnvTokenAuthenticator())
@@ -200,7 +200,7 @@ EOF;
                 ]),
             $this->responseJson(200, $json)
         );
-        $client = ClientBuilder::create()
+        $client = TopClientBuilder::create()
             ->setContainer($this->getContainer($mock))
             ->setAppData($this->getEnvAppData())
             ->setAuthenticator($this->getEnvTokenAuthenticator())
@@ -253,7 +253,7 @@ EOF;
                 ]),
             $this->responseJson(200, $json)
         );
-        $client = ClientBuilder::create()
+        $client = TopClientBuilder::create()
             ->setContainer($this->getContainer($mock))
             ->setAppData($this->getEnvAppData())
             ->setAuthenticator($this->getEnvTokenAuthenticator())
@@ -296,7 +296,7 @@ EOF;
                 ]),
             $this->responseJson(200, $json)
         );
-        $client = ClientBuilder::create()
+        $client = TopClientBuilder::create()
             ->setContainer($this->getContainer($mock))
             ->setAppData($this->getEnvAppData())
             ->setAuthenticator($this->getEnvTokenAuthenticator())
@@ -347,7 +347,7 @@ EOF;
                 ]),
             $this->responseJson(200, $json)
         );
-        $client = ClientBuilder::create()
+        $client = TopClientBuilder::create()
             ->setContainer($this->getContainer($mock))
             ->setAppData($this->getEnvAppData())
             ->setAuthenticator($this->getEnvTokenAuthenticator())
@@ -404,7 +404,7 @@ EOF;
                 ]),
             $this->responseJson(200, $json)
         );
-        $client = ClientBuilder::create()
+        $client = TopClientBuilder::create()
             ->setContainer($this->getContainer($mock))
             ->setAppData($this->getEnvAppData())
             ->setAuthenticator($this->getEnvTokenAuthenticator())
@@ -451,7 +451,7 @@ EOF;
                 ]),
             $this->responseJson(200, $json)
         );
-        $client = ClientBuilder::create()
+        $client = TopClientBuilder::create()
             ->setContainer($this->getContainer($mock))
             ->setAppData($this->getEnvAppData())
             ->setAuthenticator($this->getEnvTokenAuthenticator())

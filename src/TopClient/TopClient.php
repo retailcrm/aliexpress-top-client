@@ -3,7 +3,7 @@
 /**
  * PHP version 7.3
  *
- * @category Client
+ * @category TopClient
  * @package  RetailCrm\TopClient
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  MIT https://mit-license.org
@@ -12,9 +12,7 @@
  */
 namespace RetailCrm\TopClient;
 
-use DateTime;
 use JMS\Serializer\SerializerInterface;
-use Psr\Cache\CacheItemPoolInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\StreamInterface;
@@ -22,8 +20,12 @@ use RetailCrm\Builder\AuthorizationUriBuilder;
 use RetailCrm\Component\Exception\TopApiException;
 use RetailCrm\Component\Exception\TopClientException;
 use RetailCrm\Component\ServiceLocator;
+use RetailCrm\Component\Storage\ProductSchemaStorage;
+use RetailCrm\Factory\ProductSchemaStorageFactory;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
+use RetailCrm\Interfaces\BuilderInterface;
+use RetailCrm\Interfaces\TopClientInterface;
 use RetailCrm\Interfaces\TopRequestFactoryInterface;
 use RetailCrm\Interfaces\TopRequestProcessorInterface;
 use RetailCrm\Model\Request\BaseRequest;
@@ -33,16 +35,17 @@ use RetailCrm\Traits\ValidatorAwareTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class Client
+ * Class TopClient
  *
- * @category Client
+ * @category TopClient
  * @package  RetailCrm\TopClient
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Client
+class TopClient implements TopClientInterface
 {
     use ValidatorAwareTrait;
 
@@ -90,7 +93,12 @@ class Client
     protected $authenticator;
 
     /**
-     * Client constructor.
+     * @var ProductSchemaStorageFactory $productSchemaStorageFactory
+     */
+    protected $productSchemaStorageFactory;
+
+    /**
+     * TopClient constructor.
      *
      * @param \RetailCrm\Interfaces\AppDataInterface       $appData
      */
@@ -142,9 +150,9 @@ class Client
     /**
      * @param \RetailCrm\Interfaces\TopRequestProcessorInterface $processor
      *
-     * @return Client
+     * @return TopClient
      */
-    public function setProcessor(TopRequestProcessorInterface $processor): Client
+    public function setProcessor(TopRequestProcessorInterface $processor): TopClient
     {
         $this->processor = $processor;
         return $this;
@@ -153,11 +161,22 @@ class Client
     /**
      * @param \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
      *
-     * @return Client
+     * @return TopClient
      */
-    public function setAuthenticator(AuthenticatorInterface $authenticator): Client
+    public function setAuthenticator(AuthenticatorInterface $authenticator): TopClient
     {
         $this->authenticator = $authenticator;
+        return $this;
+    }
+
+    /**
+     * @param \RetailCrm\Factory\ProductSchemaStorageFactory $productSchemaStorageFactory
+     *
+     * @return TopClient
+     */
+    public function setProductSchemaStorageFactory(ProductSchemaStorageFactory $productSchemaStorageFactory): TopClient
+    {
+        $this->productSchemaStorageFactory = $productSchemaStorageFactory;
         return $this;
     }
 
@@ -172,16 +191,23 @@ class Client
     /**
      * @param bool $withState
      *
-     * @return string
+     * @return BuilderInterface
      *
      * $withState is passed to AuthorizationUriBuilder.
      * @see AuthorizationUriBuilder::__construct
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    public function getAuthorizationUri(bool $withState = false): string
+    public function getAuthorizationUriBuilder(bool $withState = false): BuilderInterface
     {
-        $builder = new AuthorizationUriBuilder($this->appData->getAppKey(), $this->appData->getAppSecret(), $withState);
-        return $builder->build();
+        return new AuthorizationUriBuilder($this->appData->getAppKey(), $this->appData->getAppSecret(), $withState);
+    }
+
+    /**
+     * @return \RetailCrm\Component\Storage\ProductSchemaStorage
+     */
+    public function getProductSchemaStorage(): ProductSchemaStorage
+    {
+        return $this->productSchemaStorageFactory->setClient($this)->create();
     }
 
     /**
@@ -198,7 +224,7 @@ class Client
     public function sendRequest(BaseRequest $request): TopResponseInterface
     {
         if ('json' !== $request->format) {
-            throw new TopClientException(sprintf('Client only supports JSON mode, got `%s` mode', $request->format));
+            throw new TopClientException(sprintf('TopClient only supports JSON mode, got `%s` mode', $request->format));
         }
 
         $this->processor->process($request, $this->appData);

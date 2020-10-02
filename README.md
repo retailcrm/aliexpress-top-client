@@ -16,12 +16,12 @@ Details about those third-party libraries and why you need to install them can b
 2. Instantiate client like that:
 ```php
 use RetailCrm\Component\AppData;
-use RetailCrm\Builder\ClientBuilder;
+use RetailCrm\Builder\TopClientBuilder;
 use RetailCrm\Builder\ContainerBuilder;
 use RetailCrm\Component\Authenticator\TokenAuthenticator;
 
 $appData = new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret');
-$client = ClientBuilder::create()
+$client = TopClientBuilder::create()
             ->setContainer(ContainerBuilder::create()->build())
             ->setAppData($appData)
             ->setAuthenticator(new TokenAuthenticator('session token here'))
@@ -35,12 +35,12 @@ use RetailCrm\Model\Request\Taobao\HttpDnsGetRequest;
 
 $request = new HttpDnsGetRequest();
 ```
-4. Send request using `Client::sendRequest` or `Client::sendAuthenticatedRequest` (you can't send authenticated request using client without authenticator). `taobao.httpdns.get` can be sent like this:
+4. Send request using `TopClient::sendRequest` or `TopClient::sendAuthenticatedRequest` (you can't send authenticated request using client without authenticator). `taobao.httpdns.get` can be sent like this:
 ```php
 /** @var \RetailCrm\Model\Response\Taobao\HttpDnsGetResponse $response */
 $response = $client->sendRequest(new HttpDnsGetRequest());
 ```
-This particular request doesn't require authorization, so, it can be sent via `Client::sendRequest` method. For any other requests which require authorization you must use `Client::sendAuthenticatedRequest` method (an example of such request would be `aliexpress.solution.seller.category.tree.query`, which class FQN is `\RetailCrm\Model\Request\AliExpress\SolutionSellerCategoryTreeQuery`).
+This particular request doesn't require authorization, so, it can be sent via `TopClient::sendRequest` method. For any other requests which require authorization you must use `TopClient::sendAuthenticatedRequest` method (an example of such request would be `aliexpress.solution.seller.category.tree.query`, which class FQN is `\RetailCrm\Model\Request\AliExpress\SolutionSellerCategoryTreeQuery`).
 
 **Friendly note.** Use response type annotations. Both client methods which returns responses actually returns `ResponseInterface` (not the PSR one). Actual response type will be determined by the request model. Your IDE will not recognize any response options unless you put a proper type annotation for the response variable.
 **Another friendly note.**
@@ -49,17 +49,18 @@ This particular request doesn't require authorization, so, it can be sent via `C
 This library uses Container pattern under the hood. You can pass additional dependencies using `ContainerBuilder`. For example:
 ```php
 use Http\Client\Curl\Client;
-use Nyholm\Psr7\Factory\Psr17Factory;
 use RetailCrm\Component\AppData;
 use RetailCrm\Component\Environment;
-use RetailCrm\Component\Logger\StdoutLogger;
-use RetailCrm\Builder\ClientBuilder;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use RetailCrm\Builder\TopClientBuilder;
 use RetailCrm\Builder\ContainerBuilder;
+use RetailCrm\Component\Logger\StdoutLogger;
+use RetailCrm\Component\Authenticator\TokenAuthenticator;
 
 $client = new Client();
 $logger = new StdoutLogger();
 $factory = new Psr17Factory();
-$authenticator = new TokenAuthenticator('appKey', 'token');
+$authenticator = new TokenAuthenticator('token');
 $appData = new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret');
 $container = ContainerBuilder::create()
             ->setEnv(Environment::TEST)
@@ -69,11 +70,11 @@ $container = ContainerBuilder::create()
             ->setRequestFactory($factory)
             ->setUriFactory($factory)
             ->build();
-$client = ClientBuilder::create()
+$client = TopClientBuilder::create()
             ->setContainer($container)
             ->setAppData($appData)
             ->build();
 ```
-Logger should implement `Psr\Log\LoggerInterface` (PSR-3), HTTP client should implement `Psr\Http\Client\ClientInterface` (PSR-18), HTTP objects must be compliant to PSR-7.
+Logger should implement `Psr\Log\LoggerInterface` (PSR-3), HTTP client should implement `Psr\Http\TopClient\TopClientInterface` (PSR-18), HTTP objects must be compliant to PSR-7.
 
 You can use your own container - it must be compliant to PSR-11. This is strongly discouraged because it'll be much easier to just integrate library with your own application, and your own DI system.

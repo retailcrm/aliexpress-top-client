@@ -28,6 +28,7 @@ use RetailCrm\Component\DependencyInjection\Container;
 use RetailCrm\Component\Environment;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Factory\FileItemFactory;
+use RetailCrm\Factory\ProductSchemaStorageFactory;
 use RetailCrm\Factory\SerializerFactory;
 use RetailCrm\Factory\TopRequestFactory;
 use RetailCrm\Interfaces\BuilderInterface;
@@ -222,6 +223,9 @@ class ContainerBuilder implements BuilderInterface
         });
         $container->set(FileItemFactoryInterface::class, function (ContainerInterface $container) {
             return new FileItemFactory($container->get(StreamFactoryInterface::class));
+        });
+        $container->set(ProductSchemaStorageFactory::class, function (ContainerInterface $container) {
+            return new ProductSchemaStorageFactory($container->get(Constants::CACHE));
         });
         $container->set(RequestDataFilter::class, new RequestDataFilter());
         $container->set(RequestSignerInterface::class, function (ContainerInterface $container) {
