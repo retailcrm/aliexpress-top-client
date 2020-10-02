@@ -27,10 +27,11 @@ use JMS\Serializer\Annotation as JMS;
 class CategorySuitabilityList
 {
     /**
-     * @var string[] $json
+     * @var \RetailCrm\Model\Response\AliExpress\Result\CategorySuitabilityDto[] $json
      *
-     * @JMS\Type("array<string>")
+     * @JMS\Type("array<RetailCrm\Model\Response\AliExpress\Result\CategorySuitabilityDto>")
      * @JMS\SerializedName("json")
+     * @JMS\Groups({"InlineJsonBody", "InlineJsonBodyNullIfInvalid"})
      */
     public $json;
 }

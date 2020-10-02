@@ -19,6 +19,7 @@ use JMS\Serializer\Exception\RuntimeException;
 use JMS\Serializer\Metadata\ClassMetadata;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Visitor\DeserializationVisitorInterface;
+use JsonException;
 use SplStack;
 
 /**
@@ -201,12 +202,35 @@ class JsonDeserializationVisitor extends AbstractVisitor implements Deserializat
                 ));
             }
 
-            $data[$metadata->serializedName] = json_decode(
-                $data[$metadata->serializedName],
-                true,
-                512,
-                JSON_THROW_ON_ERROR
-            );
+            try {
+                if ('array' === $metadata->type['name'] && is_array($data[$metadata->serializedName])) {
+                    $newList = [];
+
+                    foreach ($data[$metadata->serializedName] as $key => $item) {
+                        $newList[$key] = json_decode(
+                            $item,
+                            true,
+                            512,
+                            JSON_THROW_ON_ERROR
+                        );
+                    }
+
+                    $data[$metadata->serializedName] = $newList;
+                } else {
+                    $data[$metadata->serializedName] = json_decode(
+                        $data[$metadata->serializedName],
+                        true,
+                        512,
+                        JSON_THROW_ON_ERROR
+                    );
+                }
+            } catch (JsonException $exception) {
+                if (in_array('InlineJsonBodyNullIfInvalid', $metadata->groups ?? [])) {
+                    $data[$metadata->serializedName] = null;
+                } else {
+                    throw $exception;
+                }
+            }
         }
 
         if (true === $metadata->inline) {

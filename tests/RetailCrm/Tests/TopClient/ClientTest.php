@@ -172,7 +172,7 @@ EOF;
         }
     }
 
-    public function testClientAliexpressPostproductRedefiningCategoryForecast()
+    public function testClientAliexpressPostproductRedefiningCategoryForecastEmpty()
     {
         $json = <<<'EOF'
 {
@@ -220,13 +220,62 @@ EOF;
             "The result of dii is empty. It should have a correct JSON format data return.",
             $response->responseData->result->errorMessage
         );
-        self::assertEquals(
-            ['N/A'],
-            $response->responseData->result->categorySuitabilityList->json
-        );
+        self::assertNull($response->responseData->result->categorySuitabilityList->json);
         self::assertEquals('20181101111211', $response->responseData->result->timeStamp);
         self::assertEquals('24000011', $response->responseData->result->errorCode);
         self::assertTrue($response->responseData->result->success);
+    }
+
+    public function testClientAliexpressPostproductRedefiningCategoryForecast()
+    {
+        $json = <<<'EOF'
+{
+  "aliexpress_postproduct_redefining_categoryforecast_response": {
+    "result": {
+      "category_suitability_list": {
+        "json": [
+          "{\"score\":0.696,\"suitabilityRank\":1,\"categoryId\":200000346}"
+        ]
+      },
+      "success": true,
+      "time_stamp": "2019-07-15 13:49:58"
+    },
+    "request_id": "10ixzzbmna198"
+  }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalQueryParams([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.postproduct.redefining.categoryforecast',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+        $client = ClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+
+        $request = new PostproductRedefiningCategoryForecast();
+        $request->subject = 'man t-shirt';
+        $request->locale = 'en';
+
+        /** @var PostproductRedefiningCategoryForecastResponse $response */
+        $response = $client->sendAuthenticatedRequest($request);
+        $items = $response->responseData->result->categorySuitabilityList->json;
+
+        self::assertCount(1, $items);
+
+        $item = $response->responseData->result->categorySuitabilityList->json[0];
+
+        self::assertEquals(0.696, $item->score);
+        self::assertEquals(1, $item->suitabilityRank);
+        self::assertEquals(200000346, $item->categoryId);
     }
 
     public function testClientAliexpressSolutionFeedSubmit()
