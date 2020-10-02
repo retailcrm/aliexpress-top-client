@@ -2,7 +2,7 @@
 /**
  * PHP version 7.4
  *
- * @category SolutionFeedSubmit
+ * @category SolutionFeedListGet
  * @package  RetailCrm\Model\Request\AliExpress
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  http://retailcrm.ru Proprietary
@@ -13,47 +13,59 @@
 namespace RetailCrm\Model\Request\AliExpress;
 
 use JMS\Serializer\Annotation as JMS;
-use RetailCrm\Model\Request\AliExpress\Data\SingleItemRequestDto;
 use RetailCrm\Model\Request\BaseRequest;
-use RetailCrm\Model\Response\AliExpress\SolutionFeedSubmitResponse;
-use Symfony\Component\Validator\Constraints as Assert;
+use RetailCrm\Model\Response\AliExpress\SolutionFeedListGetResponse;
 
 /**
- * Class SolutionFeedSubmit
+ * Class SolutionFeedListGet
  *
- * @category SolutionFeedSubmit
+ * @category SolutionFeedListGet
  * @package  RetailCrm\Model\Request\AliExpress
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  https://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class SolutionFeedSubmit extends BaseRequest
+class SolutionFeedListGet extends BaseRequest
 {
     /**
-     * @var string $operationType
+     * @var int $currentPage
      *
-     * @JMS\Type("string")
-     * @JMS\SerializedName("operation_type")
-     * @Assert\Choice(choices=RetailCrm\Model\Enum\FeedOperationTypes::ALLOWED_OPERATION_TYPES)
+     * @JMS\Type("int")
+     * @JMS\SerializedName("current_page")
      */
-    public $operationType;
+    public $currentPage;
 
     /**
-     * @var SingleItemRequestDto[] $itemList
+     * @var string $feedType
      *
-     * @JMS\Type("array<RetailCrm\Model\Request\AliExpress\Data\SingleItemRequestDto>")
-     * @JMS\SerializedName("item_list")
-     * @Assert\Count(min=1, max=2000)
+     * @JMS\Type("string")
+     * @JMS\SerializedName("feed_type")
      */
-    public $itemList;
+    public $feedType;
+
+    /**
+     * @var int $pageSize
+     *
+     * @JMS\Type("int")
+     * @JMS\SerializedName("page_size")
+     */
+    public $pageSize;
+
+    /**
+     * @var string $status
+     *
+     * @JMS\Type("string")
+     * @JMS\SerializedName("status")
+     */
+    public $status;
 
     /**
      * @inheritDoc
      */
     public function getMethod(): string
     {
-        return 'aliexpress.solution.feed.submit';
+        return 'aliexpress.solution.feed.list.get';
     }
 
     /**
@@ -61,6 +73,6 @@ class SolutionFeedSubmit extends BaseRequest
      */
     public function getExpectedResponse(): string
     {
-        return SolutionFeedSubmitResponse::class;
+        return SolutionFeedListGetResponse::class;
     }
 }

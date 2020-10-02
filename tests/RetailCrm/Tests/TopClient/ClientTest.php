@@ -17,9 +17,14 @@ use Psr\Http\Message\RequestInterface;
 use RetailCrm\Builder\ClientBuilder;
 use RetailCrm\Component\AppData;
 use RetailCrm\Component\Constants;
+use RetailCrm\Component\Exception\ValidationException;
 use RetailCrm\Model\Entity\CategoryInfo;
+use RetailCrm\Model\Enum\FeedOperationTypes;
+use RetailCrm\Model\Enum\FeedStatuses;
 use RetailCrm\Model\Request\AliExpress\Data\SingleItemRequestDto;
 use RetailCrm\Model\Request\AliExpress\PostproductRedefiningCategoryForecast;
+use RetailCrm\Model\Request\AliExpress\SolutionFeedListGet;
+use RetailCrm\Model\Request\AliExpress\SolutionFeedQuery;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedSubmit;
 use RetailCrm\Model\Request\AliExpress\SolutionSellerCategoryTreeQuery;
 use RetailCrm\Model\Request\Taobao\HttpDnsGetRequest;
@@ -27,6 +32,7 @@ use RetailCrm\Model\Response\AliExpress\Data\SolutionFeedSubmitResponseData;
 use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResponseData;
 use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList;
 use RetailCrm\Model\Response\AliExpress\PostproductRedefiningCategoryForecastResponse;
+use RetailCrm\Model\Response\AliExpress\SolutionFeedListGetResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionFeedSubmitResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionSellerCategoryTreeQueryResponse;
 use RetailCrm\Model\Response\ErrorResponseBody;
@@ -126,7 +132,8 @@ EOF;
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.solution.seller.category.tree.query',
                     'category_id' => '5090300',
-                    'filter_no_permission' => 1
+                    'filter_no_permission' => 1,
+                    'session' => self::getEnvToken()
                 ]),
             $this->responseJson(200, $json)
         );
@@ -184,14 +191,14 @@ EOF;
     }
 }
 EOF;
-
         $mock = self::getMockClient();
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
                 ->setOptionalQueryParams([
                     'app_key' => self::getEnvAppKey(),
-                    'method' => 'aliexpress.postproduct.redefining.categoryforecast'
+                    'method' => 'aliexpress.postproduct.redefining.categoryforecast',
+                    'session' => self::getEnvToken()
                 ]),
             $this->responseJson(200, $json)
         );
@@ -231,14 +238,14 @@ EOF;
     }
 }
 EOF;
-
         $mock = self::getMockClient();
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
                 ->setOptionalQueryParams([
                     'app_key' => self::getEnvAppKey(),
-                    'method' => 'aliexpress.solution.feed.submit'
+                    'method' => 'aliexpress.solution.feed.submit',
+                    'session' => self::getEnvToken()
                 ]),
             $this->responseJson(200, $json)
         );
@@ -254,13 +261,121 @@ EOF;
         $dto->code = 'code';
         $item->itemContent = $dto;
         $item->itemContentId = 'A00000000Y1';
-        $request->operationType = SolutionFeedSubmit::PRODUCT_PRICES_UPDATE;
+        $request->operationType = FeedOperationTypes::PRODUCT_PRICES_UPDATE;
         $request->itemList = [$item];
 
-        /** @var SolutionFeedSubmitResponse $response */
         $response = $client->sendAuthenticatedRequest($request);
 
         self::assertInstanceOf(SolutionFeedSubmitResponseData::class, $response->responseData);
         self::assertEquals(200000000060024475, $response->responseData->jobId);
+    }
+
+    public function testClientAliexpressSolutionFeedQuery()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_feed_query_response":{
+        "job_id":200000000060054475,
+        "success_item_count":1,
+        "result_list":{
+            "single_item_response_dto":[
+                {
+                    "item_execution_result":"{\"productId\":33030372006,\"success\":true}",
+                    "item_content_id":"A00000000Y1"
+                }
+            ]
+        },
+        "total_item_count":1
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalQueryParams([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.feed.query',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+        $client = ClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+        $request = new SolutionFeedQuery();
+        $request->jobId = 200000000060054475;
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionFeedQueryResponse $response */
+        $response = $client->sendAuthenticatedRequest($request);
+
+        self::assertEquals(200000000060054475, $response->responseData->jobId);
+        self::assertEquals(1, $response->responseData->successItemCount);
+        self::assertNotNull($response->responseData->resultList);
+        self::assertNotNull($response->responseData->resultList->singleItemResponseDto);
+        self::assertCount(1, $response->responseData->resultList->singleItemResponseDto);
+
+        $item = $response->responseData->resultList->singleItemResponseDto[0];
+
+        self::assertEquals("A00000000Y1", $item->itemContentId);
+        self::assertNotNull($item->itemExecutionResult);
+        self::assertTrue($item->itemExecutionResult->success);
+        self::assertEquals(33030372006, $item->itemExecutionResult->productId);
+    }
+
+    public function testAliexpressSolutionFeedListGet()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_feed_list_get_response":{
+        "current_page":3,
+        "job_list":{
+            "batch_operation_job_dto":[
+                {
+                    "status":"PROCESSING",
+                    "operation_type":"PRODUCT_CREATE",
+                    "job_id":2000000000123456
+                }
+            ]
+        },
+        "page_size":20,
+        "total_count":300,
+        "total_page":15
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalQueryParams([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.feed.list.get',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+        $client = ClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+        /** @var SolutionFeedListGetResponse $response */
+        $response = $client->sendAuthenticatedRequest(new SolutionFeedListGet());
+
+        self::assertEquals(3, $response->responseData->currentPage);
+        self::assertEquals(20, $response->responseData->pageSize);
+        self::assertEquals(300, $response->responseData->totalCount);
+        self::assertEquals(15, $response->responseData->totalPage);
+        self::assertNotNull($response->responseData->jobList);
+        self::assertCount(1, $response->responseData->jobList->batchOperationJobDto);
+
+        $item = $response->responseData->jobList->batchOperationJobDto[0];
+
+        self::assertEquals(FeedStatuses::PROCESSING, $item->status);
+        self::assertEquals(FeedOperationTypes::PRODUCT_CREATE, $item->operationType);
+        self::assertEquals(2000000000123456, $item->jobId);
     }
 }

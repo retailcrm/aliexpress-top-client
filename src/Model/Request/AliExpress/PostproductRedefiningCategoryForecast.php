@@ -43,9 +43,7 @@ class PostproductRedefiningCategoryForecast extends BaseRequest
      *
      * @JMS\Type("string")
      * @JMS\SerializedName("locale")
-     *
-     * phpcs:disable Generic.Files.LineLength
-     * @Assert\Choice({"en", "ru", "pt", "id", "es", "fr", "it", "de", "nl", "tr", "he", "ja", "ar", "th", "vi", "ko", "pl"})
+     * @Assert\Choice(choices=RetailCrm\Model\Enum\CategoryForecastSupportedLanguages::SUPPORTED_LANGUAGES)
      */
     public $locale;
 

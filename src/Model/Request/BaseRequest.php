@@ -14,6 +14,8 @@ namespace RetailCrm\Model\Request;
 
 use JMS\Serializer\Annotation as JMS;
 use RetailCrm\Component\Constants;
+use RetailCrm\Model\Enum\AvailableResponseFormats;
+use RetailCrm\Model\Enum\AvailableSignMethods;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -72,9 +74,9 @@ abstract class BaseRequest
      * @JMS\Type("string")
      * @JMS\SerializedName("format")
      * @Assert\NotBlank()
-     * @Assert\Choice({"xml", "json"})
+     * @Assert\Choice(choices=RetailCrm\Model\Enum\AvailableResponseFormats::AVAILABLE_FORMATS)
      */
-    public $format = 'json';
+    public $format = AvailableResponseFormats::JSON;
 
     /**
      * @var string $version
@@ -101,9 +103,9 @@ abstract class BaseRequest
      * @JMS\Type("string")
      * @JMS\SerializedName("sign_method")
      * @Assert\NotBlank()
-     * @Assert\Choice({"hmac", "md5"})
+     * @Assert\Choice(choices=RetailCrm\Model\Enum\AvailableSignMethods::AVAILABLE_METHODS)
      */
-    public $signMethod = Constants::SIGN_TYPE_HMAC;
+    public $signMethod = AvailableSignMethods::HMAC_MD5;
 
     /**
      * @var string $sign

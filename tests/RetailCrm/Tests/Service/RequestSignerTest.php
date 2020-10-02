@@ -16,6 +16,7 @@ use RetailCrm\Component\AppData;
 use RetailCrm\Component\Constants;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\RequestSignerInterface;
+use RetailCrm\Model\Enum\AvailableSignMethods;
 use RetailCrm\Test\TestCase;
 use RetailCrm\Test\TestSignerRequest;
 
@@ -53,22 +54,22 @@ class RequestSignerTest extends TestCase
 
         return [
             [
-                $this->getTestRequest(Constants::SIGN_TYPE_MD5),
+                $this->getTestRequest(AvailableSignMethods::MD5),
                 $appData,
                 '468BF7C95925C187D0DFD7D042072EB4'
             ],
             [
-                $this->getTestRequest(Constants::SIGN_TYPE_HMAC),
+                $this->getTestRequest(AvailableSignMethods::HMAC_MD5),
                 $appData,
                 '5EF5C76D5C158BFFA9F35BAAA712A879'
             ],
             [
-                $this->getTestRequest(Constants::SIGN_TYPE_MD5, true),
+                $this->getTestRequest(AvailableSignMethods::MD5, true),
                 $appData,
                 '468BF7C95925C187D0DFD7D042072EB4'
             ],
             [
-                $this->getTestRequest(Constants::SIGN_TYPE_HMAC, true),
+                $this->getTestRequest(AvailableSignMethods::HMAC_MD5, true),
                 $appData,
                 '5EF5C76D5C158BFFA9F35BAAA712A879'
             ]

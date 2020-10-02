@@ -15,6 +15,7 @@ namespace RetailCrm\Tests\Factory;
 use RetailCrm\Component\Constants;
 use RetailCrm\Factory\TopRequestFactory;
 use RetailCrm\Interfaces\TopRequestFactoryInterface;
+use RetailCrm\Model\Enum\AvailableSignMethods;
 use RetailCrm\Test\TestCase;
 
 /**
@@ -34,7 +35,7 @@ class TopRequestFactoryTest extends TestCase
         /** @var TopRequestFactory $factory */
         $factory = $this->getContainer()->get(TopRequestFactoryInterface::class);
         $request = $factory->fromModel(
-            $this->getTestRequest(Constants::SIGN_TYPE_HMAC),
+            $this->getTestRequest(AvailableSignMethods::HMAC_MD5),
             $this->getAppData()
         );
         $uri = $request->getUri();
@@ -51,7 +52,7 @@ class TopRequestFactoryTest extends TestCase
         /** @var TopRequestFactory $factory */
         $factory = $this->getContainer()->get(TopRequestFactoryInterface::class);
         $request = $factory->fromModel(
-            $this->getTestRequest(Constants::SIGN_TYPE_HMAC, true, true),
+            $this->getTestRequest(AvailableSignMethods::HMAC_MD5, true, true),
             $this->getAppData()
         );
         $uri = $request->getUri();

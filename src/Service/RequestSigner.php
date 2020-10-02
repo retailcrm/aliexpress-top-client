@@ -17,6 +17,7 @@ use RetailCrm\Component\Constants;
 use RetailCrm\Component\Exception\NotImplementedException;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\RequestSignerInterface;
+use RetailCrm\Model\Enum\AvailableSignMethods;
 use RetailCrm\Model\Request\BaseRequest;
 
 /**
@@ -69,11 +70,11 @@ class RequestSigner implements RequestSignerInterface
         }
 
         switch ($request->signMethod) {
-            case Constants::SIGN_TYPE_MD5:
+            case AvailableSignMethods::MD5:
                 $stringToBeSigned = $appData->getAppSecret() . $stringToBeSigned . $appData->getAppSecret();
                 $request->sign = strtoupper(md5($stringToBeSigned));
                 break;
-            case Constants::SIGN_TYPE_HMAC:
+            case AvailableSignMethods::HMAC_MD5:
                 $request->sign = strtoupper(hash_hmac('md5', $stringToBeSigned, $appData->getAppSecret()));
                 break;
             default:

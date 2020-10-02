@@ -93,7 +93,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     protected function getEnvTokenAuthenticator(): AuthenticatorInterface
     {
-        return $this->getTokenAuthenticator(self::getenv('SESSION', 'test'));
+        return $this->getTokenAuthenticator(self::getEnvToken());
     }
 
     /**
@@ -183,6 +183,14 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected static function getEnvAppKey(): string
     {
         return self::getenv('APP_KEY', 'appKey');
+    }
+
+    /**
+     * @return string
+     */
+    protected static function getEnvToken(): string
+    {
+        return self::getenv('SESSION', 'test');
     }
 
     /**
