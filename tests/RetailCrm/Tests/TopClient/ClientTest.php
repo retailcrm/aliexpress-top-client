@@ -15,9 +15,6 @@ namespace RetailCrm\Tests\TopClient;
 use Http\Message\RequestMatcher\CallbackRequestMatcher;
 use Psr\Http\Message\RequestInterface;
 use RetailCrm\Builder\ClientBuilder;
-use RetailCrm\Component\AppData;
-use RetailCrm\Component\Constants;
-use RetailCrm\Component\Exception\ValidationException;
 use RetailCrm\Model\Entity\CategoryInfo;
 use RetailCrm\Model\Enum\FeedOperationTypes;
 use RetailCrm\Model\Enum\FeedStatuses;
@@ -34,14 +31,13 @@ use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResp
 use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList;
 use RetailCrm\Model\Response\AliExpress\PostproductRedefiningCategoryForecastResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionFeedListGetResponse;
-use RetailCrm\Model\Response\AliExpress\SolutionFeedSubmitResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionProductSchemaGetResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionSellerCategoryTreeQueryResponse;
 use RetailCrm\Model\Response\ErrorResponseBody;
 use RetailCrm\Model\Response\Taobao\HttpDnsGetResponse;
 use RetailCrm\Test\FakeDataRequestDto;
-use RetailCrm\Test\TestCase;
 use RetailCrm\Test\RequestMatcher;
+use RetailCrm\Test\TestCase;
 
 /**
  * Class ClientTest
