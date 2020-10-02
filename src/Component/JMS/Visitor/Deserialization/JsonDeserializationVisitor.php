@@ -28,7 +28,7 @@ use SplStack;
  * @category JsonDeserializationVisitor
  * @package  RetailCrm\Component\JMS\Visitor\Deserialization
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

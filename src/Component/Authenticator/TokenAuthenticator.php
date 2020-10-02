@@ -21,7 +21,7 @@ use RetailCrm\Model\Request\BaseRequest;
  * @category TokenAuthenticator
  * @package  RetailCrm\Component\Authenticator
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

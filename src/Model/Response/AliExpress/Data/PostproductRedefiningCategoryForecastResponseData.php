@@ -21,7 +21,7 @@ use RetailCrm\Model\Response\AbstractResponseData;
  * @category PostproductRedefiningCategoryForecastResponseData
  * @package  RetailCrm\Model\Response\AliExpress\Data
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

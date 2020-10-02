@@ -42,7 +42,8 @@ $response = $client->sendRequest(new HttpDnsGetRequest());
 ```
 This particular request doesn't require authorization, so, it can be sent via `Client::sendRequest` method. For any other requests which require authorization you must use `Client::sendAuthenticatedRequest` method (an example of such request would be `aliexpress.solution.seller.category.tree.query`, which class FQN is `\RetailCrm\Model\Request\AliExpress\SolutionSellerCategoryTreeQuery`).
 
-**Note:** use response type annotations. Both client methods which returns responses actually returns `ResponseInterface` (not the PSR one). Actual response type will be determined by the request model. Your IDE will not recognize any response options unless you put a proper type annotation for the response variable.
+**Friendly note.** Use response type annotations. Both client methods which returns responses actually returns `ResponseInterface` (not the PSR one). Actual response type will be determined by the request model. Your IDE will not recognize any response options unless you put a proper type annotation for the response variable.
+**Another friendly note.**
 
 ## Customization
 This library uses Container pattern under the hood. You can pass additional dependencies using `ContainerBuilder`. For example:

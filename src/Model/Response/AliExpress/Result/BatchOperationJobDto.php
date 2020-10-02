@@ -20,7 +20,7 @@ use JMS\Serializer\Annotation as JMS;
  * @category BatchOperationJobDto
  * @package  RetailCrm\Model\Response\AliExpress\Result
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

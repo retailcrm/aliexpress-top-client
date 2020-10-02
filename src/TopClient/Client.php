@@ -14,6 +14,7 @@ namespace RetailCrm\TopClient;
 
 use DateTime;
 use JMS\Serializer\SerializerInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\StreamInterface;
@@ -95,7 +96,7 @@ class Client
      */
     public function __construct(AppDataInterface $appData)
     {
-        $this->appData       = $appData;
+        $this->appData = $appData;
     }
 
     /**

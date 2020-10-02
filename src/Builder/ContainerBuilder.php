@@ -12,8 +12,10 @@
  */
 namespace RetailCrm\Builder;
 
+use Cache\Adapter\PHPArray\ArrayCachePool;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -87,6 +89,9 @@ class ContainerBuilder implements BuilderInterface
      * @var UriFactoryInterface $uriFactory
      */
     private $uriFactory;
+
+    /** @var CacheItemPoolInterface $cache */
+    private $cache;
 
     /**
      * @return static
@@ -163,6 +168,17 @@ class ContainerBuilder implements BuilderInterface
     }
 
     /**
+     * @param \Psr\Cache\CacheItemPoolInterface $cache
+     *
+     * @return ContainerBuilder
+     */
+    public function setCache(CacheItemPoolInterface $cache): ContainerBuilder
+    {
+        $this->cache = $cache;
+        return $this;
+    }
+
+    /**
      * @return \Psr\Container\ContainerInterface
      */
     public function build(): ContainerInterface
@@ -192,6 +208,7 @@ class ContainerBuilder implements BuilderInterface
     {
         $container->set(Constants::HTTP_CLIENT, $this->getHttpClient());
         $container->set(Constants::LOGGER, $this->getLogger());
+        $container->set(Constants::CACHE, $this->getCache());
         $container->set(StreamFactoryInterface::class, $this->getStreamFactory());
         $container->set(RequestFactoryInterface::class, $this->getRequestFactory());
         $container->set(UriFactoryInterface::class, $this->getUriFactory());
@@ -291,5 +308,13 @@ class ContainerBuilder implements BuilderInterface
         return $this->uriFactory instanceof UriFactoryInterface
             ? $this->uriFactory
             : Psr17FactoryDiscovery::findUriFactory();
+    }
+
+    /**
+     * @return \Psr\Cache\CacheItemPoolInterface
+     */
+    protected function getCache(): CacheItemPoolInterface
+    {
+        return $this->cache instanceof CacheItemPoolInterface ? $this->cache : new ArrayCachePool();
     }
 }

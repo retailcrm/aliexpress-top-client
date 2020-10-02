@@ -21,7 +21,7 @@ use JMS\Serializer\Annotation as JMS;
  * @category SolutionSellerCategoryTreeQueryResponse
  * @package  RetailCrm\Model\Response\AliExpressSolution
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */

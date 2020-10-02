@@ -21,7 +21,7 @@ use RetailCrm\Model\Response\AliExpress\Result\Traits\SuccessTrait;
  * @category ItemExecutionResult
  * @package  RetailCrm\Model\Response\AliExpress\Result
  * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
+ * @license  MIT https://mit-license.org
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
