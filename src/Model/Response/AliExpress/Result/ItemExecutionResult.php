@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 7.4
+ * PHP version 7.3
  *
  * @category ItemExecutionResult
  * @package  RetailCrm\Model\Response\AliExpress\Result
@@ -13,6 +13,7 @@
 namespace RetailCrm\Model\Response\AliExpress\Result;
 
 use JMS\Serializer\Annotation as JMS;
+use RetailCrm\Model\Response\AliExpress\Result\Traits\SuccessTrait;
 
 /**
  * Class ItemExecutionResult
@@ -26,6 +27,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ItemExecutionResult
 {
+    use SuccessTrait;
+
     /**
      * @var int $productId
      *
@@ -33,12 +36,4 @@ class ItemExecutionResult
      * @JMS\SerializedName("productId")
      */
     public $productId;
-
-    /**
-     * @var bool $success
-     *
-     * @JMS\Type("bool")
-     * @JMS\SerializedName("success")
-     */
-    public $success;
 }

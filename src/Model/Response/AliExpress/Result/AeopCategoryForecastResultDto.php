@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 7.4
+ * PHP version 7.3
  *
  * @category AeopCategoryForecastResultDto
  * @package  RetailCrm\Model\Response\AliExpress\Result
@@ -13,6 +13,8 @@
 namespace RetailCrm\Model\Response\AliExpress\Result;
 
 use JMS\Serializer\Annotation as JMS;
+use RetailCrm\Model\Response\AliExpress\Result\Traits\ErrorTrait;
+use RetailCrm\Model\Response\AliExpress\Result\Traits\SuccessTrait;
 
 /**
  * Class AeopCategoryForecastResultDto
@@ -26,13 +28,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class AeopCategoryForecastResultDto
 {
-    /**
-     * @var string $errorMessage
-     *
-     * @JMS\Type("string")
-     * @JMS\SerializedName("error_message")
-     */
-    public $errorMessage;
+    use ErrorTrait;
+    use SuccessTrait;
 
     /**
      * @var \RetailCrm\Model\Response\AliExpress\Result\Entity\CategorySuitabilityList $categorySuitabilityList
@@ -49,20 +46,4 @@ class AeopCategoryForecastResultDto
      * @JMS\SerializedName("time_stamp")
      */
     public $timeStamp;
-
-    /**
-     * @var string $errorCode
-     *
-     * @JMS\Type("string")
-     * @JMS\SerializedName("error_code")
-     */
-    public $errorCode;
-
-    /**
-     * @var bool $success
-     *
-     * @JMS\Type("bool")
-     * @JMS\SerializedName("success")
-     */
-    public $success;
 }

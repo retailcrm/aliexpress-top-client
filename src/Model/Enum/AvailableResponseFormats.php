@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP version 7.4
+ * PHP version 7.3
  *
  * @category AvailableResponseFormats
  * @package  RetailCrm\Model\Enum

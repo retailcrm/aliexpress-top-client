@@ -2,7 +2,7 @@
 /**
  * PHP version 7.3
  *
- * @category CategorySuitabilityDto
+ * @category SolutionProductSchemaGetResponseResult
  * @package  RetailCrm\Model\Response\AliExpress\Result
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  http://retailcrm.ru Proprietary
@@ -13,40 +13,31 @@
 namespace RetailCrm\Model\Response\AliExpress\Result;
 
 use JMS\Serializer\Annotation as JMS;
+use RetailCrm\Model\Response\AliExpress\Result\Traits\ErrorTrait;
+use RetailCrm\Model\Response\AliExpress\Result\Traits\SuccessTrait;
 
 /**
- * Class CategorySuitabilityDto
+ * Class SolutionProductSchemaGetResponseResult
  *
- * @category CategorySuitabilityDto
+ * @category SolutionProductSchemaGetResponseResult
  * @package  RetailCrm\Model\Response\AliExpress\Result
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  https://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class CategorySuitabilityDto
+class SolutionProductSchemaGetResponseResult
 {
-    /**
-     * @var float $score
-     *
-     * @JMS\Type("float")
-     * @JMS\SerializedName("score")
-     */
-    public $score;
+    use ErrorTrait;
+    use SuccessTrait;
 
     /**
-     * @var float $score
+     * Product Schema in JSON Schema format. Shouldn't be deserialized.
      *
-     * @JMS\Type("float")
-     * @JMS\SerializedName("suitabilityRank")
-     */
-    public $suitabilityRank;
-
-    /**
-     * @var int $categoryId
+     * @var string $schema
      *
-     * @JMS\Type("int")
-     * @JMS\SerializedName("categoryId")
+     * @JMS\Type("string")
+     * @JMS\SerializedName("schema")
      */
-    public $categoryId;
+    public $schema;
 }

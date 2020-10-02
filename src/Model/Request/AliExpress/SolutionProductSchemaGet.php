@@ -2,7 +2,7 @@
 /**
  * PHP version 7.3
  *
- * @category PostproductRedefiningCategoryForecastResponse
+ * @category SolutionProductSchemaGet
  * @package  RetailCrm\Model\Request\AliExpress
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  http://retailcrm.ru Proprietary
@@ -14,45 +14,36 @@ namespace RetailCrm\Model\Request\AliExpress;
 
 use JMS\Serializer\Annotation as JMS;
 use RetailCrm\Model\Request\BaseRequest;
-use RetailCrm\Model\Response\AliExpress\PostproductRedefiningCategoryForecastResponse;
 use Symfony\Component\Validator\Constraints as Assert;
+use RetailCrm\Model\Response\AliExpress\SolutionProductSchemaGetResponse;
 
 /**
- * Class PostproductRedefiningCategoryForecastResponse
+ * Class SolutionProductSchemaGet
  *
- * @category PostproductRedefiningCategoryForecastResponse
+ * @category SolutionProductSchemaGet
  * @package  RetailCrm\Model\Request\AliExpress
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  https://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class PostproductRedefiningCategoryForecast extends BaseRequest
+class SolutionProductSchemaGet extends BaseRequest
 {
     /**
-     * @var string $subject
+     * @var int $aliexpressCategoryId
      *
-     * @JMS\Type("string")
-     * @JMS\SerializedName("subject")
-     * @Assert\LessThanOrEqual(512)
+     * @JMS\Type("int")
+     * @JMS\SerializedName("aliexpress_category_id")
+     * @Assert\NotBlank()
      */
-    public $subject;
-
-    /**
-     * @var string $locale
-     *
-     * @JMS\Type("string")
-     * @JMS\SerializedName("locale")
-     * @Assert\Choice(choices=RetailCrm\Model\Enum\CategoryForecastSupportedLanguages::SUPPORTED_LANGUAGES)
-     */
-    public $locale;
+    public $aliexpressCategoryId;
 
     /**
      * @inheritDoc
      */
     public function getMethod(): string
     {
-        return 'aliexpress.postproduct.redefining.categoryforecast';
+        return 'aliexpress.solution.product.schema.get';
     }
 
     /**
@@ -60,6 +51,6 @@ class PostproductRedefiningCategoryForecast extends BaseRequest
      */
     public function getExpectedResponse(): string
     {
-        return PostproductRedefiningCategoryForecastResponse::class;
+        return SolutionProductSchemaGetResponse::class;
     }
 }

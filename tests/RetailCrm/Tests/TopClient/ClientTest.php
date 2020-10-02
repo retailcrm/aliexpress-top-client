@@ -26,6 +26,7 @@ use RetailCrm\Model\Request\AliExpress\PostproductRedefiningCategoryForecast;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedListGet;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedQuery;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedSubmit;
+use RetailCrm\Model\Request\AliExpress\SolutionProductSchemaGet;
 use RetailCrm\Model\Request\AliExpress\SolutionSellerCategoryTreeQuery;
 use RetailCrm\Model\Request\Taobao\HttpDnsGetRequest;
 use RetailCrm\Model\Response\AliExpress\Data\SolutionFeedSubmitResponseData;
@@ -34,6 +35,7 @@ use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResp
 use RetailCrm\Model\Response\AliExpress\PostproductRedefiningCategoryForecastResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionFeedListGetResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionFeedSubmitResponse;
+use RetailCrm\Model\Response\AliExpress\SolutionProductSchemaGetResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionSellerCategoryTreeQueryResponse;
 use RetailCrm\Model\Response\ErrorResponseBody;
 use RetailCrm\Model\Response\Taobao\HttpDnsGetResponse;
@@ -426,5 +428,44 @@ EOF;
         self::assertEquals(FeedStatuses::PROCESSING, $item->status);
         self::assertEquals(FeedOperationTypes::PRODUCT_CREATE, $item->operationType);
         self::assertEquals(2000000000123456, $item->jobId);
+    }
+
+    public function testAliexpressSolutionProductSchemaGet()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_product_schema_get_response":{
+        "result":{
+            "success":true,
+            "error_code":"F00-00-10007-007",
+            "error_message":"duplicate sku_code, please check your input",
+            "schema":"{}"
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalQueryParams([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.product.schema.get',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+        $client = ClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+        $request = new SolutionProductSchemaGet();
+        $request->aliexpressCategoryId = 1;
+
+        /** @var SolutionProductSchemaGetResponse $response */
+        $response = $client->sendAuthenticatedRequest($request);
+
+        self::assertEquals('{}', $response->responseData->result->schema);
     }
 }

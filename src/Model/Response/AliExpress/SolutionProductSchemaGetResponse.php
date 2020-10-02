@@ -2,7 +2,7 @@
 /**
  * PHP version 7.3
  *
- * @category SolutionFeedSubmitResponse
+ * @category SolutionProductSchemaGetResponse
  * @package  RetailCrm\Model\Response\AliExpress
  * @author   RetailCRM <integration@retailcrm.ru>
  * @license  http://retailcrm.ru Proprietary
@@ -12,26 +12,27 @@
 
 namespace RetailCrm\Model\Response\AliExpress;
 
+use RetailCrm\Model\Response\AliExpress\Data\SolutionProductSchemaGetResponseData;
 use RetailCrm\Model\Response\BaseResponse;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Class SolutionFeedSubmitResponse
+ * Class SolutionProductSchemaGetResponse
  *
- * @category SolutionFeedSubmitResponse
+ * @category SolutionProductSchemaGetResponse
  * @package  RetailCrm\Model\Response\AliExpress
  * @author   RetailDriver LLC <integration@retailcrm.ru>
  * @license  https://retailcrm.ru Proprietary
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class SolutionFeedSubmitResponse extends BaseResponse
+class SolutionProductSchemaGetResponse extends BaseResponse
 {
     /**
-     * @var \RetailCrm\Model\Response\AliExpress\Data\SolutionFeedSubmitResponseData $responseData
+     * @var SolutionProductSchemaGetResponseData $responseData
      *
-     * @JMS\Type("RetailCrm\Model\Response\AliExpress\Data\SolutionFeedSubmitResponseData")
-     * @JMS\SerializedName("aliexpress_solution_feed_submit_response")
+     * @JMS\Type("RetailCrm\Model\Response\AliExpress\Data\SolutionProductSchemaGetResponseData")
+     * @JMS\SerializedName("aliexpress_solution_product_schema_get_response")
      */
     public $responseData;
 }
