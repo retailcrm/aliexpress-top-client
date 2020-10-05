@@ -13,6 +13,7 @@
 namespace RetailCrm\Model\Response\AliExpress\Result;
 
 use JMS\Serializer\Annotation as JMS;
+use RetailCrm\Model\Response\AliExpress\Result\Interfaces\ErrorInterface;
 use RetailCrm\Model\Response\AliExpress\Result\Traits\ErrorTrait;
 use RetailCrm\Model\Response\AliExpress\Result\Traits\SuccessTrait;
 
@@ -26,7 +27,7 @@ use RetailCrm\Model\Response\AliExpress\Result\Traits\SuccessTrait;
  * @link     http://retailcrm.ru
  * @see      https://help.retailcrm.ru
  */
-class AeopCategoryForecastResultDto
+class AeopCategoryForecastResultDto implements ErrorInterface
 {
     use ErrorTrait;
     use SuccessTrait;

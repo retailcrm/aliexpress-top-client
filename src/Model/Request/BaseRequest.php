@@ -17,6 +17,7 @@ use RetailCrm\Component\Constants;
 use RetailCrm\Model\Enum\AvailableResponseFormats;
 use RetailCrm\Model\Enum\AvailableSignMethods;
 use Symfony\Component\Validator\Constraints as Assert;
+use RetailCrm\Component\Validator\Constraints as TopAssert;
 
 /**
  * Class BaseRequest
@@ -65,6 +66,7 @@ abstract class BaseRequest
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\SerializedName("timestamp")
      * @Assert\NotBlank()
+     * @TopAssert\Timezone("Asia/Shanghai")
      */
     public $timestamp;
 

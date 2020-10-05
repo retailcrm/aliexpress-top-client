@@ -41,4 +41,24 @@ trait ErrorTrait
      * @JMS\SerializedName("error_message")
      */
     public $errorMessage;
+
+    /**
+     * ErrorInterface implementation.
+     *
+     * @return ?string
+     */
+    public function getErrorCode(): ?string
+    {
+        return $this->errorCode;
+    }
+
+    /**
+     * ErrorInterface implementation.
+     *
+     * @return ?string
+     */
+    public function getErrorMessage(): ?string
+    {
+        return $this->errorMessage;
+    }
 }

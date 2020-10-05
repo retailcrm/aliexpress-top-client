@@ -15,14 +15,20 @@ namespace RetailCrm\Tests\TopClient;
 use Http\Message\RequestMatcher\CallbackRequestMatcher;
 use Psr\Http\Message\RequestInterface;
 use RetailCrm\Builder\TopClientBuilder;
+use RetailCrm\Component\ConstraintViolationListTransformer;
+use RetailCrm\Component\Exception\ValidationException;
 use RetailCrm\Model\Entity\CategoryInfo;
 use RetailCrm\Model\Enum\FeedOperationTypes;
 use RetailCrm\Model\Enum\FeedStatuses;
+use RetailCrm\Model\Enum\OfflinePickupTypes;
+use RetailCrm\Model\Enum\OrderStatuses;
+use RetailCrm\Model\Request\AliExpress\Data\OrderQuery;
 use RetailCrm\Model\Request\AliExpress\Data\SingleItemRequestDto;
 use RetailCrm\Model\Request\AliExpress\PostproductRedefiningCategoryForecast;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedListGet;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedQuery;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedSubmit;
+use RetailCrm\Model\Request\AliExpress\SolutionOrderGet;
 use RetailCrm\Model\Request\AliExpress\SolutionProductSchemaGet;
 use RetailCrm\Model\Request\AliExpress\SolutionSellerCategoryTreeQuery;
 use RetailCrm\Model\Request\Taobao\HttpDnsGetRequest;
@@ -459,9 +465,155 @@ EOF;
         $request = new SolutionProductSchemaGet();
         $request->aliexpressCategoryId = 1;
 
-        /** @var SolutionProductSchemaGetResponse $response */
         $response = $client->sendAuthenticatedRequest($request);
 
         self::assertEquals('{}', $response->responseData->result->schema);
+    }
+
+    public function testAliexpressSolutionOrderGet()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_order_get_response":{
+        "result":{
+            "error_message":"1",
+            "total_count":1,
+            "target_list":{
+                "order_dto":[
+                    {
+                        "timeout_left_time":120340569,
+                        "seller_signer_fullname":"cn1234",
+                        "seller_operator_login_id":"cn1234",
+                        "seller_login_id":"cn1234",
+                        "product_list":{
+                            "order_product_dto":[
+                                {
+                                    "total_product_amount":{
+                                        "currency_code":"USD",
+                                        "amount":"1.01"
+                                    },
+                                    "son_order_status":"PLACE_ORDER_SUCCESS",
+                                    "sku_code":"12",
+                                    "show_status":"PLACE_ORDER_SUCCESS",
+                                    "send_goods_time":"2017-10-12 12:12:12",
+                                    "send_goods_operator":"WAREHOUSE_SEND_GOODS",
+                                    "product_unit_price":{
+                                        "currency_code":"USD",
+                                        "amount":"1.01"
+                                    },
+                                    "product_unit":"piece",
+                                    "product_standard":"",
+                                    "product_snap_url":"http:\/\/www.aliexpress.com:1080\/snapshot\/null.html?orderId\\u003d1160045860056286",
+                                    "product_name":"mobile",
+                                    "product_img_url":"http:\/\/g03.a.alicdn.com\/kf\/images\/eng\/no_photo.gif",
+                                    "product_id":2356980,
+                                    "product_count":1,
+                                    "order_id":222222,
+                                    "money_back3x":false,
+                                    "memo":"1",
+                                    "logistics_type":"EMS",
+                                    "logistics_service_name":"EMS",
+                                    "logistics_amount":{
+                                        "currency_code":"USD",
+                                        "amount":"1.01"
+                                    },
+                                    "issue_status":"END_ISSUE",
+                                    "issue_mode":"w",
+                                    "goods_prepare_time":3,
+                                    "fund_status":"WAIT_SELLER_CHECK",
+                                    "freight_commit_day":"27",
+                                    "escrow_fee_rate":"0.01",
+                                    "delivery_time":"5-10",
+                                    "child_id":23457890,
+                                    "can_submit_issue":false,
+                                    "buyer_signer_last_name":"1",
+                                    "buyer_signer_first_name":"1",
+                                    "afflicate_fee_rate":"0.03"
+                                }
+                            ]
+                        },
+                        "phone":false,
+                        "payment_type":"ebanx101",
+                        "pay_amount":{
+                            "currency_code":"USD",
+                            "amount":"1.01"
+                        },
+                        "order_status":"PLACE_ORDER_SUCCESS",
+                        "order_id":1160045860056286,
+                        "order_detail_url":"http",
+                        "logistics_status":"NO_LOGISTICS",
+                        "logisitcs_escrow_fee_rate":"1",
+                        "loan_amount":{
+                            "currency_code":"USD",
+                            "amount":"1.01"
+                        },
+                        "left_send_good_min":"1",
+                        "left_send_good_hour":"1",
+                        "left_send_good_day":"1",
+                        "issue_status":"END_ISSUE",
+                        "has_request_loan":false,
+                        "gmt_update":"2017-10-12 12:12:12",
+                        "gmt_send_goods_time":"2017-10-12 12:12:12",
+                        "gmt_pay_time":"2017-10-12 12:12:12",
+                        "gmt_create":"2017-10-12 12:12:12",
+                        "fund_status":"WAIT_SELLER_CHECK",
+                        "frozen_status":"IN_FROZEN",
+                        "escrow_fee_rate":1,
+                        "escrow_fee":{
+                            "currency_code":"USD",
+                            "amount":"1.01"
+                        },
+                        "end_reason":"buyer_confirm_goods",
+                        "buyer_signer_fullname":"test",
+                        "buyer_login_id":"test",
+                        "biz_type":"AE_RECHARGE",
+                        "offline_pickup_type":"RU_OFFLINE_SELF_PICK_UP_EXPRESSION"
+                    }
+                ]
+            },
+            "page_size":1,
+            "error_code":"1",
+            "current_page":1,
+            "total_page":1,
+            "success":true,
+            "time_stamp":"1"
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalQueryParams([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.order.get',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+        $query = new OrderQuery();
+        $query->orderStatus = OrderStatuses::PLACE_ORDER_SUCCESS;
+        $request = new SolutionOrderGet();
+        $request->param0 = $query;
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionOrderGetResponse $response */
+        $response = $client->sendAuthenticatedRequest($request);
+        $result = $response->responseData->result;
+
+        self::assertTrue($result->success);
+        self::assertEquals(1, $result->totalCount);
+        self::assertCount(1, $result->targetList->orderDto);
+        self::assertEquals(OrderStatuses::PLACE_ORDER_SUCCESS, $result->targetList->orderDto[0]->orderStatus);
+        self::assertEquals(222222, $result->targetList->orderDto[0]->productList->orderProductDto[0]->orderId);
+        self::assertEquals(
+            OfflinePickupTypes::RU_OFFLINE_SELF_PICK_UP_EXPRESSION,
+            $result->targetList->orderDto[0]->offlinePickupType
+        );
     }
 }

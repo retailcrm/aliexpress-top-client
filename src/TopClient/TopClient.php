@@ -211,7 +211,19 @@ class TopClient implements TopClientInterface
     }
 
     /**
-     * Send TOP request
+     * Send TOP request. Can throw several exceptions:
+     *  - ValidationException - when request didn't pass validation.
+     *  - FactoryException - when PSR-7 request cannot be built.
+     *  - TopClientException - when PSR-7 request cannot be processed by client, or xml mode is used
+     *    (always use JSON mode, it's already chosen in the BaseRequest model). Previous error will contain HTTP
+     *    client processing error (if it's present).
+     *  - TopApiException - when request is not processed and API returned error. Note: this exception is only thrown
+     *    when request cannot be processed by API at all (for example, if signature is invalid). It will not be thrown
+     *    if request was processed, but API returned error in the response result. In that case you can use error fields
+     *    from the response result itself; those results implement ErrorInterface via ErrorTrait.
+     *    However, some result classes may contain different format for error data. Those result classes won't implement
+     *    ErrorInterface - you can use `instanceof` to differentiate such results from the others. This inconsistency
+     *    is brought by the API design itself, and cannot be easily removed.
      *
      * @param \RetailCrm\Model\Request\BaseRequest $request
      *
@@ -256,7 +268,7 @@ class TopClient implements TopClientInterface
     }
 
     /**
-     * Send authenticated TOP request
+     * Send authenticated TOP request. Authenticator should be present in order to use this method.
      *
      * @param \RetailCrm\Model\Request\BaseRequest $request
      *

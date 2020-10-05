@@ -148,11 +148,19 @@ class TopRequestFactory implements TopRequestFactoryInterface
         // But in which format AliExpress TOP expects that? Should definitely check that.
         $queryData = http_build_query($requestData);
 
-        return $this->requestFactory
-            ->createRequest(
-                'GET',
-                $this->uriFactory->createUri($appData->getServiceUrl())->withQuery($queryData)
-            )->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+        try {
+            return $this->requestFactory
+                ->createRequest(
+                    'GET',
+                    $this->uriFactory->createUri($appData->getServiceUrl())->withQuery($queryData)
+                )->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+        } catch (\Exception $exception) {
+            throw new FactoryException(
+                sprintf('Error building request: %s', $exception->getMessage()),
+                0,
+                $exception
+            );
+        }
     }
 
     /**
