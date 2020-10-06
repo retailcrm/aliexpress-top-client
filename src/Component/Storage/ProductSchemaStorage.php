@@ -98,8 +98,9 @@ class ProductSchemaStorage
         $error = new ErrorResponseBody();
         $error->msg = $response->responseData->result->errorMessage;
         $error->code = (int) $response->responseData->result->errorCode;
+        $error->requestId = $response->requestId;
 
-        throw new TopApiException($error, $response->requestId);
+        throw new TopApiException($error);
     }
 
     /**

@@ -15,14 +15,12 @@ namespace RetailCrm\Builder;
 use RetailCrm\Component\Constants;
 use RetailCrm\Component\Environment;
 use RetailCrm\Component\ServiceLocator;
-use RetailCrm\Component\Storage\ProductSchemaStorage;
 use RetailCrm\Factory\ProductSchemaStorageFactory;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\BuilderInterface;
 use RetailCrm\Interfaces\ContainerAwareInterface;
 use RetailCrm\Interfaces\TopRequestFactoryInterface;
-use RetailCrm\Interfaces\TopRequestProcessorInterface;
 use RetailCrm\TopClient\TopClient;
 use RetailCrm\Traits\ContainerAwareTrait;
 
@@ -90,7 +88,6 @@ class TopClientBuilder implements ContainerAwareInterface, BuilderInterface
         $client->setLogger($this->container->get(Constants::LOGGER));
         $client->setRequestFactory($this->container->get(TopRequestFactoryInterface::class));
         $client->setServiceLocator($this->container->get(ServiceLocator::class));
-        $client->setProcessor($this->container->get(TopRequestProcessorInterface::class));
         $client->setProductSchemaStorageFactory($this->container->get(ProductSchemaStorageFactory::class));
 
         if (null !== $this->authenticator) {

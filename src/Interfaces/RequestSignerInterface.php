@@ -13,8 +13,6 @@
 
 namespace RetailCrm\Interfaces;
 
-use RetailCrm\Model\Request\BaseRequest;
-
 /**
  * Interface RequestSignerInterface
  *
@@ -28,10 +26,14 @@ use RetailCrm\Model\Request\BaseRequest;
 interface RequestSignerInterface
 {
     /**
-     * Signs provided request.
+     * Generate sign for provided request data.
      *
-     * @param \RetailCrm\Model\Request\BaseRequest   $request
+     * @param array                                  $request
      * @param \RetailCrm\Interfaces\AppDataInterface $appData
+     * @param string                                 $signMethod
+     *
+     * @return string
+     * @throws \RetailCrm\Component\Exception\NotImplementedException
      */
-    public function sign(BaseRequest $request, AppDataInterface $appData): void;
+    public function generateSign(array $request, AppDataInterface $appData, string $signMethod): string;
 }

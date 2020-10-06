@@ -19,11 +19,15 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use RetailCrm\Component\Exception\FactoryException;
+use RetailCrm\Component\Exception\NotImplementedException;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\FileItemInterface;
+use RetailCrm\Interfaces\RequestSignerInterface;
+use RetailCrm\Interfaces\RequestTimestampProviderInterface;
 use RetailCrm\Interfaces\TopRequestFactoryInterface;
 use RetailCrm\Model\Request\BaseRequest;
 use RetailCrm\Service\RequestDataFilter;
+use RetailCrm\Service\TopRequestProcessor;
 use UnexpectedValueException;
 
 /**
@@ -63,6 +67,38 @@ class TopRequestFactory implements TopRequestFactoryInterface
      * @var \Psr\Http\Message\UriFactoryInterface $uriFactory
      */
     private $uriFactory;
+
+    /**
+     * @var \RetailCrm\Interfaces\RequestSignerInterface $signer
+     */
+    private $signer;
+
+    /**
+     * @var RequestTimestampProviderInterface $timestampProvider
+     */
+    private $timestampProvider;
+
+    /**
+     * @param \RetailCrm\Interfaces\RequestSignerInterface $signer
+     *
+     * @return \RetailCrm\Factory\TopRequestFactory
+     */
+    public function setSigner(RequestSignerInterface $signer): TopRequestFactory
+    {
+        $this->signer = $signer;
+        return $this;
+    }
+
+    /**
+     * @param \RetailCrm\Interfaces\RequestTimestampProviderInterface $timestampProvider
+     *
+     * @return \RetailCrm\Factory\TopRequestFactory
+     */
+    public function setTimestampProvider(RequestTimestampProviderInterface $timestampProvider): TopRequestFactory
+    {
+        $this->timestampProvider = $timestampProvider;
+        return $this;
+    }
 
     /**
      * @param \RetailCrm\Service\RequestDataFilter $filter
@@ -120,6 +156,33 @@ class TopRequestFactory implements TopRequestFactoryInterface
     }
 
     /**
+     * @param \RetailCrm\Model\Request\BaseRequest $request
+     *
+     * @return array
+     * @throws \RetailCrm\Component\Exception\FactoryException
+     */
+    public function getRequestArray(BaseRequest $request): array
+    {
+        $requestData = $this->serializer->toArray($request);
+
+        foreach ($requestData as $key => $value) {
+            if ($value instanceof FileItemInterface) {
+                continue;
+            }
+
+            $requestData[$key] = $this->castValue($value);
+        }
+
+        if (empty($requestData)) {
+            throw new FactoryException('Empty request data');
+        }
+
+        ksort($requestData);
+
+        return $requestData;
+    }
+
+    /**
      * @param \RetailCrm\Model\Request\BaseRequest         $request
      * @param \RetailCrm\Interfaces\AppDataInterface       $appData
      *
@@ -130,22 +193,20 @@ class TopRequestFactory implements TopRequestFactoryInterface
         BaseRequest $request,
         AppDataInterface $appData
     ): RequestInterface {
-        $requestData = $this->serializer->toArray($request);
-        $requestHasBinaryData = $this->filter->hasBinaryFromRequestData($requestData);
+        $request->appKey = $appData->getAppKey();
+        $this->timestampProvider->provide($request);
+        $requestData = $this->getRequestArray($request);
 
-        ksort($requestData);
-
-        if (empty($requestData)) {
-            throw new FactoryException('Empty request data');
+        try {
+            $requestData['sign'] = $this->signer->generateSign($requestData, $appData, $request->signMethod);
+        } catch (NotImplementedException $exception) {
+            throw new FactoryException(sprintf('Cannot sign request: %s', $exception->getMessage()));
         }
 
-        if ($requestHasBinaryData) {
+        if ($this->filter->hasBinaryFromRequestData($requestData)) {
             return $this->makeMultipartRequest($appData->getServiceUrl(), $requestData);
         }
 
-        //TODO
-        // And how this call should process arrays? It will process them, yes.
-        // But in which format AliExpress TOP expects that? Should definitely check that.
         $queryData = http_build_query($requestData);
 
         try {
@@ -177,11 +238,7 @@ class TopRequestFactory implements TopRequestFactoryInterface
             if ($value instanceof FileItemInterface) {
                 $builder->addResource($param, $value->getStream(), ['filename' => $value->getFileName()]);
             } else {
-                $casted = $this->castValue($value);
-
-                if (null !== $casted) {
-                    $builder->addResource($param, $casted);
-                }
+                $builder->addResource($param, $value);
             }
         }
 
@@ -203,6 +260,7 @@ class TopRequestFactory implements TopRequestFactoryInterface
      * @param mixed $value
      *
      * @return string|resource|null
+     * @todo Arrays will be encoded to JSON. Is this correct? Press X to doubt.
      */
     private function castValue($value)
     {
@@ -217,6 +275,9 @@ class TopRequestFactory implements TopRequestFactoryInterface
             case 'double':
             case 'string':
                 return (string) $value;
+            case 'array':
+            case 'object':
+                return (string) $this->serializer->serialize($value, 'json');
             default:
                 throw new UnexpectedValueException(sprintf('Got value with unsupported type: %s', $type));
         }

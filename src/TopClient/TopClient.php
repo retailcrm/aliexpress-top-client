@@ -30,7 +30,6 @@ use RetailCrm\Interfaces\AuthenticatorInterface;
 use RetailCrm\Interfaces\BuilderInterface;
 use RetailCrm\Interfaces\TopClientInterface;
 use RetailCrm\Interfaces\TopRequestFactoryInterface;
-use RetailCrm\Interfaces\TopRequestProcessorInterface;
 use RetailCrm\Model\Request\BaseRequest;
 use RetailCrm\Model\Response\BaseResponse;
 use RetailCrm\Model\Response\TopResponseInterface;
@@ -79,11 +78,6 @@ class TopClient implements TopClientInterface
      * @var \RetailCrm\Component\ServiceLocator $serviceLocator
      */
     protected $serviceLocator;
-
-    /**
-     * @var TopRequestProcessorInterface $processor
-     */
-    protected $processor;
 
     /**
      * @var \RetailCrm\Interfaces\AuthenticatorInterface $authenticator
@@ -153,17 +147,6 @@ class TopClient implements TopClientInterface
     public function setServiceLocator(ServiceLocator $serviceLocator): void
     {
         $this->serviceLocator = $serviceLocator;
-    }
-
-    /**
-     * @param \RetailCrm\Interfaces\TopRequestProcessorInterface $processor
-     *
-     * @return TopClient
-     */
-    public function setProcessor(TopRequestProcessorInterface $processor): TopClient
-    {
-        $this->processor = $processor;
-        return $this;
     }
 
     /**
@@ -269,8 +252,6 @@ class TopClient implements TopClientInterface
             throw new TopClientException(sprintf('TopClient only supports JSON mode, got `%s` mode', $request->format));
         }
 
-        $this->processor->process($request, $this->appData);
-
         $httpRequest = $this->requestFactory->fromModel($request, $this->appData);
 
         try {
@@ -292,10 +273,19 @@ class TopClient implements TopClientInterface
         }
 
         if (null !== $response->errorResponse) {
-            throw new TopApiException($response->errorResponse, $response->requestId);
+            if ($this->debugLogging()) {
+                $this->logger->debug(sprintf(
+                    '<AliExpress TOP Client> Request %s (%s): got error response %s',
+                    $request->getMethod(),
+                    $httpRequest->getUri()->__toString(),
+                    $bodyData
+                ));
+            }
+
+            throw new TopApiException($response->errorResponse);
         }
 
-        if (null !== $this->logger && !($this->logger instanceof NullLogger) && $this->env->isDebug()) {
+        if ($this->debugLogging()) {
             $this->logger->debug(sprintf(
                 '<AliExpress TOP Client> Request %s (%s): got response %s',
                 $request->getMethod(),
@@ -327,6 +317,14 @@ class TopClient implements TopClientInterface
         $this->authenticator->authenticate($request);
 
         return $this->sendRequest($request);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function debugLogging(): bool
+    {
+        return null !== $this->logger && !($this->logger instanceof NullLogger) && $this->env->isDebug();
     }
 
     /**

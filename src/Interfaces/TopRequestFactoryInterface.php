@@ -40,4 +40,11 @@ interface TopRequestFactoryInterface
         BaseRequest $request,
         AppDataInterface $appData
     ): RequestInterface;
+
+    /**
+     * @param \RetailCrm\Model\Request\BaseRequest $request
+     *
+     * @return array
+     */
+    public function getRequestArray(BaseRequest $request): array;
 }

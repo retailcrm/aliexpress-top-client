@@ -12,11 +12,10 @@
  */
 namespace RetailCrm\Tests\TopClient;
 
+use DateTime;
 use Http\Message\RequestMatcher\CallbackRequestMatcher;
 use Psr\Http\Message\RequestInterface;
 use RetailCrm\Builder\TopClientBuilder;
-use RetailCrm\Component\ConstraintViolationListTransformer;
-use RetailCrm\Component\Exception\ValidationException;
 use RetailCrm\Model\Entity\CategoryInfo;
 use RetailCrm\Model\Enum\FeedOperationTypes;
 use RetailCrm\Model\Enum\FeedStatuses;
@@ -41,7 +40,6 @@ use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResp
 use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList;
 use RetailCrm\Model\Response\AliExpress\PostproductRedefiningCategoryForecastResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionFeedListGetResponse;
-use RetailCrm\Model\Response\AliExpress\SolutionProductSchemaGetResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionSellerCategoryTreeQueryResponse;
 use RetailCrm\Model\Response\ErrorResponseBody;
 use RetailCrm\Model\Response\Taobao\HttpDnsGetResponse;
@@ -602,6 +600,9 @@ EOF;
             ->setAuthenticator($this->getEnvTokenAuthenticator())
             ->build();
         $query = new OrderQuery();
+        $query->pageSize = 20;
+        $query->currentPage = 1;
+        $query->createDateStart = new DateTime();
         $query->orderStatus = OrderStatuses::PLACE_ORDER_SUCCESS;
         $request = new SolutionOrderGet();
         $request->param0 = $query;

@@ -49,4 +49,20 @@ class ErrorResponseBody
      * @JMS\SerializedName("sub_code")
      */
     public $subCode;
+
+    /**
+     * @var string $subMsg
+     *
+     * @JMS\Type("string")
+     * @JMS\SerializedName("sub_msg")
+     */
+    public $subMsg;
+
+    /**
+     * @var string $requestId
+     *
+     * @JMS\Type("string")
+     * @JMS\SerializedName("request_id")
+     */
+    public $requestId;
 }

@@ -36,11 +36,9 @@ use RetailCrm\Interfaces\FileItemFactoryInterface;
 use RetailCrm\Interfaces\RequestSignerInterface;
 use RetailCrm\Interfaces\RequestTimestampProviderInterface;
 use RetailCrm\Interfaces\TopRequestFactoryInterface;
-use RetailCrm\Interfaces\TopRequestProcessorInterface;
 use RetailCrm\Service\RequestDataFilter;
 use RetailCrm\Service\RequestSigner;
 use RetailCrm\Service\RequestTimestampProvider;
-use RetailCrm\Service\TopRequestProcessor;
 use RuntimeException;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\TraceableValidator;
@@ -230,16 +228,7 @@ class ContainerBuilder implements BuilderInterface
         });
         $container->set(RequestDataFilter::class, new RequestDataFilter());
         $container->set(RequestSignerInterface::class, function (ContainerInterface $container) {
-            return new RequestSigner(
-                $container->get(Constants::SERIALIZER),
-                $container->get(RequestDataFilter::class)
-            );
-        });
-        $container->set(TopRequestProcessorInterface::class, function (ContainerInterface $container) {
-            return (new TopRequestProcessor())
-                ->setSigner($container->get(RequestSignerInterface::class))
-                ->setValidator($container->get(Constants::VALIDATOR))
-                ->setTimestampProvider($container->get(RequestTimestampProviderInterface::class));
+            return new RequestSigner($container->get(RequestDataFilter::class));
         });
         $container->set(TopRequestFactoryInterface::class, function (ContainerInterface $container) {
             return (new TopRequestFactory())
@@ -247,7 +236,9 @@ class ContainerBuilder implements BuilderInterface
                 ->setSerializer($container->get(Constants::SERIALIZER))
                 ->setStreamFactory($container->get(StreamFactoryInterface::class))
                 ->setRequestFactory($container->get(RequestFactoryInterface::class))
-                ->setUriFactory($container->get(UriFactoryInterface::class));
+                ->setUriFactory($container->get(UriFactoryInterface::class))
+                ->setSigner($container->get(RequestSignerInterface::class))
+                ->setTimestampProvider($container->get(RequestTimestampProviderInterface::class));
         });
         $container->set(ServiceLocator::class, function (ContainerInterface $container) {
             $locator = new ServiceLocator();

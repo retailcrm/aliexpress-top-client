@@ -16,6 +16,7 @@ use RetailCrm\Component\AppData;
 use RetailCrm\Component\Constants;
 use RetailCrm\Interfaces\AppDataInterface;
 use RetailCrm\Interfaces\RequestSignerInterface;
+use RetailCrm\Interfaces\TopRequestFactoryInterface;
 use RetailCrm\Model\Enum\AvailableSignMethods;
 use RetailCrm\Test\TestCase;
 use RetailCrm\Test\TestSignerRequest;
@@ -35,43 +36,46 @@ class RequestSignerTest extends TestCase
     /**
      * @dataProvider signDataProvider
      *
-     * @param \RetailCrm\Test\TestSignerRequest      $request
+     * @param array                                  $request
      * @param \RetailCrm\Interfaces\AppDataInterface $appData
      * @param string                                 $expectedHash
+     *
+     * @throws \RetailCrm\Component\Exception\NotImplementedException
      */
-    public function testSign(TestSignerRequest $request, AppDataInterface $appData, string $expectedHash): void
+    public function testSign(array $request, AppDataInterface $appData, string $expectedHash): void
     {
         /** @var RequestSignerInterface $signer */
         $signer = $this->getContainer()->get(RequestSignerInterface::class);
-        $signer->sign($request, $appData);
 
-        self::assertEquals($expectedHash, $request->sign);
+        self::assertEquals($expectedHash, $signer->generateSign($request, $appData, $request['sign_method']));
     }
 
     public function signDataProvider(): array
     {
+        /** @var TopRequestFactoryInterface $factory */
+        $factory = $this->getContainer()->get(TopRequestFactoryInterface::class);
         $appData = $this->getAppData();
 
         return [
             [
-                $this->getTestRequest(AvailableSignMethods::MD5),
+                $factory->getRequestArray($this->getTestRequest(AvailableSignMethods::MD5)),
                 $appData,
-                '468BF7C95925C187D0DFD7D042072EB4'
+                '4BC79C5FAA1B5E254E95A97E65BACEAB'
             ],
             [
-                $this->getTestRequest(AvailableSignMethods::HMAC_MD5),
+                $factory->getRequestArray($this->getTestRequest(AvailableSignMethods::HMAC_MD5)),
                 $appData,
-                '5EF5C76D5C158BFFA9F35BAAA712A879'
+                '497FA7FCAD98F4F335EFAE2451F8291D'
             ],
             [
-                $this->getTestRequest(AvailableSignMethods::MD5, true),
+                $factory->getRequestArray($this->getTestRequest(AvailableSignMethods::MD5, true)),
                 $appData,
-                '468BF7C95925C187D0DFD7D042072EB4'
+                '4BC79C5FAA1B5E254E95A97E65BACEAB'
             ],
             [
-                $this->getTestRequest(AvailableSignMethods::HMAC_MD5, true),
+                $factory->getRequestArray($this->getTestRequest(AvailableSignMethods::HMAC_MD5, true)),
                 $appData,
-                '5EF5C76D5C158BFFA9F35BAAA712A879'
+                '497FA7FCAD98F4F335EFAE2451F8291D'
             ]
         ];
     }

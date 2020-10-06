@@ -36,7 +36,6 @@ class SolutionOrderGet extends BaseRequest
      *
      * @JMS\Type("RetailCrm\Model\Request\AliExpress\Data\OrderQuery")
      * @JMS\SerializedName("param0")
-     * @todo Should be marshaled to JSON before building request? Check that.
      */
     public $param0;
 

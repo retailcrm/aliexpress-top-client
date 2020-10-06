@@ -29,43 +29,28 @@ use Throwable;
 class TopApiException extends Exception
 {
     /**
-     * @var string $subCode
+     * @var ErrorResponseBody $error
      */
-    private $subCode;
-
-    /**
-     * @var string $requestId
-     */
-    private $requestId;
+    private $error;
 
     /**
      * TopApiException constructor.
      *
      * @param \RetailCrm\Model\Response\ErrorResponseBody $responseBody
-     * @param string|null                                      $requestId
-     * @param \Throwable|null                                  $previous
+     * @param \Throwable|null                             $previous
      */
-    public function __construct(ErrorResponseBody $responseBody, ?string $requestId, Throwable $previous = null)
+    public function __construct(ErrorResponseBody $responseBody, Throwable $previous = null)
     {
         parent::__construct($responseBody->msg, $responseBody->code, $previous);
 
-        $this->subCode = $responseBody->subCode;
-        $this->requestId = $requestId;
+        $this->error = $responseBody;
     }
 
     /**
-     * @return string
+     * @return \RetailCrm\Model\Response\ErrorResponseBody
      */
-    public function getSubCode(): ?string
+    public function getError(): ErrorResponseBody
     {
-        return $this->subCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRequestId(): ?string
-    {
-        return $this->requestId;
+        return $this->error;
     }
 }
