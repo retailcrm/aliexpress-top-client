@@ -163,23 +163,7 @@ class TopRequestFactory implements TopRequestFactoryInterface
      */
     public function getRequestArray(BaseRequest $request): array
     {
-        $requestData = $this->serializer->toArray($request);
-
-        foreach ($requestData as $key => $value) {
-            if ($value instanceof FileItemInterface) {
-                continue;
-            }
-
-            $requestData[$key] = $this->castValue($value);
-        }
-
-        if (empty($requestData)) {
-            throw new FactoryException('Empty request data');
-        }
-
-        ksort($requestData);
-
-        return $requestData;
+        return $this->processRequestArray($this->serializer->toArray($request));
     }
 
     /**
@@ -207,14 +191,15 @@ class TopRequestFactory implements TopRequestFactoryInterface
             return $this->makeMultipartRequest($appData->getServiceUrl(), $requestData);
         }
 
-        $queryData = http_build_query($requestData);
+        $postData = http_build_query($requestData);
 
         try {
             return $this->requestFactory
                 ->createRequest(
-                    'GET',
-                    $this->uriFactory->createUri($appData->getServiceUrl())->withQuery($queryData)
-                )->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    'POST',
+                    $this->uriFactory->createUri($appData->getServiceUrl())
+                )->withBody($this->streamFactory->createStream($postData))
+                ->withHeader('content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
         } catch (\Exception $exception) {
             throw new FactoryException(
                 sprintf('Error building request: %s', $exception->getMessage()),
@@ -222,6 +207,31 @@ class TopRequestFactory implements TopRequestFactoryInterface
                 $exception
             );
         }
+    }
+
+    /**
+     * @param array $requestData
+     *
+     * @return array
+     * @throws \RetailCrm\Component\Exception\FactoryException
+     */
+    protected function processRequestArray(array $requestData): array
+    {
+        foreach ($requestData as $key => $value) {
+            if ($value instanceof FileItemInterface) {
+                continue;
+            }
+
+            $requestData[$key] = $this->castValue($value);
+        }
+
+        if (empty($requestData)) {
+            throw new FactoryException('Empty request data');
+        }
+
+        ksort($requestData);
+
+        return $requestData;
     }
 
     /**
@@ -251,7 +261,8 @@ class TopRequestFactory implements TopRequestFactoryInterface
         return $this->requestFactory
             ->createRequest('POST', $this->uriFactory->createUri($endpoint))
             ->withBody($stream)
-            ->withHeader('Content-Type', 'multipart/form-data; boundary="'.$builder->getBoundary().'"');
+            ->withHeader('Content-Type', 'multipart/form-data; boundary="'.$builder->getBoundary().'"')
+            ->withHeader('Content-Length', $stream->getSize());
     }
 
     /**

@@ -16,16 +16,24 @@ use DateTime;
 use Http\Message\RequestMatcher\CallbackRequestMatcher;
 use Psr\Http\Message\RequestInterface;
 use RetailCrm\Builder\TopClientBuilder;
+use RetailCrm\Component\Constants;
+use RetailCrm\Component\Logger\FileLogger;
+use RetailCrm\Component\Logger\StdoutLogger;
 use RetailCrm\Model\Entity\CategoryInfo;
+use RetailCrm\Model\Enum\DropshippingAreas;
 use RetailCrm\Model\Enum\FeedOperationTypes;
 use RetailCrm\Model\Enum\FeedStatuses;
 use RetailCrm\Model\Enum\OfflinePickupTypes;
 use RetailCrm\Model\Enum\OrderStatuses;
+use RetailCrm\Model\Request\AliExpress\Data\FeedStocksUpdateDto;
 use RetailCrm\Model\Request\AliExpress\Data\OrderQuery;
 use RetailCrm\Model\Request\AliExpress\Data\SingleItemRequestDto;
 use RetailCrm\Model\Request\AliExpress\Data\SingleOrderQuery;
+use RetailCrm\Model\Request\AliExpress\Data\SkuStocksUpdateItemDto;
+use RetailCrm\Model\Request\AliExpress\LogisticsDsTrackingInfoQuery;
 use RetailCrm\Model\Request\AliExpress\LogisticsRedefiningListLogisticsService;
 use RetailCrm\Model\Request\AliExpress\PostproductRedefiningCategoryForecast;
+use RetailCrm\Model\Request\AliExpress\PostproductRedefiningFindAEProductByIdForDropshipper;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedListGet;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedQuery;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedSubmit;
@@ -39,6 +47,7 @@ use RetailCrm\Model\Response\AliExpress\Data\SolutionFeedSubmitResponseData;
 use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResponseData;
 use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList;
 use RetailCrm\Model\Response\AliExpress\PostproductRedefiningCategoryForecastResponse;
+use RetailCrm\Model\Response\AliExpress\PostproductRedefiningFindAEProductByIdForDropshipperResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionFeedListGetResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionSellerCategoryTreeQueryResponse;
 use RetailCrm\Model\Response\ErrorResponseBody;
@@ -134,7 +143,7 @@ EOF;
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
-                ->setOptionalQueryParams([
+                ->setOptionalPostFields([
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.solution.seller.category.tree.query',
                     'category_id' => '5090300',
@@ -201,7 +210,7 @@ EOF;
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
-                ->setOptionalQueryParams([
+                ->setOptionalPostFields([
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.postproduct.redefining.categoryforecast',
                     'session' => self::getEnvToken()
@@ -254,7 +263,7 @@ EOF;
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
-                ->setOptionalQueryParams([
+                ->setOptionalPostFields([
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.postproduct.redefining.categoryforecast',
                     'session' => self::getEnvToken()
@@ -297,7 +306,7 @@ EOF;
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
-                ->setOptionalQueryParams([
+                ->setOptionalPostFields([
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.solution.feed.submit',
                     'session' => self::getEnvToken()
@@ -348,7 +357,7 @@ EOF;
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
-                ->setOptionalQueryParams([
+                ->setOptionalPostFields([
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.solution.feed.query',
                     'session' => self::getEnvToken()
@@ -405,7 +414,7 @@ EOF;
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
-                ->setOptionalQueryParams([
+                ->setOptionalPostFields([
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.solution.feed.list.get',
                     'session' => self::getEnvToken()
@@ -452,7 +461,7 @@ EOF;
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
-                ->setOptionalQueryParams([
+                ->setOptionalPostFields([
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.solution.product.schema.get',
                     'session' => self::getEnvToken()
@@ -587,7 +596,7 @@ EOF;
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
-                ->setOptionalQueryParams([
+                ->setOptionalPostFields([
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.solution.order.get',
                     'session' => self::getEnvToken()
@@ -652,7 +661,7 @@ EOF;
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
-                ->setOptionalQueryParams([
+                ->setOptionalPostFields([
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.solution.order.receiptinfo.get',
                     'session' => self::getEnvToken()
@@ -707,7 +716,7 @@ EOF;
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
-                ->setOptionalQueryParams([
+                ->setOptionalPostFields([
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.logistics.redefining.listlogisticsservice',
                     'session' => self::getEnvToken()
@@ -743,7 +752,7 @@ EOF;
         $mock->on(
             RequestMatcher::createMatcher('api.taobao.com')
                 ->setPath('/router/rest')
-                ->setOptionalQueryParams([
+                ->setOptionalPostFields([
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.solution.order.fulfill',
                     'session' => self::getEnvToken()
@@ -767,5 +776,289 @@ EOF;
         $response = $client->sendAuthenticatedRequest($request);
 
         self::assertTrue($response->responseData->result->resultSuccess);
+    }
+
+    public function testAliexpressPostproductRedefiningFindAEProductByIdForDropshipper()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_postproduct_redefining_findaeproductbyidfordropshipper_response":{
+        "result":{
+            "aeop_ae_product_s_k_us":{
+                "aeop_ae_product_sku":[
+                    {
+                        "sku_stock":true,
+                        "sku_price":"200.07",
+                        "sku_code":"cfas00978",
+                        "ipm_sku_stock":1234,
+                        "id":"\"200000182:193;200007763:201336100\"",
+                        "currency_code":"USD",
+                        "aeop_s_k_u_propertys":{
+                            "aeop_sku_property":[
+                                {
+                                    "sku_property_id":0,
+                                    "sku_image":"0",
+                                    "property_value_id_long":0,
+                                    "property_value_definition_name":"0",
+                                    "sku_property_value":"\"blue\"",
+                                    "sku_property_name":"\"color\""
+                                }
+                            ]
+                        },
+                        "barcode":"320325455",
+                        "offer_sale_price":"3.3",
+                        "offer_bulk_sale_price":"3.2",
+                        "sku_bulk_order":10,
+                        "s_k_u_available_stock":10
+                    }
+                ]
+            },
+            "detail":"<div>This is a product<\/div>",
+            "is_success":true,
+            "product_unit":100000015,
+            "ws_offline_date":"0",
+            "ws_display":"expire_offline",
+            "category_id":123456,
+            "aeop_a_e_multimedia":{
+                "aeop_a_e_videos":{
+                    "aeop_ae_video":[
+                        {
+                            "poster_url":"http:\/\/img01.taobaocdn.com\/bao\/uploaded\/TB1rNdGIVXXXXbTXFXXXXXXXXXX.jpg",
+                            "media_type":"video",
+                            "media_status":"approved",
+                            "media_id":12345678,
+                            "ali_member_id":1006680305
+                        }
+                    ]
+                }
+            },
+            "owner_member_id":"aliqatest01",
+            "product_status_type":"onSelling",
+            "aeop_ae_product_propertys":{
+                "aeop_ae_product_property":[
+                    {
+                        "attr_value_unit":"piece",
+                        "attr_value_start":"1",
+                        "attr_value_id":100234,
+                        "attr_value_end":"10",
+                        "attr_value":"ABCD",
+                        "attr_name_id":2981,
+                        "attr_name":"型号"
+                    }
+                ]
+            },
+            "gross_weight":"40.12",
+            "delivery_time":7,
+            "ws_valid_num":30,
+            "gmt_modified":"0",
+            "error_message":"System exception",
+            "package_type":true,
+            "aeop_national_quote_configuration":{
+                "configuration_type":"percentage",
+                "configuration_data":"[{\"shiptoCountry\":\"US\",\"percentage\":\"5\"},{\"shiptoCountry\":\"RU\",\"percentage\":\"-2\"}]"
+            },
+            "subject":"knew odd",
+            "base_unit":2,
+            "package_length":10,
+            "mobile_detail":"{}",
+            "package_height":2,
+            "package_width":12,
+            "currency_code":"USD",
+            "gmt_create":"0",
+            "image_u_r_ls":"http:\/\/g01.a.alicdn.com\/kf\/HTB13GKLJXXXXXbYaXXXq6xXFXXXi.jpg;http:\/\/g02.a.alicdn.com\/kf\/HTB1DkaWJXXXXXb6XFXXq6xXFXXXp.jpg;http:\/\/g02.a.alicdn.com\/kf\/HTB1pMCQJXXXXXcvXVXXq6xXFXXXm.jpg;http:\/\/g03.a.alicdn.com\/kf\/HTB1QhORJXXXXXbiXVXXq6xXFXXXx.jpg;http:\/\/g02.a.alicdn.com\/kf\/HTB1q1aLJXXXXXcfaXXXq6xXFXXXv.jpg",
+            "product_id":32839190109,
+            "error_code":16009999,
+            "product_price":"10.23",
+            "item_offer_site_sale_price":"USD 5.5",
+            "total_available_stock":12,
+            "store_info":{
+                "communication_rating":"4.8",
+                "item_as_descriped_rating":"4.8",
+                "shipping_speed_rating":"4.7",
+                "store_id":12345,
+                "store_name":"Clothes Store"
+            },
+            "evaluation_count":100,
+            "avg_evaluation_rating":"4.7",
+            "order_count":120
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.postproduct.redefining.findaeproductbyidfordropshipper',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+        $request = new PostproductRedefiningFindAEProductByIdForDropshipper();
+        $request->productId = 1;
+
+        /** @var PostproductRedefiningFindAEProductByIdForDropshipperResponse $response */
+        $response = $client->sendAuthenticatedRequest($request);
+
+        self::assertEquals(
+            'http://img01.taobaocdn.com/bao/uploaded/TB1rNdGIVXXXXbTXFXXXXXXXXXX.jpg',
+            $response->responseData->result->aeopAeMultimedia->aeopAeVideos->aeopAeVideo[0]->posterUrl
+        );
+    }
+
+    public function testAliexpressLogisticsDsTrackingInfoQuery()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_logistics_ds_trackinginfo_query_response":{
+        "details":{
+            "details":[
+                {
+                    "event_desc":"BILLING INFORMATION RECEIVED",
+                    "signed_name":"signedName",
+                    "status":"status",
+                    "address":"address",
+                    "event_date":"2016-06-26"
+                }
+            ]
+        },
+        "official_website":"www.ems.com",
+        "error_desc":"System error",
+        "result_success":true
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.logistics.ds.trackinginfo.query',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+        $request = new LogisticsDsTrackingInfoQuery();
+        $request->logisticsNo = '20100810142400000-0700';
+        $request->outRef = '1160045240183009';
+        $request->serviceName = 'UPS';
+        $request->toArea = DropshippingAreas::RUSSIAN_FEDERATION;
+
+        /** @var \RetailCrm\Model\Response\AliExpress\LogisticsDsTrackingInfoQueryResponse $response */
+        $response = $client->sendAuthenticatedRequest($request);
+
+        self::assertEquals(
+            'BILLING INFORMATION RECEIVED',
+            $response->responseData->details->details[0]->eventDesc
+        );
+    }
+
+    public function testAliexpressFeedSolutionStocksWorkflow()
+    {
+        $jsonFeedSubmitResponse = <<<'EOF'
+{
+    "aliexpress_solution_feed_submit_response":{
+        "job_id":200000000060024475
+    }
+}
+EOF;
+        $jsonFeedQueryResponse = <<<'EOF'
+{
+    "aliexpress_solution_feed_query_response":{
+        "job_id":200000000060024475,
+        "success_item_count":1,
+        "result_list":{
+            "single_item_response_dto":[
+                {
+                    "item_execution_result":"{\"productId\":33030372006,\"success\":true}",
+                    "item_content_id":"A00000000Y1"
+                }
+            ]
+        },
+        "total_item_count":1
+    }
+}
+EOF;
+
+        $requestSubmit                = new SolutionFeedSubmit();
+        $requestSubmit->operationType = FeedOperationTypes::PRODUCT_STOCKS_UPDATE;
+        $requestSubmit->itemList      = [];
+
+        for ($i = 0; $i < 100; $i++) {
+            $dto = new SingleItemRequestDto();
+            $stocks = new FeedStocksUpdateDto();
+            $stocks->aliexpressProductId = 1;
+            $stocks->multipleSkuUpdateList = [];
+
+            for ($j = 0; $j < 5; $j++) {
+                $item = new SkuStocksUpdateItemDto();
+                $item->skuCode = sha1(mt_rand());
+                $item->inventory = mt_rand(1, 100);
+                $stocks->multipleSkuUpdateList[] = $item;
+            }
+
+            $dto->itemContentId = sha1(mt_rand());
+            $dto->itemContent = $stocks;
+
+            $requestSubmit->itemList[] = $dto;
+        }
+
+        $requestQuery = new SolutionFeedQuery();
+        $requestQuery->jobId = 200000000060024475;
+
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.feed.submit',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $jsonFeedSubmitResponse)
+        );
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.feed.query',
+                    'session' => self::getEnvToken(),
+                    'job_id' => 200000000060024475
+                ]),
+            $this->responseJson(200, $jsonFeedQueryResponse)
+        );
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionFeedSubmitResponse $response */
+        $responseSubmit = $client->sendAuthenticatedRequest($requestSubmit);
+
+        self::assertEquals('200000000060024475', $responseSubmit->responseData->jobId);
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionFeedQueryResponse $responseQuery */
+        $responseQuery = $client->sendAuthenticatedRequest($requestQuery);
+
+        self::assertEquals(200000000060024475, $responseQuery->responseData->jobId);
+        self::assertEquals(1, $responseQuery->responseData->successItemCount);
+        self::assertNotNull($responseQuery->responseData->resultList);
+        self::assertNotNull($responseQuery->responseData->resultList->singleItemResponseDto);
+        self::assertCount(1, $responseQuery->responseData->resultList->singleItemResponseDto);
     }
 }

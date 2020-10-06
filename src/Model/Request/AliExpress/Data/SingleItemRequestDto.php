@@ -30,7 +30,7 @@ class SingleItemRequestDto
      * Any value here will be serialized to JSON before serializing entire model.
      * Only array and RequestDtoInterface are viable here.
      *
-     * @var \RetailCrm\Interfaces\RequestDtoInterface $itemContent
+     * @var \RetailCrm\Interfaces\RequestDtoInterface|array $itemContent
      *
      * @JMS\Type("RetailCrm\Interfaces\RequestDtoInterface")
      * @JMS\SerializedName("item_content")

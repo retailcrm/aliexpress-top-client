@@ -2,7 +2,7 @@
     "name": "retailcrm/aliexpress-top-client",
     "description": "API client implementation for AliExpress TOP.",
     "type": "library",
-    "keywords": ["API", "retailCRM", "REST"],
+    "keywords": ["API", "retailCRM", "REST", "AliExpress"],
     "homepage": "http://www.retailcrm.ru/",
     "authors": [
         {

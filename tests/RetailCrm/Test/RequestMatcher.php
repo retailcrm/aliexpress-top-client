@@ -68,6 +68,11 @@ class RequestMatcher implements RequestMatcherInterface
     private $optionalQueryParams = [];
 
     /**
+     * @var array
+     */
+    private $optionalPostFields = [];
+
+    /**
      * RequestMatcher constructor.
      *
      * @param string $host
@@ -165,6 +170,17 @@ class RequestMatcher implements RequestMatcherInterface
     }
 
     /**
+     * @param array $optionalPostFields
+     *
+     * @return RequestMatcher
+     */
+    public function setOptionalPostFields(array $optionalPostFields): RequestMatcher
+    {
+        $this->optionalPostFields = $optionalPostFields;
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function matches(RequestInterface $request)
@@ -205,6 +221,15 @@ class RequestMatcher implements RequestMatcherInterface
             && !$this->firstArrayPresentInSecond(
                 $this->optionalQueryParams,
                 $this->getQueryData($request->getUri()->getQuery())
+            )
+        ) {
+            return false;
+        }
+
+        if (!empty($this->optionalPostFields)
+            && !$this->firstArrayPresentInSecond(
+                $this->optionalPostFields,
+                $this->getQueryData((string) $request->getBody())
             )
         ) {
             return false;

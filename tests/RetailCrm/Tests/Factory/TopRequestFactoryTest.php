@@ -41,10 +41,9 @@ class TopRequestFactoryTest extends TestCase
         $uri = $request->getUri();
         $contents = self::getStreamData($request->getBody());
 
-        self::assertEmpty($contents);
-        self::assertNotEmpty($uri->getQuery());
-        self::assertFalse(stripos($uri->getQuery(), 'simplify'), $uri->getQuery());
-        self::assertNotFalse(stripos($uri->getQuery(), 'SPAIN_LOCAL_CORREOS'));
+        self::assertNotEmpty($contents);
+        self::assertFalse(stripos($contents, 'simplify'), $uri->getQuery());
+        self::assertNotFalse(stripos($contents, 'SPAIN_LOCAL_CORREOS'));
     }
 
     public function testFromModelPost(): void

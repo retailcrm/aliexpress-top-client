@@ -30,10 +30,11 @@ class AuthorizationUriBuilderTest extends TestCase
     public function testBuild()
     {
         $appData = $this->getEnvAppData();
-        $builder = new AuthorizationUriBuilder($appData->getAppKey(), $appData->getRedirectUri());
+        $builder = new AuthorizationUriBuilder($appData->getAppKey(), $appData->getRedirectUri(), true);
         $result = $builder->build();
 
-        self::assertNotFalse(strpos($result, $appData->getAppKey()));
-        self::assertNotFalse(strpos($result, urlencode($appData->getRedirectUri())));
+        self::assertNotFalse(strpos($result->getAddress(), $appData->getAppKey()));
+        self::assertNotFalse(strpos($result->getAddress(), urlencode($appData->getRedirectUri())));
+        self::assertNotEmpty($result->getState());
     }
 }

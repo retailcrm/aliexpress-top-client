@@ -13,6 +13,7 @@
 namespace RetailCrm\Builder;
 
 use BadMethodCallException;
+use RetailCrm\Component\AuthorizationUri;
 use RetailCrm\Interfaces\BuilderInterface;
 
 /**
@@ -64,16 +65,22 @@ class AuthorizationUriBuilder implements BuilderInterface
     /**
      * @inheritDoc
      */
-    public function build(): string
+    public function build(): AuthorizationUri
     {
-        return self::AUTHORIZE_URI . '?' . http_build_query($this->getParams());
+        $state = $this->withState ? uniqid('aeauth', true) : null;
+
+        return new AuthorizationUri(
+            self::AUTHORIZE_URI . '?' . http_build_query($this->getParams($state)),
+            $state
+        );
     }
 
     /**
+     * @param string|null $state
+     *
      * @return array
-     * @throws BadMethodCallException
      */
-    private function getParams(): array
+    private function getParams(?string $state): array
     {
         if (empty($this->redirectUri)) {
             throw new BadMethodCallException('Redirect URI should not be empty');
@@ -84,7 +91,7 @@ class AuthorizationUriBuilder implements BuilderInterface
             'response_type' => 'code',
             'redirect_uri' => $this->redirectUri,
             'sp' => 'ae',
-            'state' => $this->withState ? uniqid('aeauth', true) : null,
+            'state' => $state,
             'view' => 'web'
         ]);
     }

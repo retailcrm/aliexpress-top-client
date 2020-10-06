@@ -261,6 +261,17 @@ class TopClient implements TopClientInterface
         }
 
         $bodyData = self::getBodyContents($httpResponse->getBody());
+
+        if ($this->debugLogging()) {
+            $this->logger->debug(sprintf(
+                '<AliExpress TOP Client> Request %s (%s) (%s): got response %s',
+                $request->getMethod(),
+                $httpRequest->getUri()->__toString(),
+                $httpRequest->getBody()->__toString(),
+                $bodyData
+            ));
+        }
+
         /** @var BaseResponse $response */
         $response = $this->serializer->deserialize(
             $bodyData,
@@ -275,23 +286,15 @@ class TopClient implements TopClientInterface
         if (null !== $response->errorResponse) {
             if ($this->debugLogging()) {
                 $this->logger->debug(sprintf(
-                    '<AliExpress TOP Client> Request %s (%s): got error response %s',
+                    '<AliExpress TOP Client> Request %s (%s) (%s): got error response %s',
                     $request->getMethod(),
                     $httpRequest->getUri()->__toString(),
+                    $httpRequest->getBody()->__toString(),
                     $bodyData
                 ));
             }
 
             throw new TopApiException($response->errorResponse);
-        }
-
-        if ($this->debugLogging()) {
-            $this->logger->debug(sprintf(
-                '<AliExpress TOP Client> Request %s (%s): got response %s',
-                $request->getMethod(),
-                $httpRequest->getUri()->__toString(),
-                $bodyData
-            ));
         }
 
         return $response;
