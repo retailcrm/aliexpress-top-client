@@ -50,7 +50,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $this->container = ContainerBuilder::create()
                 ->setEnv(Environment::TEST)
                 ->setClient(is_null($client) ? self::getMockClient() : $client)
-                ->setLogger(new StdoutLogger())
                 ->setStreamFactory($factory)
                 ->setRequestFactory($factory)
                 ->setUriFactory($factory)

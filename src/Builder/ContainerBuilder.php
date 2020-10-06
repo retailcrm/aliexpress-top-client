@@ -185,6 +185,7 @@ class ContainerBuilder implements BuilderInterface
     public function build(): ContainerInterface
     {
         $container = new Container();
+        $container->set(Environment::class, new Environment($this->env));
 
         switch ($this->env) {
             case Environment::PROD:

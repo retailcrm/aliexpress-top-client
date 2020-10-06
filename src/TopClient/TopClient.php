@@ -16,7 +16,10 @@ use JMS\Serializer\SerializerInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RetailCrm\Builder\AuthorizationUriBuilder;
+use RetailCrm\Component\Environment;
 use RetailCrm\Component\Exception\TopApiException;
 use RetailCrm\Component\Exception\TopClientException;
 use RetailCrm\Component\ServiceLocator;
@@ -78,11 +81,6 @@ class TopClient implements TopClientInterface
     protected $serviceLocator;
 
     /**
-     * @var \RetailCrm\Interfaces\RequestTimestampProviderInterface
-     */
-    protected $timestampProvider;
-
-    /**
      * @var TopRequestProcessorInterface $processor
      */
     protected $processor;
@@ -96,6 +94,16 @@ class TopClient implements TopClientInterface
      * @var ProductSchemaStorageFactory $productSchemaStorageFactory
      */
     protected $productSchemaStorageFactory;
+
+    /**
+     * @var \Psr\Log\LoggerInterface $logger
+     */
+    protected $logger;
+
+    /**
+     * @var Environment $environment
+     */
+    protected $env;
 
     /**
      * TopClient constructor.
@@ -181,6 +189,28 @@ class TopClient implements TopClientInterface
     }
 
     /**
+     * @param \Psr\Log\LoggerInterface $logger
+     *
+     * @return TopClient
+     */
+    public function setLogger(LoggerInterface $logger): TopClient
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+     * @param \RetailCrm\Component\Environment $env
+     *
+     * @return TopClient
+     */
+    public function setEnv(Environment $env): TopClient
+    {
+        $this->env = $env;
+        return $this;
+    }
+
+    /**
      * @return \RetailCrm\Component\ServiceLocator
      */
     public function getServiceLocator(): ServiceLocator
@@ -249,9 +279,10 @@ class TopClient implements TopClientInterface
             throw new TopClientException(sprintf('Error sending request: %s', $exception->getMessage()), $exception);
         }
 
+        $bodyData = self::getBodyContents($httpResponse->getBody());
         /** @var BaseResponse $response */
         $response = $this->serializer->deserialize(
-            self::getBodyContents($httpResponse->getBody()),
+            $bodyData,
             $request->getExpectedResponse(),
             $request->format
         );
@@ -262,6 +293,15 @@ class TopClient implements TopClientInterface
 
         if (null !== $response->errorResponse) {
             throw new TopApiException($response->errorResponse, $response->requestId);
+        }
+
+        if (null !== $this->logger && !($this->logger instanceof NullLogger) && $this->env->isDebug()) {
+            $this->logger->debug(sprintf(
+                '<AliExpress TOP Client> Request %s (%s): got response %s',
+                $request->getMethod(),
+                $httpRequest->getUri()->__toString(),
+                $bodyData
+            ));
         }
 
         return $response;

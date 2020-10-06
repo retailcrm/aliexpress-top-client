@@ -13,6 +13,7 @@
 namespace RetailCrm\Builder;
 
 use RetailCrm\Component\Constants;
+use RetailCrm\Component\Environment;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Component\Storage\ProductSchemaStorage;
 use RetailCrm\Factory\ProductSchemaStorageFactory;
@@ -85,6 +86,8 @@ class TopClientBuilder implements ContainerAwareInterface, BuilderInterface
         $client->setHttpClient($this->container->get(Constants::HTTP_CLIENT));
         $client->setSerializer($this->container->get(Constants::SERIALIZER));
         $client->setValidator($this->container->get(Constants::VALIDATOR));
+        $client->setEnv($this->container->get(Environment::class));
+        $client->setLogger($this->container->get(Constants::LOGGER));
         $client->setRequestFactory($this->container->get(TopRequestFactoryInterface::class));
         $client->setServiceLocator($this->container->get(ServiceLocator::class));
         $client->setProcessor($this->container->get(TopRequestProcessorInterface::class));

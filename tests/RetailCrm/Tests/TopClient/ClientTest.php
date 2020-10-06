@@ -24,11 +24,15 @@ use RetailCrm\Model\Enum\OfflinePickupTypes;
 use RetailCrm\Model\Enum\OrderStatuses;
 use RetailCrm\Model\Request\AliExpress\Data\OrderQuery;
 use RetailCrm\Model\Request\AliExpress\Data\SingleItemRequestDto;
+use RetailCrm\Model\Request\AliExpress\Data\SingleOrderQuery;
+use RetailCrm\Model\Request\AliExpress\LogisticsRedefiningListLogisticsService;
 use RetailCrm\Model\Request\AliExpress\PostproductRedefiningCategoryForecast;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedListGet;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedQuery;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedSubmit;
+use RetailCrm\Model\Request\AliExpress\SolutionOrderFulfill;
 use RetailCrm\Model\Request\AliExpress\SolutionOrderGet;
+use RetailCrm\Model\Request\AliExpress\SolutionOrderReceiptInfoGet;
 use RetailCrm\Model\Request\AliExpress\SolutionProductSchemaGet;
 use RetailCrm\Model\Request\AliExpress\SolutionSellerCategoryTreeQuery;
 use RetailCrm\Model\Request\Taobao\HttpDnsGetRequest;
@@ -615,5 +619,152 @@ EOF;
             OfflinePickupTypes::RU_OFFLINE_SELF_PICK_UP_EXPRESSION,
             $result->targetList->orderDto[0]->offlinePickupType
         );
+    }
+
+    public function testAliexpressSolutionOrderReceiptInfoGet()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_order_receiptinfo_get_response":{
+        "result":{
+            "country_name":"Russian Federation",
+            "mobile_no":"4679974",
+            "contact_person":"Mark",
+            "phone_country":"04",
+            "phone_area":"12345",
+            "province":"Moscow",
+            "address":"address 001",
+            "phone_number":"88688435",
+            "fax_number":"88688436",
+            "detail_address":"center street No.99",
+            "city":"Babenki",
+            "country":"RU",
+            "address2":"address 001",
+            "fax_country":"400120",
+            "zip":"400120",
+            "fax_area":"203"
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalQueryParams([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.order.receiptinfo.get',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+        $query = new SingleOrderQuery();
+        $query->orderId = 1;
+        $request = new SolutionOrderReceiptInfoGet();
+        $request->param1 = $query;
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionOrderReceiptInfoGetResponse $response */
+        $response = $client->sendAuthenticatedRequest($request);
+
+        self::assertNotNull($response->responseData);
+        self::assertNotNull($response->responseData->result);
+
+        foreach (array_keys(get_class_vars(get_class($response->responseData->result))) as $key) {
+            self::assertNotEmpty($response->responseData->result->$key);
+        }
+    }
+
+    public function testAliexpressLogisticsRedefiningListLogisticsService()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_logistics_redefining_listlogisticsservice_response":{
+        "result_list":{
+            "aeop_logistics_service_result":[
+                {
+                    "recommend_order":11,
+                    "tracking_no_regex":"^[a-zA-z]{2}[A-Za-z0-9]{9}[a-zA-z]{2}$",
+                    "min_process_day":1,
+                    "logistics_company":"CPAM",
+                    "max_process_day":5,
+                    "display_name":"China Post Registered Air Mail",
+                    "service_name":"CPAM"
+                }
+            ]
+        },
+        "error_desc":"System error",
+        "result_success":true
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalQueryParams([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.logistics.redefining.listlogisticsservice',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+        /** @var \RetailCrm\Model\Response\AliExpress\LogisticsRedefiningListLogisticsServiceResponse $response */
+        $response = $client->sendAuthenticatedRequest(new LogisticsRedefiningListLogisticsService());
+
+        self::assertEquals(
+            'China Post Registered Air Mail',
+            $response->responseData->resultList->aeopLogisticsServiceResult[0]->displayName
+        );
+    }
+
+    public function testAliexpressSolutionOrderFulfill()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_order_fulfill_response":{
+        "result":{
+            "result_success":true
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalQueryParams([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.order.fulfill',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+        $request = new SolutionOrderFulfill();
+        $request->serviceName = 'EMS';
+        $request->trackingWebsite = 'www.17track.com';
+        $request->outRef = '888877779999';
+        $request->sendType = 'part';
+        $request->description = 'memo';
+        $request->logisticsNo = 'LA88887777CN';
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionOrderFulfillResponse $response */
+        $response = $client->sendAuthenticatedRequest($request);
+
+        self::assertTrue($response->responseData->result->resultSuccess);
     }
 }
