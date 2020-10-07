@@ -44,6 +44,8 @@ class Environment
      */
     public function __construct(string $value)
     {
+        $value = strtoupper($value);
+
         if (!in_array($value, self::AVAILABLE_VALUES)) {
             throw new InvalidArgumentException(sprintf('Incorrect environment provided: %s', $value));
         }
