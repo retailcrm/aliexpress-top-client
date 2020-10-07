@@ -37,6 +37,7 @@ use RetailCrm\Model\Request\AliExpress\PostproductRedefiningFindAEProductByIdFor
 use RetailCrm\Model\Request\AliExpress\SolutionFeedListGet;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedQuery;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedSubmit;
+use RetailCrm\Model\Request\AliExpress\SolutionMerchantProfileGet;
 use RetailCrm\Model\Request\AliExpress\SolutionOrderFulfill;
 use RetailCrm\Model\Request\AliExpress\SolutionOrderGet;
 use RetailCrm\Model\Request\AliExpress\SolutionOrderReceiptInfoGet;
@@ -1060,5 +1061,48 @@ EOF;
         self::assertNotNull($responseQuery->responseData->resultList);
         self::assertNotNull($responseQuery->responseData->resultList->singleItemResponseDto);
         self::assertCount(1, $responseQuery->responseData->resultList->singleItemResponseDto);
+    }
+
+    public function testAliexpressSolutionMerchantProfileGet()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_merchant_profile_get_response":{
+        "country_code":"ES",
+        "product_posting_forbidden":false,
+        "merchant_login_id":"es1329072766xyzq",
+        "shop_id":1234321,
+        "shop_name":"test store",
+        "shop_type":"official",
+        "shop_url":"\/\/www.aliexpress.com\/store\/1234321"
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.merchant.profile.get',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionMerchantProfileGetResponse $response */
+        $response = $client->sendAuthenticatedRequest(new SolutionMerchantProfileGet());
+
+        self::assertEquals('ES', $response->responseData->countryCode);
+        self::assertEquals(false, $response->responseData->productPostingForbidden);
+        self::assertEquals('es1329072766xyzq', $response->responseData->merchantLoginId);
+        self::assertEquals(1234321, $response->responseData->shopId);
+        self::assertEquals('test store', $response->responseData->shopName);
+        self::assertEquals('official', $response->responseData->shopType);
+        self::assertEquals('//www.aliexpress.com/store/1234321', $response->responseData->shopUrl);
     }
 }
