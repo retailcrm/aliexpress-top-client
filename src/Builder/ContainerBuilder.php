@@ -107,7 +107,7 @@ class ContainerBuilder implements BuilderInterface
      */
     public function setEnv(string $environmentType = Environment::DEV): self
     {
-        $this->env = $environmentType;
+        $this->env = strtoupper($environmentType);
         return $this;
     }
 
