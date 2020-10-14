@@ -22,6 +22,7 @@ use RetailCrm\Builder\AuthorizationUriBuilder;
 use RetailCrm\Component\Environment;
 use RetailCrm\Component\Exception\TopApiException;
 use RetailCrm\Component\Exception\TopClientException;
+use RetailCrm\Component\OAuthTokenFetcher;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Component\Storage\ProductSchemaStorage;
 use RetailCrm\Factory\ProductSchemaStorageFactory;
@@ -209,6 +210,14 @@ class TopClient implements TopClientInterface
     public function getAuthorizationUriBuilder(string $state = ''): BuilderInterface
     {
         return new AuthorizationUriBuilder($this->appData->getAppKey(), $this->appData->getRedirectUri(), $state);
+    }
+
+    /**
+     * @return \RetailCrm\Component\OAuthTokenFetcher
+     */
+    public function getTokenFetcher(): OAuthTokenFetcher
+    {
+        return $this->getServiceLocator()->getOAuthTokenFetcherFactory()->create($this->appData);
     }
 
     /**

@@ -13,6 +13,7 @@
 namespace RetailCrm\Component;
 
 use RetailCrm\Factory\FileItemFactory;
+use RetailCrm\Factory\OAuthTokenFetcherFactory;
 use RetailCrm\Interfaces\ContainerAwareInterface;
 use RetailCrm\Interfaces\FileItemFactoryInterface;
 use RetailCrm\Traits\ContainerAwareTrait;
@@ -30,6 +31,14 @@ use RetailCrm\Traits\ContainerAwareTrait;
 class ServiceLocator implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
+
+    /**
+     * @return \RetailCrm\Factory\OAuthTokenFetcherFactory
+     */
+    public function getOAuthTokenFetcherFactory(): OAuthTokenFetcherFactory
+    {
+        return $this->getContainer()->get(OAuthTokenFetcherFactory::class);
+    }
 
     /**
      * @return \RetailCrm\Interfaces\FileItemFactoryInterface

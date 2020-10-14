@@ -28,6 +28,7 @@ use RetailCrm\Component\DependencyInjection\Container;
 use RetailCrm\Component\Environment;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Factory\FileItemFactory;
+use RetailCrm\Factory\OAuthTokenFetcherFactory;
 use RetailCrm\Factory\ProductSchemaStorageFactory;
 use RetailCrm\Factory\SerializerFactory;
 use RetailCrm\Factory\TopRequestFactory;
@@ -219,6 +220,15 @@ class ContainerBuilder implements BuilderInterface
         );
         $container->set(Constants::SERIALIZER, function (ContainerInterface $container) {
             return SerializerFactory::withContainer($container)->create();
+        });
+        $container->set(OAuthTokenFetcherFactory::class, function (ContainerInterface $container) {
+            return new OAuthTokenFetcherFactory(
+                $container->get(Constants::SERIALIZER),
+                $container->get(StreamFactoryInterface::class),
+                $container->get(RequestFactoryInterface::class),
+                $container->get(UriFactoryInterface::class),
+                $container->get(Constants::HTTP_CLIENT)
+            );
         });
         $container->set(FileItemFactoryInterface::class, function (ContainerInterface $container) {
             return new FileItemFactory($container->get(StreamFactoryInterface::class));

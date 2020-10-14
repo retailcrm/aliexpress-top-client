@@ -12,6 +12,7 @@
  */
 namespace RetailCrm\Interfaces;
 
+use RetailCrm\Component\OAuthTokenFetcher;
 use RetailCrm\Component\ServiceLocator;
 use RetailCrm\Model\Request\BaseRequest;
 use RetailCrm\Model\Response\TopResponseInterface;
@@ -47,6 +48,11 @@ interface TopClientInterface
      * @return BuilderInterface
      */
     public function getAuthorizationUriBuilder(string $state = ''): BuilderInterface;
+
+    /**
+     * @return \RetailCrm\Component\OAuthTokenFetcher
+     */
+    public function getTokenFetcher(): OAuthTokenFetcher;
 
     /**
      * Send TOP request
