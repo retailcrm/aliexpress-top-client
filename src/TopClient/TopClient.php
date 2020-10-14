@@ -208,7 +208,7 @@ class TopClient implements TopClientInterface
      */
     public function getAuthorizationUriBuilder(string $state = ''): BuilderInterface
     {
-        return new AuthorizationUriBuilder($this->appData->getAppKey(), $this->appData->getAppSecret(), $state);
+        return new AuthorizationUriBuilder($this->appData->getAppKey(), $this->appData->getRedirectUri(), $state);
     }
 
     /**

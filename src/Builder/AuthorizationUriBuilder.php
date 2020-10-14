@@ -56,7 +56,7 @@ class AuthorizationUriBuilder implements BuilderInterface
     {
         $this->appKey      = $appKey;
         $this->redirectUri = $redirectUri;
-        $this->state   = $state;
+        $this->state       = $state;
     }
 
     /**
