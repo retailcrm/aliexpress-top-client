@@ -202,17 +202,13 @@ class TopClient implements TopClientInterface
     }
 
     /**
-     * @param bool $withState
+     * @param string $state
      *
      * @return BuilderInterface
-     *
-     * $withState is passed to AuthorizationUriBuilder.
-     * @see AuthorizationUriBuilder::__construct
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    public function getAuthorizationUriBuilder(bool $withState = false): BuilderInterface
+    public function getAuthorizationUriBuilder(string $state = ''): BuilderInterface
     {
-        return new AuthorizationUriBuilder($this->appData->getAppKey(), $this->appData->getAppSecret(), $withState);
+        return new AuthorizationUriBuilder($this->appData->getAppKey(), $this->appData->getAppSecret(), $state);
     }
 
     /**
