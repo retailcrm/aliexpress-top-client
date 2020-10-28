@@ -40,7 +40,7 @@ class OrderStatuses
     public const WAIT_BUYER_ACCEPT_GOODS = 'WAIT_BUYER_ACCEPT_GOODS';
 
     // Buyer accepted, funds is in processing.
-    public const FUND_PROCESSING = 'FUND_PROCESSING';
+    public const PAYMENT_PROCESSING = 'PAYMENT_PROCESSING';
 
     // Order is involved in the dispute.
     public const IN_ISSUE = 'IN_ISSUE';
@@ -51,11 +51,20 @@ class OrderStatuses
     // Waiting for payment amount confirmation from seller.
     public const WAIT_SELLER_EXAMINE_MONEY = 'WAIT_SELLER_EXAMINE_MONEY';
 
-    // Payment will be marked as completed in 24 hours.
+    // Payment was successful, but order is in risk control now.
     public const RISK_CONTROL = 'RISK_CONTROL';
+
+    // Risk control resulted in hold, buyer should approve the payment.
+    public const RISK_CONTROL_HOLD = 'RISK_CONTROL_HOLD';
 
     // Order is closed, no further actions needed.
     public const FINISH = 'FINISH';
+
+    // Order is closed and now stored in the archive.
+    public const ARCHIVE = 'ARCHIVE';
+
+    // Undocumented.
+    public const FROZEN_STATUS = 'FROZEN_STATUS';
 
     // List of all order statuses.
     public const STATUSES_LIST = [
@@ -64,11 +73,14 @@ class OrderStatuses
         self::WAIT_SELLER_SEND_GOODS,
         self::SELLER_PART_SEND_GOODS,
         self::WAIT_BUYER_ACCEPT_GOODS,
-        self::FUND_PROCESSING,
+        self::PAYMENT_PROCESSING,
         self::IN_ISSUE,
         self::IN_FROZEN,
         self::WAIT_SELLER_EXAMINE_MONEY,
         self::RISK_CONTROL,
-        self::FINISH
+        self::RISK_CONTROL_HOLD,
+        self::FINISH,
+        self::ARCHIVE,
+        self::FROZEN_STATUS
     ];
 }
