@@ -1,7 +1,7 @@
-[![Build Status](https://img.shields.io/travis/retailcrm/aliexpress-top-client/master.svg?style=flat-square)](https://travis-ci.org/retailcrm/aliexpress-top-client)
-[![Coverage](https://img.shields.io/codecov/c/gh/retailcrm/aliexpress-top-client/master.svg?style=flat-square)](https://codecov.io/gh/retailcrm/aliexpress-top-client)
-[![Latest stable](https://img.shields.io/packagist/v/retailcrm/aliexpress-top-client.svg?style=flat-square)](https://packagist.org/packages/retailcrm/aliexpress-top-client)
-[![PHP from Packagist](https://img.shields.io/packagist/php-v/retailcrm/aliexpress-top-client.svg?style=flat-square)](https://packagist.org/packages/retailcrm/aliexpress-top-client)
+[![Build Status](https://github.com/retailcrm/aliexpress-top-client/workflows/ci/badge.svg)](https://github.com/retailcrm/aliexpress-top-client/actions)
+[![Coverage](https://img.shields.io/codecov/c/gh/retailcrm/aliexpress-top-client/master.svg?logo=codecov)](https://codecov.io/gh/retailcrm/aliexpress-top-client)
+[![Latest stable](https://img.shields.io/packagist/v/retailcrm/aliexpress-top-client.svg)](https://packagist.org/packages/retailcrm/aliexpress-top-client)
+[![PHP from Packagist](https://img.shields.io/packagist/php-v/retailcrm/aliexpress-top-client.svg)](https://packagist.org/packages/retailcrm/aliexpress-top-client)
 
 # AliExpress TOP API client
 API client implementation for AliExpress TOP.
