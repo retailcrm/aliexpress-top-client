@@ -5,10 +5,6 @@
  *
  * @category Container
  * @package  RetailCrm\Component\DependencyInjection
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Component\DependencyInjection;
 
@@ -29,10 +25,6 @@ use Throwable;
  * @category Container
  * @package  RetailCrm\Component\DependencyInjection
  * @author   Evgeniy Zyubin <mail@devanych.ru>
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 final class Container implements ContainerInterface
 {

@@ -28,10 +28,6 @@ use RetailCrm\Interfaces\FileItemFactoryInterface;
  *
  * @category TestCase
  * @package  ${NAMESPACE}
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {

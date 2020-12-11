@@ -4,10 +4,6 @@
  *
  * @category Timezone
  * @package  RetailCrm\Component\Validator\Constraints
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Component\Validator\Constraints;
@@ -19,10 +15,6 @@ use Symfony\Component\Validator\Constraint;
  *
  * @category Timezone
  * @package  RetailCrm\Component\Validator\Constraints
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  *
  * @Annotation
  * @Target({"PROPERTY", "METHOD", "ANNOTATION"})

@@ -4,10 +4,6 @@
  *
  * @category TradeBuyPlaceOrderResponse
  * @package  RetailCrm\Model\Response\AliExpress
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Response\AliExpress;
@@ -20,10 +16,6 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @category TradeBuyPlaceOrderResponse
  * @package  RetailCrm\Model\Response\AliExpress
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class TradeBuyPlaceOrderResponse extends BaseResponse
 {

@@ -4,10 +4,6 @@
  *
  * @category TrackingInfoDetails
  * @package  RetailCrm\Model\Response\AliExpress\Data\Entity
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Response\AliExpress\Data\Entity;
@@ -20,10 +16,6 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @category TrackingInfoDetails
  * @package  RetailCrm\Model\Response\AliExpress\Data\Entity
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class TrackingInfoDetails
 {

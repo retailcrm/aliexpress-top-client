@@ -5,10 +5,6 @@
  *
  * @category ContainerBuilderTest
  * @package  RetailCrm\Tests\Builder
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Tests\Builder;
 
@@ -29,10 +25,6 @@ use RetailCrm\Test\TestCase;
  *
  * @category ContainerBuilderTest
  * @package  RetailCrm\Tests\Builder
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class ContainerBuilderTest extends TestCase
 {

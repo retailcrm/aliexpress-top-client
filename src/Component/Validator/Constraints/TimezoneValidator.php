@@ -4,10 +4,6 @@
  *
  * @category TimezoneValidator
  * @package  RetailCrm\Component\Validator\Constraints
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Component\Validator\Constraints;
@@ -23,10 +19,6 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
  *
  * @category TimezoneValidator
  * @package  RetailCrm\Component\Validator\Constraints
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class TimezoneValidator extends ConstraintValidator
 {

@@ -5,10 +5,6 @@
  *
  * @category ClientTest
  * @package  RetailCrm\Tests\TopClient
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Tests\TopClient;
 
@@ -59,10 +55,6 @@ use RetailCrm\Test\TestCase;
  *
  * @category ClientTest
  * @package  RetailCrm\Tests\TopClient
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class ClientTest extends TestCase
 {

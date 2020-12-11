@@ -4,10 +4,6 @@
  *
  * @category TokenAuthenticator
  * @package  RetailCrm\Component\Authenticator
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Component\Authenticator;
@@ -20,10 +16,6 @@ use RetailCrm\Model\Request\BaseRequest;
  *
  * @category TokenAuthenticator
  * @package  RetailCrm\Component\Authenticator
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class TokenAuthenticator implements AuthenticatorInterface
 {

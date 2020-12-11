@@ -5,10 +5,6 @@
  *
  * @category FileLogger
  * @package  RetailCrm\Component\Logger
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Component\Logger;
 
@@ -17,10 +13,6 @@ namespace RetailCrm\Component\Logger;
  *
  * @category FileLogger
  * @package  RetailCrm\Component\Logger
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class FileLogger extends AbstractLogger
 {

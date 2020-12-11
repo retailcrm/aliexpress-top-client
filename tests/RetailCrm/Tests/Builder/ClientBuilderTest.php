@@ -5,10 +5,6 @@
  *
  * @category ClientBuilderTest
  * @package  RetailCrm\Tests\Builder
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Tests\Builder;
 
@@ -23,10 +19,6 @@ use RetailCrm\TopClient\TopClient;
  *
  * @category ClientBuilderTest
  * @package  RetailCrm\Tests\Builder
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class ClientBuilderTest extends TestCase
 {

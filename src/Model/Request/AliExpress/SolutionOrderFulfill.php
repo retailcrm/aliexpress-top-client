@@ -4,10 +4,6 @@
  *
  * @category SolutionOrderFulfill
  * @package  RetailCrm\Model\Request\AliExpress
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Request\AliExpress;
@@ -22,10 +18,6 @@ use RetailCrm\Model\Response\AliExpress\SolutionOrderFulfillResponse;
  *
  * @category SolutionOrderFulfill
  * @package  RetailCrm\Model\Request\AliExpress
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class SolutionOrderFulfill extends BaseRequest
 {

@@ -5,10 +5,6 @@
  *
  * @category TopClientInterface
  * @package  RetailCrm\Interfaces
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Interfaces;
 
@@ -22,10 +18,6 @@ use RetailCrm\Model\Response\TopResponseInterface;
  *
  * @category ContainerBuilder
  * @package  RetailCrm\Interfaces
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  *
  */
 interface TopClientInterface

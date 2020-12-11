@@ -4,10 +4,6 @@
  *
  * @category JsonDeserializationVisitor
  * @package  RetailCrm\Component\JMS\Visitor\Deserialization
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Component\JMS\Visitor\Deserialization;
@@ -27,10 +23,6 @@ use SplStack;
  *
  * @category JsonDeserializationVisitor
  * @package  RetailCrm\Component\JMS\Visitor\Deserialization
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class JsonDeserializationVisitor extends AbstractVisitor implements DeserializationVisitorInterface
 {

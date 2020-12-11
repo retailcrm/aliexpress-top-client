@@ -4,10 +4,6 @@
  *
  * @category SolutionSellerCategoryTreeQueryResponse
  * @package  RetailCrm\Model\Response\AliExpressSolution
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Response\AliExpress;
@@ -20,10 +16,6 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @category SolutionSellerCategoryTreeQueryResponse
  * @package  RetailCrm\Model\Response\AliExpressSolution
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class SolutionSellerCategoryTreeQueryResponse extends BaseResponse
 {

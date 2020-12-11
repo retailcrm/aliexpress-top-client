@@ -4,10 +4,6 @@
  *
  * @category AuthorizationUriBuilderTest
  * @package  RetailCrm\Tests\Builder
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Tests\Builder;
@@ -20,10 +16,6 @@ use RetailCrm\Test\TestCase;
  *
  * @category AuthorizationUriBuilderTest
  * @package  RetailCrm\Tests\Builder
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class AuthorizationUriBuilderTest extends TestCase
 {

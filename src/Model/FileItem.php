@@ -5,10 +5,6 @@
  *
  * @category FileItem
  * @package  RetailCrm\Model
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Model;
 
@@ -20,10 +16,6 @@ use RetailCrm\Interfaces\FileItemInterface;
  *
  * @category FileItem
  * @package  RetailCrm\Model
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class FileItem implements FileItemInterface
 {

@@ -2,16 +2,16 @@
     "name": "retailcrm/aliexpress-top-client",
     "description": "API client implementation for AliExpress TOP.",
     "type": "library",
-    "keywords": ["API", "retailCRM", "REST", "AliExpress"],
-    "homepage": "http://www.retailcrm.ru/",
+    "keywords": ["API", "RetailCRM", "REST", "AliExpress"],
+    "homepage": "http://www.retailcrm.pro/",
     "authors": [
         {
             "name": "RetailDriver LLC",
-            "email": "integration@retailcrm.ru"
+            "email": "support@retailcrm.pro"
         }
     ],
     "support": {
-        "email": "support@retailcrm.ru"
+        "email": "support@retailcrm.pro"
     },
     "autoload": {
         "psr-4": { "RetailCrm\\": "src/" }

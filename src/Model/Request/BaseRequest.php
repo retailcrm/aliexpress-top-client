@@ -5,10 +5,6 @@
  *
  * @category BaseRequest
  * @package  RetailCrm\Model\Request
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Model\Request;
 
@@ -24,10 +20,6 @@ use RetailCrm\Component\Validator\Constraints as TopAssert;
  *
  * @category BaseRequest
  * @package  RetailCrm\Model\Request
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 abstract class BaseRequest
 {

@@ -4,10 +4,6 @@
  *
  * @category SolutionProductSchemaGetResponse
  * @package  RetailCrm\Model\Response\AliExpress
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Response\AliExpress;
@@ -21,10 +17,6 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @category SolutionProductSchemaGetResponse
  * @package  RetailCrm\Model\Response\AliExpress
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class SolutionProductSchemaGetResponse extends BaseResponse
 {

@@ -4,10 +4,6 @@
  *
  * @category ErrorTrait
  * @package  RetailCrm\Model\Response\AliExpress\Result\Traits
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Response\AliExpress\Result\Traits;
@@ -19,10 +15,6 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @category ErrorTrait
  * @package  RetailCrm\Model\Response\AliExpress\Result\Traits
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 trait ErrorTrait
 {

@@ -4,10 +4,6 @@
  *
  * @category AvailableResponseFormats
  * @package  RetailCrm\Model\Enum
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Enum;
@@ -17,10 +13,6 @@ namespace RetailCrm\Model\Enum;
  *
  * @category AvailableResponseFormats
  * @package  RetailCrm\Model\Enum
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class AvailableResponseFormats
 {

@@ -4,10 +4,6 @@
  *
  * @category OrderProductDtoList
  * @package  RetailCrm\Model\Entity
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Entity;
@@ -19,10 +15,6 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @category OrderProductDtoList
  * @package  RetailCrm\Model\Entity
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class OrderProductDtoList
 {

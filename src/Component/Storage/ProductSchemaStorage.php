@@ -4,10 +4,6 @@
  *
  * @category ProductSchemaStorage
  * @package  RetailCrm\Component\Storage
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Component\Storage;
@@ -29,10 +25,6 @@ use RetailCrm\Model\Response\ErrorResponseBody;
  *
  * @category ProductSchemaStorage
  * @package  RetailCrm\Component\Storage
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class ProductSchemaStorage
 {

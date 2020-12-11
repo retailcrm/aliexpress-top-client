@@ -4,10 +4,6 @@
  *
  * @category HttpDnsEnvEntry
  * @package  RetailCrm\Model\Response\Type
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Response\Type;
@@ -19,10 +15,6 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @category HttpDnsEnvEntry
  * @package  RetailCrm\Model\Response\Type
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class HttpDnsEnvEntry
 {

@@ -5,10 +5,6 @@
  *
  * @category ContainerAwareTrait
  * @package  RetailCrm\Traits
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Traits;
@@ -21,10 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @category ContainerAwareTrait
  * @package  RetailCrm\Traits
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 trait ContainerAwareTrait
 {
