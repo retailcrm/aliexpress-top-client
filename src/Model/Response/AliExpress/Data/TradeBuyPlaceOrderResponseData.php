@@ -4,10 +4,6 @@
  *
  * @category TradeBuyPlaceOrderResponseData
  * @package  RetailCrm\Model\Response\AliExpress\Data
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Response\AliExpress\Data;
@@ -19,10 +15,6 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @category TradeBuyPlaceOrderResponseData
  * @package  RetailCrm\Model\Response\AliExpress\Data
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class TradeBuyPlaceOrderResponseData
 {

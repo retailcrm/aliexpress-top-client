@@ -5,10 +5,6 @@
  *
  * @category ContainerException
  * @package  RetailCrm\Component\DependencyInjection\Exception
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Component\DependencyInjection\Exception;
 
@@ -21,10 +17,6 @@ use LogicException;
  * @category ContainerException
  * @package  RetailCrm\Component\DependencyInjection\Exception
  * @author   Evgeniy Zyubin <mail@devanych.ru>
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class ContainerException extends LogicException implements ContainerExceptionInterface
 {

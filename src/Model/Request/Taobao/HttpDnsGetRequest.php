@@ -5,10 +5,6 @@
  *
  * @category HttpDnsGetRequest
  * @package  RetailCrm\Model\Request\Taobao
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Model\Request\Taobao;
 
@@ -20,10 +16,6 @@ use RetailCrm\Model\Response\Taobao\HttpDnsGetResponse;
  *
  * @category HttpDnsGetRequest
  * @package  RetailCrm\Model\Request\Taobao
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class HttpDnsGetRequest extends BaseRequest
 {

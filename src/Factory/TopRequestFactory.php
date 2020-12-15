@@ -5,10 +5,6 @@
  *
  * @category TopRequestFactory
  * @package  RetailCrm\Factory
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Factory;
 
@@ -35,10 +31,6 @@ use UnexpectedValueException;
  *
  * @category TopRequestFactory
  * @package  RetailCrm\Factory
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TopRequestFactory implements TopRequestFactoryInterface

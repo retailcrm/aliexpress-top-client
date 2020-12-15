@@ -4,10 +4,6 @@
  *
  * @category OAuthTokenFetcherTest
  * @package  RetailCrm\Tests\Component
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Tests\Component;
@@ -21,10 +17,6 @@ use RetailCrm\Test\TestCase;
  *
  * @category OAuthTokenFetcherTest
  * @package  RetailCrm\Tests\Component
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class OAuthTokenFetcherTest extends TestCase
 {

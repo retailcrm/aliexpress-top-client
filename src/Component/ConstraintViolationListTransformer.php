@@ -4,10 +4,6 @@
  *
  * @category ConstraintViolationListTransformer
  * @package  RetailCrm\Component
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Component;
@@ -19,10 +15,6 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *
  * @category ConstraintViolationListTransformer
  * @package  RetailCrm\Component
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class ConstraintViolationListTransformer
 {

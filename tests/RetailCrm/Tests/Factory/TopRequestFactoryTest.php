@@ -5,10 +5,6 @@
  *
  * @category TopRequestFactoryTest
  * @package  RetailCrm\Tests\Factory
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Tests\Factory;
 
@@ -23,10 +19,6 @@ use RetailCrm\Test\TestCase;
  *
  * @category TopRequestFactoryTest
  * @package  RetailCrm\Tests\Factory
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class TopRequestFactoryTest extends TestCase
 {

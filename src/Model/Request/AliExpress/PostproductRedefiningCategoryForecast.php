@@ -4,10 +4,6 @@
  *
  * @category PostproductRedefiningCategoryForecastResponse
  * @package  RetailCrm\Model\Request\AliExpress
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Request\AliExpress;
@@ -22,10 +18,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @category PostproductRedefiningCategoryForecastResponse
  * @package  RetailCrm\Model\Request\AliExpress
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class PostproductRedefiningCategoryForecast extends BaseRequest
 {

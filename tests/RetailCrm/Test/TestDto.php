@@ -5,10 +5,6 @@
  *
  * @category TestDto
  * @package  RetailCrm\Test
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Test;
 
@@ -20,10 +16,6 @@ use RetailCrm\Interfaces\RequestDtoInterface;
  *
  * @category TestDto
  * @package  RetailCrm\Test
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class TestDto implements RequestDtoInterface
 {

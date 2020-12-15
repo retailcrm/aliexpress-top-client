@@ -4,10 +4,6 @@
  *
  * @category JsonDeserializationVisitorTest
  * @package  RetailCrm\Tests\Component\JMS\Visitor\Deserialization
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Tests\Component\JMS\Visitor\Deserialization;
@@ -24,10 +20,6 @@ use RetailCrm\Test\TestCase;
  *
  * @category JsonDeserializationVisitorTest
  * @package  RetailCrm\Tests\Component\JMS\Visitor\Deserialization
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class JsonDeserializationVisitorTest extends TestCase
 {

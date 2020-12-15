@@ -5,10 +5,6 @@
  *
  * @category ContainerBuilder
  * @package  RetailCrm\Builder
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Builder;
 
@@ -50,10 +46,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  *
  * @category ContainerBuilder
  * @package  RetailCrm\Builder
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  *
  * ContainerBuilder should be like that.
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)

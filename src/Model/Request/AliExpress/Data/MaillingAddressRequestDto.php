@@ -4,10 +4,6 @@
  *
  * @category MaillingAddressRequestDto
  * @package  RetailCrm\Model\Request\AliExpress\Data
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Request\AliExpress\Data;
@@ -21,10 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @category MaillingAddressRequestDto
  * @package  RetailCrm\Model\Request\AliExpress\Data
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class MaillingAddressRequestDto

@@ -4,10 +4,6 @@
  *
  * @category JsonDeserializationVisitorFactory
  * @package  RetailCrm\Component\JMS\Factory
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Component\JMS\Factory;
@@ -21,10 +17,6 @@ use JMS\Serializer\Visitor\Factory\DeserializationVisitorFactory;
  *
  * @category JsonDeserializationVisitorFactory
  * @package  RetailCrm\Component\JMS\Factory
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class JsonDeserializationVisitorFactory implements DeserializationVisitorFactory
 {

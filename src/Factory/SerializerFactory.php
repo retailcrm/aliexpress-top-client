@@ -5,10 +5,6 @@
  *
  * @category SerializerFactory
  * @package  RetailCrm\Factory
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Factory;
 
@@ -30,10 +26,6 @@ use JMS\Serializer\Expression\ExpressionEvaluator;
  *
  * @category SerializerFactory
  * @package  RetailCrm\Factory
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class SerializerFactory implements FactoryInterface
 {

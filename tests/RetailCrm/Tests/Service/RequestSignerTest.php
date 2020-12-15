@@ -5,10 +5,6 @@
  *
  * @category RequestSigner
  * @package  RetailCrm\Tests\Service
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Tests\Service;
 
@@ -26,10 +22,6 @@ use RetailCrm\Test\TestSignerRequest;
  *
  * @category RequestSigner
  * @package  RetailCrm\Tests\Service
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class RequestSignerTest extends TestCase
 {

@@ -4,10 +4,6 @@
  *
  * @category SolutionOrderReceiptInfoGetResponseResult
  * @package  RetailCrm\Model\Response\AliExpress\Result
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  http://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 
 namespace RetailCrm\Model\Response\AliExpress\Result;
@@ -19,10 +15,6 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @category SolutionOrderReceiptInfoGetResponseResult
  * @package  RetailCrm\Model\Response\AliExpress\Result
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  https://retailcrm.ru Proprietary
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class SolutionOrderReceiptInfoGetResponseResult

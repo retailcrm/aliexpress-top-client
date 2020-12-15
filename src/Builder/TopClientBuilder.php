@@ -5,10 +5,6 @@
  *
  * @category TopClientBuilder
  * @package  RetailCrm\Builder
- * @author   RetailCRM <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      http://help.retailcrm.ru
  */
 namespace RetailCrm\Builder;
 
@@ -29,10 +25,6 @@ use RetailCrm\Traits\ContainerAwareTrait;
  *
  * @category TopClientBuilder
  * @package  RetailCrm\Builder
- * @author   RetailDriver LLC <integration@retailcrm.ru>
- * @license  MIT https://mit-license.org
- * @link     http://retailcrm.ru
- * @see      https://help.retailcrm.ru
  */
 class TopClientBuilder implements ContainerAwareInterface, BuilderInterface
 {
