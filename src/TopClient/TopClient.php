@@ -108,6 +108,7 @@ class TopClient implements TopClientInterface
     public function validateSelf(): void
     {
         $this->validate($this);
+        $this->validate($this->appData);
     }
 
     /**

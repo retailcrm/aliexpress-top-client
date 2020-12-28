@@ -7,25 +7,23 @@
 API client implementation for AliExpress TOP.
 
 ## Usage
-1. This library uses `php-http/httplug` under the hood. If you don't want to bother with details, just install library and it's dependencies through Composer:
+1. This library uses `php-http/httplug` under the hood. If you don't want to bother with details, just install library and it's dependencies via Composer:
 ```sh
 composer require php-http/curl-client nyholm/psr7 php-http/message retailcrm/aliexpress-top-client
 ```
 Details about those third-party libraries and why you need to install them can be found [here](http://docs.php-http.org/en/latest/httplug/users.html).
 
-2. Instantiate client like that:
+2. Instantiate client using `TopClientFactory`:
 ```php
 use RetailCrm\Component\AppData;
-use RetailCrm\Builder\TopClientBuilder;
-use RetailCrm\Builder\ContainerBuilder;
-use RetailCrm\Component\Authenticator\TokenAuthenticator;
+use RetailCrm\Factory\TopClientFactory;
 
-$appData = new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret');
-$client = TopClientBuilder::create()
-            ->setContainer(ContainerBuilder::create()->build())
-            ->setAppData($appData)
-            ->setAuthenticator(new TokenAuthenticator('session token here'))
-            ->build();
+$client = TopClientFactory::createClient(
+    AppData::OVERSEAS_ENDPOINT,
+    'appKey',
+    'appSecret',
+    'session token here'
+);
 ```
 
 3. Create and fill request data. All requests and responses use the same naming: part of the namespace is the first word in the request name, and everything else is in the request DTO class name. Requests live under `RetailCrm\Model\Request` namespace, and responses can be found in the `RetailCrm\Model\Response` namespace.
@@ -75,5 +73,21 @@ $client = TopClientBuilder::create()
             ->build();
 ```
 Logger should implement `Psr\Log\LoggerInterface` (PSR-3), HTTP client should implement `Psr\Http\TopClient\TopClientInterface` (PSR-18), HTTP objects must be compliant to PSR-7.
+You can use your own container if you want to - it must be compliant to PSR-11. This is strongly discouraged because it'll be much easier to just integrate library with your own application, and your own DI system.
 
-You can use your own container - it must be compliant to PSR-11. This is strongly discouraged because it'll be much easier to just integrate library with your own application, and your own DI system.
+The simplest example of client initialization without using `TopClientFactory` looks like this:
+```php
+use RetailCrm\Component\AppData;
+use RetailCrm\Builder\TopClientBuilder;
+use RetailCrm\Builder\ContainerBuilder;
+use RetailCrm\Component\Authenticator\TokenAuthenticator;
+
+$appData = new AppData(AppData::OVERSEAS_ENDPOINT, 'appKey', 'appSecret');
+$client = TopClientBuilder::create()
+            ->setContainer(ContainerBuilder::create()->build())
+            ->setAppData($appData)
+            ->setAuthenticator(new TokenAuthenticator('session token here'))
+            ->build();
+```
+In fact, `TopClientFactory` works just like this under the hood.
+
