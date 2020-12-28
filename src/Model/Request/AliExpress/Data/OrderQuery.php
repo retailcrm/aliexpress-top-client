@@ -28,7 +28,7 @@ class OrderQuery
      *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\SerializedName("create_date_end")
-     * @TopAssert\Timezone("America/Los_Angeles")
+     * @TopAssert\Timezone("PST")
      */
     public $createDateEnd;
 
@@ -37,7 +37,7 @@ class OrderQuery
      *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\SerializedName("create_date_start")
-     * @TopAssert\Timezone("America/Los_Angeles")
+     * @TopAssert\Timezone("PST")
      */
     public $createDateStart;
 
@@ -46,7 +46,7 @@ class OrderQuery
      *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\SerializedName("modified_date_start")
-     * @TopAssert\Timezone("America/Los_Angeles")
+     * @TopAssert\Timezone("PST")
      */
     public $modifiedDateStart;
 
@@ -82,7 +82,7 @@ class OrderQuery
      *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\SerializedName("modified_date_end")
-     * @TopAssert\Timezone("America/Los_Angeles")
+     * @TopAssert\Timezone("PST")
      */
     public $modifiedDateEnd;
 
