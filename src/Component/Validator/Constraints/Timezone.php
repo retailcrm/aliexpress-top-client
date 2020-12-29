@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class Timezone extends Constraint
 {
-    public $timezone = 'America/Los_Angeles';
+    public $timezone = 'PST';
     public $message = 'Invalid timezone provided. Got {{ provided }}, should be {{ expected }}.';
 
     /**
