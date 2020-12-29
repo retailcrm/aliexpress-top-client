@@ -26,7 +26,7 @@ class AppData implements AppDataInterface
     /**
      * @var string $serviceUrl
      * @Assert\Url()
-     * @Assert\Choice(choices=Client::AVAILABLE_ENDPOINTS, message="Invalid endpoint provided.")
+     * @Assert\Choice(choices=AppData::AVAILABLE_ENDPOINTS, message="Invalid endpoint provided.")
      */
     protected $serviceUrl;
 
