@@ -8,6 +8,9 @@
  */
 namespace RetailCrm\Factory;
 
+use JMS\Serializer\Annotation\PostDeserialize;
+use JMS\Serializer\EventDispatcher\EventDispatcher;
+use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\Serializer;
@@ -16,6 +19,7 @@ use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\Visitor\Factory\JsonSerializationVisitorFactory;
 use Psr\Container\ContainerInterface;
 use RetailCrm\Component\Constants;
+use RetailCrm\Component\JMS\EventSubscriber\TimezoneDeserializeSubscriber;
 use RetailCrm\Component\JMS\Factory\JsonDeserializationVisitorFactory;
 use RetailCrm\Interfaces\FactoryInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -100,6 +104,9 @@ class SerializerFactory implements FactoryInterface
                     $returnNull
                 );
             })->addDefaultHandlers()
+            ->configureListeners(function (EventDispatcher $dispatcher) {
+                $dispatcher->addSubscriber(new TimezoneDeserializeSubscriber());
+            })
             ->setSerializationVisitor('json', new JsonSerializationVisitorFactory())
             ->setDeserializationVisitor('json', new JsonDeserializationVisitorFactory())
             ->setSerializationContextFactory(new SerializationContextFactory())
