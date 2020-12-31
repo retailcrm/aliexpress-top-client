@@ -619,6 +619,7 @@ EOF;
             OfflinePickupTypes::RU_OFFLINE_SELF_PICK_UP_EXPRESSION,
             $result->targetList->orderDto[0]->offlinePickupType
         );
+        self::assertEquals('PST', $result->targetList->orderDto[0]->gmtCreate->getTimezone()->getName());
     }
 
     public function testAliexpressSolutionOrderReceiptInfoGet()
