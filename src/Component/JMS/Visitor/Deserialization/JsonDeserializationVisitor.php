@@ -12,6 +12,7 @@ use JMS\Serializer\AbstractVisitor;
 use JMS\Serializer\Exception\LogicException;
 use JMS\Serializer\Exception\NotAcceptableException;
 use JMS\Serializer\Exception\RuntimeException;
+use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Metadata\ClassMetadata;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Visitor\DeserializationVisitorInterface;
@@ -24,7 +25,7 @@ use SplStack;
  * @category JsonDeserializationVisitor
  * @package  RetailCrm\Component\JMS\Visitor\Deserialization
  */
-class JsonDeserializationVisitor extends AbstractVisitor implements DeserializationVisitorInterface
+class JsonDeserializationVisitor implements DeserializationVisitorInterface
 {
     /**
      * @var int
@@ -45,6 +46,11 @@ class JsonDeserializationVisitor extends AbstractVisitor implements Deserializat
      * @var object|null
      */
     private $currentObject;
+
+    /**
+     * @var GraphNavigatorInterface
+     */
+    protected $navigator;
 
     public function __construct(
         int $options = 0,
@@ -307,5 +313,10 @@ class JsonDeserializationVisitor extends AbstractVisitor implements Deserializat
             default:
                 throw new RuntimeException('Could not decode JSON.');
         }
+    }
+
+    public function setNavigator(GraphNavigatorInterface $navigator): void
+    {
+        $this->navigator = $navigator;
     }
 }
