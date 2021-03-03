@@ -35,6 +35,7 @@ use RetailCrm\Model\Request\AliExpress\SolutionOrderFulfill;
 use RetailCrm\Model\Request\AliExpress\SolutionOrderGet;
 use RetailCrm\Model\Request\AliExpress\SolutionOrderReceiptInfoGet;
 use RetailCrm\Model\Request\AliExpress\SolutionProductSchemaGet;
+use RetailCrm\Model\Request\AliExpress\SolutionProductInfoGet;
 use RetailCrm\Model\Request\AliExpress\SolutionProductListGet;
 use RetailCrm\Model\Request\AliExpress\SolutionSellerCategoryTreeQuery;
 use RetailCrm\Model\Request\Taobao\HttpDnsGetRequest;
@@ -44,6 +45,7 @@ use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResp
 use RetailCrm\Model\Response\AliExpress\PostproductRedefiningCategoryForecastResponse;
 use RetailCrm\Model\Response\AliExpress\PostproductRedefiningFindAEProductByIdForDropshipperResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionFeedListGetResponse;
+use RetailCrm\Model\Response\AliExpress\SolutionProductInfoGetResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionProductListGetResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionSellerCategoryTreeQueryResponse;
 use RetailCrm\Model\Response\ErrorResponseBody;
@@ -1165,5 +1167,186 @@ EOF;
         self::assertIsArray($items);
         self::assertCount(1, $items);
         self::assertEquals(23453463456346546, $items[0]->productId);
+    }
+
+    public function testAliexpressSolutionProductInfoGet()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_product_info_get_response":{
+        "result":{
+            "add_unit":11,
+            "add_weight":"11.11",
+            "aeop_a_e_multimedia":{
+                "aeop_a_e_videos":{
+                    "global_aeop_ae_video":[
+                        {
+                            "ali_member_id":1006680305,
+                            "media_id":12345678,
+                            "media_status":"approved",
+                            "media_type":"video",
+                            "poster_url":"http:\/\/img01.taobaocdn.com\/bao\/uploaded\/TB1rNdGIVXXXXbTXFXXXXXXXXXX.jpg"
+                        }
+                    ]
+                }
+            },
+            "aeop_ae_product_propertys":{
+                "global_aeop_ae_product_property":[
+                    {
+                        "attr_name":"size",
+                        "attr_name_id":200000043,
+                        "attr_value":"2 - 5 kg",
+                        "attr_value_id":493,
+                        "attr_value_unit":"0"
+                    }
+                ]
+            },
+            "aeop_ae_product_s_k_us":{
+                "global_aeop_ae_product_sku":[
+                    {
+                        "aeop_s_k_u_property_list":{
+                            "global_aeop_sku_property":[
+                                {
+                                    "property_value_definition_name":"pink",
+                                    "property_value_id":366,
+                                    "sku_image":"http:\/\/ae01.alicdn.com\/kf\/HTB19KVYX6LuK1Rjy0Fhq6xpdFXac.jpg",
+                                    "sku_property_id":14
+                                }
+                            ]
+                        },
+                        "barcode":"0",
+                        "currency_code":"USD",
+                        "id":"\"200000182:193;200007763:201336100\"",
+                        "ipm_sku_stock":1234,
+                        "sku_code":"ffff00978",
+                        "sku_price":"200.07",
+                        "sku_stock":true,
+                        "sku_discount_price":"10.01"
+                    },
+                    {
+                        "aeop_s_k_u_property_list":{
+                            "global_aeop_sku_property":[
+                                {
+                                    "property_value_definition_name":"pink",
+                                    "property_value_id":366,
+                                    "sku_image":"http:\/\/ae01.alicdn.com\/kf\/HTB19KVYX6LuK1Rjy0Fhq6xpdFXac.jpg",
+                                    "sku_property_id":14
+                                }
+                            ]
+                        },
+                        "barcode":"0",
+                        "currency_code":"USD",
+                        "id":"\"200000182:193;200007763:201336100\"",
+                        "ipm_sku_stock":1234,
+                        "sku_code":"cfas00978",
+                        "sku_price":"200.07",
+                        "sku_stock":true,
+                        "sku_discount_price":"10.01"
+                    }
+                ]
+            },
+            "base_unit":2,
+            "bulk_discount":90,
+            "bulk_order":10,
+            "category_id":123456,
+            "currency_code":"USD",
+            "delivery_time":60,
+            "detail":"<div><\/div>",
+            "freight_template_id":12345,
+            "gmt_create":"2018-12-03 15:17:33",
+            "gmt_modified":"2018-12-18 17:11:08",
+            "gross_weight":"40.12",
+            "group_id":10023,
+            "group_ids":{
+                "number":[
+                    [1002141,
+                    10024524]
+                ]
+            },
+            "image_u_r_ls":"http:\/\/g01.a.alicdn.com\/kf\/HTB13GKLJXXXXXbYaXXXq6xXFXXXi.jpg;http:\/\/g02.a.alicdn.com\/kf\/HTB1DkaWJXXXXXb6XFXXq6xXFXXXp.jpg;http:\/\/g02.a.alicdn.com\/kf\/HTB1pMCQJXXXXXcvXVXXq6xXFXXXm.jpg;http:\/\/g03.a.alicdn.com\/kf\/HTB1QhORJXXXXXbiXVXXq6xXFXXXx.jpg;http:\/\/g02.a.alicdn.com\/kf\/HTB1q1aLJXXXXXcfaXXXq6xXFXXXv.jpg",
+            "is_pack_sell":true,
+            "lot_num":1,
+            "mobile_detail":"balalaba",
+            "owner_member_id":"aliqatest01",
+            "owner_member_seq":1006680305,
+            "package_height":30,
+            "package_length":10,
+            "package_width":20,
+            "product_id":1234,
+            "product_price":"10.23",
+            "product_status_type":"onSelling",
+            "product_unit":100000015,
+            "promise_template_id":100,
+            "reduce_strategy":"place_order_withhold或payment_success_deduct",
+            "sizechart_id":123,
+            "subject":"English description",
+            "ws_offline_date":"2018-12-19 11:24:27",
+            "package_type":true,
+            "multi_language_subject_list":{
+                "global_subject":[
+                    {
+                        "locale":"es_ES",
+                        "subject":"Versión Global Xiaomi Redmi Note 5"
+                    }
+                ]
+            },
+            "multi_language_description_list":{
+                "global_description":[
+                    {
+                        "locale":"es_ES",
+                        "mobile_detail":"{\"version\":\"2.0.0\",\"moduleList\":[{\"type\":\"html\",\"html\":{\"content\":\"Versión Global Xiaomi Redmi Note 5\"}}]}",
+                        "web_detail":"{\"version\":\"2.0.0\",\"moduleList\":[{\"type\":\"html\",\"html\":{\"content\":\"Versión Global Xiaomi Redmi Note 5\"}}]}"
+                    }
+                ]
+            },
+            "multi_country_price_configuration":{
+                "price_type":"absolute",
+                "country_price_list":{
+                    "single_country_price_dto":[
+                        {
+                            "ship_to_country":"ES",
+                            "sku_price_by_country_list":{
+                                "single_sku_price_by_country_dto":[
+                                    {
+                                        "sku_code":"abc123",
+                                        "price":"16",
+                                        "discount_price":"12.99"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.product.info.get',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionProductInfoGetResponse $response */
+        $response = $client->sendAuthenticatedRequest(new SolutionProductInfoGet());
+
+        $skuList = $response->responseData->result->aeopAEProductSkus->globalAeopAEProductSku;
+        self::assertIsArray($skuList);
+        self::assertCount(2, $skuList);
+        self::assertNotNull($skuList[0]->skuCode);
+        self::assertNotNull($skuList[1]->skuCode);
     }
 }
