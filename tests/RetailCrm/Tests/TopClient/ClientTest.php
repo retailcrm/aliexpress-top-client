@@ -35,6 +35,7 @@ use RetailCrm\Model\Request\AliExpress\SolutionOrderFulfill;
 use RetailCrm\Model\Request\AliExpress\SolutionOrderGet;
 use RetailCrm\Model\Request\AliExpress\SolutionOrderReceiptInfoGet;
 use RetailCrm\Model\Request\AliExpress\SolutionProductSchemaGet;
+use RetailCrm\Model\Request\AliExpress\SolutionProductListGet;
 use RetailCrm\Model\Request\AliExpress\SolutionSellerCategoryTreeQuery;
 use RetailCrm\Model\Request\Taobao\HttpDnsGetRequest;
 use RetailCrm\Model\Response\AliExpress\Data\SolutionFeedSubmitResponseData;
@@ -43,6 +44,7 @@ use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResp
 use RetailCrm\Model\Response\AliExpress\PostproductRedefiningCategoryForecastResponse;
 use RetailCrm\Model\Response\AliExpress\PostproductRedefiningFindAEProductByIdForDropshipperResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionFeedListGetResponse;
+use RetailCrm\Model\Response\AliExpress\SolutionProductListGetResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionSellerCategoryTreeQueryResponse;
 use RetailCrm\Model\Response\ErrorResponseBody;
 use RetailCrm\Model\Response\Taobao\HttpDnsGetResponse;
@@ -1094,5 +1096,74 @@ EOF;
         self::assertEquals('test store', $response->responseData->shopName);
         self::assertEquals('official', $response->responseData->shopType);
         self::assertEquals('//www.aliexpress.com/store/1234321', $response->responseData->shopUrl);
+    }
+
+    public function testAliexpressSolutionProductListGet()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_product_list_get_response":{
+        "result":{
+            "error_message":"",
+            "error_code":16009999,
+            "total_page":100,
+            "success":true,
+            "product_count":1201,
+            "error_msg":"0",
+            "current_page":10,
+            "aeop_a_e_product_display_d_t_o_list":{
+                "item_display_dto":[
+                    {
+                        "ws_offline_date":"2021-01-01 12:13:14",
+                        "ws_display":"0",
+                        "subject":"knew odd",
+                        "src":"0",
+                        "product_min_price":"0",
+                        "product_max_price":"0",
+                        "product_id":23453463456346546,
+                        "owner_member_seq":0,
+                        "owner_member_id":"0",
+                        "image_u_r_ls":"0",
+                        "group_id":123,
+                        "gmt_modified":"2021-01-01 12:13:14",
+                        "gmt_create":"2021-01-01 12:13:14",
+                        "freight_template_id":0,
+                        "currency_code":"USD;RUB",
+                        "coupon_start_date":"2021-01-01 12:13:14",
+                        "coupon_end_date":"2021-01-01 12:13:14"
+                    }
+                ]
+            }
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.product.list.get',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionProductListGetResponse $response */
+        $response = $client->sendAuthenticatedRequest(new SolutionProductListGet());
+
+        self::assertEquals(true, $response->responseData->result->success);
+        self::assertEquals(1201, $response->responseData->result->productCount);
+        $items = $response->responseData->result->aeopAEProductDisplayDtoList->itemDisplayDto;
+        self::assertIsArray($items);
+        self::assertCount(1, $items);
+        self::assertEquals(23453463456346546, $items[0]->productId);
     }
 }
