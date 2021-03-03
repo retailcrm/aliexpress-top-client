@@ -16,6 +16,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @category ItemDisplayDto
  * @package  RetailCrm\Model\Response\AliExpress\Result\Entity
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class ItemDisplayDto
 {

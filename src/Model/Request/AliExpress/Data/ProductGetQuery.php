@@ -18,6 +18,7 @@ use RetailCrm\Component\Validator\Constraints as TopAssert;
  *
  * @category ProductGetQuery
  * @package  RetailCrm\Model\Request\AliExpress\Data
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class ProductGetQuery
 {
