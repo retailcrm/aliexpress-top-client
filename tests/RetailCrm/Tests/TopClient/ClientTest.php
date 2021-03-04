@@ -27,6 +27,8 @@ use RetailCrm\Model\Request\AliExpress\LogisticsDsTrackingInfoQuery;
 use RetailCrm\Model\Request\AliExpress\LogisticsRedefiningListLogisticsService;
 use RetailCrm\Model\Request\AliExpress\PostproductRedefiningCategoryForecast;
 use RetailCrm\Model\Request\AliExpress\PostproductRedefiningFindAEProductByIdForDropshipper;
+use RetailCrm\Model\Request\AliExpress\SolutionBatchProductInventoryUpdate;
+use RetailCrm\Model\Request\AliExpress\SolutionBatchProductPriceUpdate;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedListGet;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedQuery;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedSubmit;
@@ -34,6 +36,8 @@ use RetailCrm\Model\Request\AliExpress\SolutionMerchantProfileGet;
 use RetailCrm\Model\Request\AliExpress\SolutionOrderFulfill;
 use RetailCrm\Model\Request\AliExpress\SolutionOrderGet;
 use RetailCrm\Model\Request\AliExpress\SolutionOrderReceiptInfoGet;
+use RetailCrm\Model\Request\AliExpress\SolutionProductInfoGet;
+use RetailCrm\Model\Request\AliExpress\SolutionProductListGet;
 use RetailCrm\Model\Request\AliExpress\SolutionProductSchemaGet;
 use RetailCrm\Model\Request\AliExpress\SolutionSellerCategoryTreeQuery;
 use RetailCrm\Model\Request\Taobao\HttpDnsGetRequest;
@@ -1094,5 +1098,389 @@ EOF;
         self::assertEquals('test store', $response->responseData->shopName);
         self::assertEquals('official', $response->responseData->shopType);
         self::assertEquals('//www.aliexpress.com/store/1234321', $response->responseData->shopUrl);
+    }
+
+    public function testAliexpressSolutionProductListGet()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_product_list_get_response":{
+        "result":{
+            "error_message":"",
+            "error_code":16009999,
+            "total_page":100,
+            "success":true,
+            "product_count":1201,
+            "error_msg":"0",
+            "current_page":10,
+            "aeop_a_e_product_display_d_t_o_list":{
+                "item_display_dto":[
+                    {
+                        "ws_offline_date":"2021-01-01 12:13:14",
+                        "ws_display":"0",
+                        "subject":"knew odd",
+                        "src":"0",
+                        "product_min_price":"0",
+                        "product_max_price":"0",
+                        "product_id":23453463456346546,
+                        "owner_member_seq":0,
+                        "owner_member_id":"0",
+                        "image_u_r_ls":"0",
+                        "group_id":123,
+                        "gmt_modified":"2021-01-01 12:13:14",
+                        "gmt_create":"2021-01-01 12:13:14",
+                        "freight_template_id":0,
+                        "currency_code":"USD;RUB",
+                        "coupon_start_date":"2021-01-01 12:13:14",
+                        "coupon_end_date":"2021-01-01 12:13:14"
+                    }
+                ]
+            }
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.product.list.get',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionProductListGetResponse $response */
+        $response = $client->sendAuthenticatedRequest(new SolutionProductListGet());
+
+        self::assertEquals(true, $response->responseData->result->success);
+        self::assertEquals(1201, $response->responseData->result->productCount);
+        $items = $response->responseData->result->aeopAEProductDisplayDtoList->itemDisplayDto;
+        self::assertIsArray($items);
+        self::assertCount(1, $items);
+        self::assertEquals(23453463456346546, $items[0]->productId);
+    }
+
+    public function testAliexpressSolutionProductInfoGet()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_product_info_get_response":{
+        "result":{
+            "add_unit":11,
+            "add_weight":"11.11",
+            "aeop_a_e_multimedia":{
+                "aeop_a_e_videos":{
+                    "global_aeop_ae_video":[
+                        {
+                            "ali_member_id":1006680305,
+                            "media_id":12345678,
+                            "media_status":"approved",
+                            "media_type":"video",
+                            "poster_url":"http:\/\/img01.taobaocdn.com\/bao\/uploaded\/TB1rNdGIVXXXXbTXFXXXXXXXXXX.jpg"
+                        }
+                    ]
+                }
+            },
+            "aeop_ae_product_propertys":{
+                "global_aeop_ae_product_property":[
+                    {
+                        "attr_name":"size",
+                        "attr_name_id":200000043,
+                        "attr_value":"2 - 5 kg",
+                        "attr_value_id":493,
+                        "attr_value_unit":"0"
+                    }
+                ]
+            },
+            "aeop_ae_product_s_k_us":{
+                "global_aeop_ae_product_sku":[
+                    {
+                        "aeop_s_k_u_property_list":{
+                            "global_aeop_sku_property":[
+                                {
+                                    "property_value_definition_name":"pink",
+                                    "property_value_id":366,
+                                    "sku_image":"http:\/\/ae01.alicdn.com\/kf\/HTB19KVYX6LuK1Rjy0Fhq6xpdFXac.jpg",
+                                    "sku_property_id":14
+                                }
+                            ]
+                        },
+                        "barcode":"0",
+                        "currency_code":"USD",
+                        "id":"\"200000182:193;200007763:201336100\"",
+                        "ipm_sku_stock":1234,
+                        "sku_code":"ffff00978",
+                        "sku_price":"200.07",
+                        "sku_stock":true,
+                        "sku_discount_price":"10.01"
+                    },
+                    {
+                        "aeop_s_k_u_property_list":{
+                            "global_aeop_sku_property":[
+                                {
+                                    "property_value_definition_name":"pink",
+                                    "property_value_id":366,
+                                    "sku_image":"http:\/\/ae01.alicdn.com\/kf\/HTB19KVYX6LuK1Rjy0Fhq6xpdFXac.jpg",
+                                    "sku_property_id":14
+                                }
+                            ]
+                        },
+                        "barcode":"0",
+                        "currency_code":"USD",
+                        "id":"\"200000182:193;200007763:201336100\"",
+                        "ipm_sku_stock":1234,
+                        "sku_code":"cfas00978",
+                        "sku_price":"200.07",
+                        "sku_stock":true,
+                        "sku_discount_price":"10.01"
+                    }
+                ]
+            },
+            "base_unit":2,
+            "bulk_discount":90,
+            "bulk_order":10,
+            "category_id":123456,
+            "currency_code":"USD",
+            "delivery_time":60,
+            "detail":"<div><\/div>",
+            "freight_template_id":12345,
+            "gmt_create":"2018-12-03 15:17:33",
+            "gmt_modified":"2018-12-18 17:11:08",
+            "gross_weight":"40.12",
+            "group_id":10023,
+            "group_ids":{
+                "number":[
+                    [1002141,
+                    10024524]
+                ]
+            },
+            "image_u_r_ls":"http:\/\/g01.a.alicdn.com\/kf\/HTB13GKLJXXXXXbYaXXXq6xXFXXXi.jpg;http:\/\/g02.a.alicdn.com\/kf\/HTB1DkaWJXXXXXb6XFXXq6xXFXXXp.jpg;http:\/\/g02.a.alicdn.com\/kf\/HTB1pMCQJXXXXXcvXVXXq6xXFXXXm.jpg;http:\/\/g03.a.alicdn.com\/kf\/HTB1QhORJXXXXXbiXVXXq6xXFXXXx.jpg;http:\/\/g02.a.alicdn.com\/kf\/HTB1q1aLJXXXXXcfaXXXq6xXFXXXv.jpg",
+            "is_pack_sell":true,
+            "lot_num":1,
+            "mobile_detail":"balalaba",
+            "owner_member_id":"aliqatest01",
+            "owner_member_seq":1006680305,
+            "package_height":30,
+            "package_length":10,
+            "package_width":20,
+            "product_id":1234,
+            "product_price":"10.23",
+            "product_status_type":"onSelling",
+            "product_unit":100000015,
+            "promise_template_id":100,
+            "reduce_strategy":"place_order_withhold或payment_success_deduct",
+            "sizechart_id":123,
+            "subject":"English description",
+            "ws_offline_date":"2018-12-19 11:24:27",
+            "package_type":true,
+            "multi_language_subject_list":{
+                "global_subject":[
+                    {
+                        "locale":"es_ES",
+                        "subject":"Versión Global Xiaomi Redmi Note 5"
+                    }
+                ]
+            },
+            "multi_language_description_list":{
+                "global_description":[
+                    {
+                        "locale":"es_ES",
+                        "mobile_detail":"{\"version\":\"2.0.0\",\"moduleList\":[{\"type\":\"html\",\"html\":{\"content\":\"Versión Global Xiaomi Redmi Note 5\"}}]}",
+                        "web_detail":"{\"version\":\"2.0.0\",\"moduleList\":[{\"type\":\"html\",\"html\":{\"content\":\"Versión Global Xiaomi Redmi Note 5\"}}]}"
+                    }
+                ]
+            },
+            "multi_country_price_configuration":{
+                "price_type":"absolute",
+                "country_price_list":{
+                    "single_country_price_dto":[
+                        {
+                            "ship_to_country":"ES",
+                            "sku_price_by_country_list":{
+                                "single_sku_price_by_country_dto":[
+                                    {
+                                        "sku_code":"abc123",
+                                        "price":"16",
+                                        "discount_price":"12.99"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.product.info.get',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionProductInfoGetResponse $response */
+        $response = $client->sendAuthenticatedRequest(new SolutionProductInfoGet());
+
+        $skuList = $response->responseData->result->aeopAEProductSkus->globalAeopAEProductSku;
+        self::assertIsArray($skuList);
+        self::assertCount(2, $skuList);
+        self::assertNotNull($skuList[0]->skuCode);
+        self::assertNotNull($skuList[1]->skuCode);
+    }
+
+    public function testAliexpressSolutionBatchProductInventoryUpdate()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_batch_product_inventory_update_response":{
+        "update_error_code":"",
+        "update_error_message":"",
+        "update_success": true,
+        "update_failed_list":{
+            "synchronize_product_response_dto":[
+                {
+                    "error_code":"",
+                    "error_message":"message",
+                    "product_id": 123
+                },
+                {
+                    "error_code":"",
+                    "error_message":"message",
+                    "product_id":1234
+                }
+            ]
+        },
+        "update_successful_list":{
+            "synchronize_product_response_dto":[
+                {
+                    "product_id": 123
+                }
+            ]
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.batch.product.inventory.update',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionBatchProductInventoryUpdateResponse $response */
+        $response = $client->sendAuthenticatedRequest(new SolutionBatchProductInventoryUpdate());
+
+        self::assertTrue($response->responseData->updateSuccess);
+        $updateSuccessfulList = $response->responseData->updateSuccessfulList->synchronizeProductResponseDto;
+        $updateFailedList = $response->responseData->updateFailedList->synchronizeProductResponseDto;
+        self::assertIsArray($updateSuccessfulList);
+        self::assertIsArray($updateFailedList);
+        self::assertCount(1, $updateSuccessfulList);
+        self::assertCount(2, $updateFailedList);
+        self::assertNotNull($updateFailedList[0]->productId);
+        self::assertNotNull($updateFailedList[0]->errorMessage);
+        self::assertNotNull($updateFailedList[1]->productId);
+        self::assertNotNull($updateFailedList[1]->errorMessage);
+        self::assertNotNull($updateSuccessfulList[0]->productId);
+    }
+
+    public function testAliexpressSolutionBatchProductPriceUpdate()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_batch_product_price_update_response":{
+        "update_error_code":"",
+        "update_error_message":"",
+        "update_success": true,
+        "update_failed_list":{
+            "synchronize_product_response_dto":[
+                {
+                    "error_code":"",
+                    "error_message":"message",
+                    "product_id": 123
+                },
+                {
+                    "error_code":"",
+                    "error_message":"message",
+                    "product_id":1234
+                }
+            ]
+        },
+        "update_successful_list":{
+            "synchronize_product_response_dto":[
+                {
+                    "product_id": 123
+                }
+            ]
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.batch.product.price.update',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionBatchProductPriceUpdateResponse $response */
+        $response = $client->sendAuthenticatedRequest(new SolutionBatchProductPriceUpdate());
+
+        self::assertTrue($response->responseData->updateSuccess);
+        $updateSuccessfulList = $response->responseData->updateSuccessfulList->synchronizeProductResponseDto;
+        $updateFailedList = $response->responseData->updateFailedList->synchronizeProductResponseDto;
+        self::assertIsArray($updateSuccessfulList);
+        self::assertIsArray($updateFailedList);
+        self::assertCount(1, $updateSuccessfulList);
+        self::assertCount(2, $updateFailedList);
+        self::assertNotNull($updateFailedList[0]->productId);
+        self::assertNotNull($updateFailedList[0]->errorMessage);
+        self::assertNotNull($updateFailedList[1]->productId);
+        self::assertNotNull($updateFailedList[1]->errorMessage);
+        self::assertNotNull($updateSuccessfulList[0]->productId);
     }
 }
