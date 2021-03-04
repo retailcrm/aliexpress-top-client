@@ -27,6 +27,7 @@ use RetailCrm\Model\Request\AliExpress\LogisticsDsTrackingInfoQuery;
 use RetailCrm\Model\Request\AliExpress\LogisticsRedefiningListLogisticsService;
 use RetailCrm\Model\Request\AliExpress\PostproductRedefiningCategoryForecast;
 use RetailCrm\Model\Request\AliExpress\PostproductRedefiningFindAEProductByIdForDropshipper;
+use RetailCrm\Model\Request\AliExpress\SolutionBatchProductInventoryUpdate;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedListGet;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedQuery;
 use RetailCrm\Model\Request\AliExpress\SolutionFeedSubmit;
@@ -44,6 +45,7 @@ use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResp
 use RetailCrm\Model\Response\AliExpress\Data\SolutionSellerCategoryTreeQueryResponseDataChildrenCategoryList;
 use RetailCrm\Model\Response\AliExpress\PostproductRedefiningCategoryForecastResponse;
 use RetailCrm\Model\Response\AliExpress\PostproductRedefiningFindAEProductByIdForDropshipperResponse;
+use RetailCrm\Model\Response\AliExpress\SolutionBatchProductInventoryUpdateResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionFeedListGetResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionProductInfoGetResponse;
 use RetailCrm\Model\Response\AliExpress\SolutionProductListGetResponse;
@@ -1348,5 +1350,72 @@ EOF;
         self::assertCount(2, $skuList);
         self::assertNotNull($skuList[0]->skuCode);
         self::assertNotNull($skuList[1]->skuCode);
+    }
+
+    public function testAliexpressSolutionBatchProductInventoryUpdate()
+    {
+        $json = <<<'EOF'
+{
+    "aliexpress_solution_batch_product_inventory_update_response":{
+        "update_error_code":"",
+        "update_error_message":"",
+        "update_success": true,
+        "update_failed_list":{
+            "synchronize_product_response_dto":[
+                {
+                    "error_code":"",
+                    "error_message":"message",
+                    "product_id": 123
+                },
+                {
+                    "error_code":"",
+                    "error_message":"message",
+                    "product_id":1234
+                }
+            ]
+        },
+        "update_successful_list":{
+            "synchronize_product_response_dto":[
+                {
+                    "product_id": 123
+                }
+            ]
+        }
+    }
+}
+EOF;
+        $mock = self::getMockClient();
+        $mock->on(
+            RequestMatcher::createMatcher('api.taobao.com')
+                ->setPath('/router/rest')
+                ->setOptionalPostFields([
+                    'app_key' => self::getEnvAppKey(),
+                    'method' => 'aliexpress.solution.batch.product.inventory.update',
+                    'session' => self::getEnvToken()
+                ]),
+            $this->responseJson(200, $json)
+        );
+
+        $client = TopClientBuilder::create()
+            ->setContainer($this->getContainer($mock))
+            ->setAppData($this->getEnvAppData())
+            ->setAuthenticator($this->getEnvTokenAuthenticator())
+            ->build();
+
+        /** @var \RetailCrm\Model\Response\AliExpress\SolutionBatchProductInventoryUpdateResponse $response */
+        $response = $client->sendAuthenticatedRequest(new SolutionBatchProductInventoryUpdate());
+
+        self::assertTrue($response->responseData->updateSuccess);
+        $updateSuccessfulList = $response->responseData->updateSuccessfulList->synchronizeProductResponseDto;
+        $updateFailedList = $response->responseData->updateFailedList->synchronizeProductResponseDto;
+        self::assertIsArray($updateSuccessfulList);
+        self::assertIsArray($updateFailedList);
+        self::assertCount(1, $updateSuccessfulList);
+        self::assertCount(2, $updateFailedList);
+        self::assertNotNull($updateFailedList[0]->productId);
+        self::assertNotNull($updateFailedList[0]->errorMessage);
+        self::assertNotNull($updateFailedList[1]->productId);
+        self::assertNotNull($updateFailedList[1]->errorMessage);
+        self::assertNotNull($updateSuccessfulList[0]->productId);
     }
 }
