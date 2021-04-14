@@ -55,9 +55,6 @@ class OrderStatuses
     // Order is closed and now stored in the archive.
     public const ARCHIVE = 'ARCHIVE';
 
-    // Undocumented.
-    public const FROZEN_STATUS = 'FROZEN_STATUS';
-
     // List of all order statuses.
     public const STATUSES_LIST = [
         self::PLACE_ORDER_SUCCESS,
@@ -72,7 +69,6 @@ class OrderStatuses
         self::RISK_CONTROL,
         self::RISK_CONTROL_HOLD,
         self::FINISH,
-        self::ARCHIVE,
-        self::FROZEN_STATUS
+        self::ARCHIVE
     ];
 }
