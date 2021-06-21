@@ -274,6 +274,7 @@ class TopRequestFactory implements TopRequestFactoryInterface
             case 'NULL':
                 return $value;
             case 'boolean':
+                return $value ? 'true' : 'false';
             case 'integer':
             case 'double':
             case 'string':
