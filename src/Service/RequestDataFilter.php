@@ -25,12 +25,12 @@ class RequestDataFilter
      */
     public function filterBinaryFromRequestData(array $params): array
     {
-        return array_filter(array_filter(
+        return array_filter(
             $params,
             static function ($item) {
                 return !($item instanceof FileItemInterface);
             }
-        ));
+        );
     }
 
     /**
