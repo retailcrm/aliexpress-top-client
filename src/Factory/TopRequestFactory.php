@@ -264,6 +264,8 @@ class TopRequestFactory implements TopRequestFactoryInterface
      *
      * @return string|resource|null
      * @todo Arrays will be encoded to JSON. Is this correct? Press X to doubt.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function castValue($value)
     {
@@ -274,6 +276,7 @@ class TopRequestFactory implements TopRequestFactoryInterface
             case 'NULL':
                 return $value;
             case 'boolean':
+                return $value ? 'true' : 'false';
             case 'integer':
             case 'double':
             case 'string':

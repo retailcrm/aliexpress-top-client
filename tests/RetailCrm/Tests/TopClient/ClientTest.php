@@ -141,7 +141,7 @@ EOF;
                     'app_key' => self::getEnvAppKey(),
                     'method' => 'aliexpress.solution.seller.category.tree.query',
                     'category_id' => '5090300',
-                    'filter_no_permission' => 1,
+                    'filter_no_permission' => 'true',
                     'session' => self::getEnvToken()
                 ]),
             $this->responseJson(200, $json)
