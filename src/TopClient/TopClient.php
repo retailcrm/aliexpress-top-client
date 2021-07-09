@@ -255,7 +255,7 @@ class TopClient implements TopClientInterface
         try {
             $httpResponse = $this->httpClient->sendRequest($httpRequest);
         } catch (ClientExceptionInterface $exception) {
-            throw new TopClientException(sprintf('Error sending request: %s', $exception->getMessage()), $exception);
+            throw new TopClientException(sprintf('Error sending request: %s', $exception->getMessage()), 0, $exception);
         }
 
         $bodyData = self::getBodyContents($httpResponse->getBody());
