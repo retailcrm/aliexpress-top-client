@@ -264,6 +264,8 @@ class TopRequestFactory implements TopRequestFactoryInterface
      *
      * @return string|resource|null
      * @todo Arrays will be encoded to JSON. Is this correct? Press X to doubt.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function castValue($value)
     {
